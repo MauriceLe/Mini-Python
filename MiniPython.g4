@@ -1,0 +1,48 @@
+grammar MiniPython;
+
+start: (def_function | def_class | statement | COMMENT | NL)* EOF;
+
+INT         : [0-9]+;
+BOOL        : 'TRUE' | 'FALSE';
+STRING      : ["].*?["] | ['].*?['];
+COMMENT     : ~[END] [#][a-zA-Z_0-9]*;
+
+WS          : [ \t]+ -> skip;
+NL          : [\r\n]+;
+END         : '#end';
+ID          : [a-zA-Z][a-zA-Z_0-9]*;
+
+IF          : 'if';
+ELIF        : 'elif';
+ELSE        : 'else';
+WHILE       : 'while';
+RETURN      : 'return';
+CLASS_      : 'class';
+DEF         : 'def';
+SELF        : 'self';
+
+negation    : 'not';
+logic       : 'or' | 'and';
+compare     : '>' | '<' | '=='| '!=' | '>=' | '<=';
+arithmetic  : '+' | '-' | '*' | '/';
+
+expression  : expression logic expression
+            | expression compare expression
+            | expression arithmetic expression
+            | negation expression
+            | ID | INT | BOOL | STRING;
+
+block       : ':' NL statement*;
+param       : '(' expression* (','expression)* ')';
+
+if          : IF expression block (ELIF expression block)* (ELSE block)? END;
+while       : WHILE expression ':' NL statement* END;
+method      : ID '.' ID param NL;
+function    : ID param NL;
+object      : ID param NL;
+
+assign      : ID '=' (expression | object | function | method) NL;
+statement   : assign | if | while | function | method;
+
+def_function: DEF ID '(' ID* (','ID)* ')' block RETURN expression? NL END;
+def_class   : CLASS_ ID '(' ID? ')' ':' NL def_function END;

@@ -1,0 +1,12 @@
+# Kommentar
+#end
+
+variable1 = 1 + 10
+variable2 = 1 < 10 + 10
+
+function1(variable1, variable2)
+function2(1 + 10)
+
+def function1(param1):
+    param1
+#end
