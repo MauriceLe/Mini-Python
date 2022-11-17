@@ -16,18 +16,6 @@ public class MiniPythonBaseListener implements MiniPythonListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStart(MiniPythonParser.StartContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitStart(MiniPythonParser.StartContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterNegation(MiniPythonParser.NegationContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -52,6 +40,30 @@ public class MiniPythonBaseListener implements MiniPythonListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterMulti_div(MiniPythonParser.Multi_divContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMulti_div(MiniPythonParser.Multi_divContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPlus_minus(MiniPythonParser.Plus_minusContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPlus_minus(MiniPythonParser.Plus_minusContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterCompare(MiniPythonParser.CompareContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -59,18 +71,6 @@ public class MiniPythonBaseListener implements MiniPythonListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCompare(MiniPythonParser.CompareContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterArithmetic(MiniPythonParser.ArithmeticContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitArithmetic(MiniPythonParser.ArithmeticContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -215,6 +215,18 @@ public class MiniPythonBaseListener implements MiniPythonListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDef_class(MiniPythonParser.Def_classContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterStart(MiniPythonParser.StartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStart(MiniPythonParser.StartContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

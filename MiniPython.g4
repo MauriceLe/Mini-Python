@@ -1,16 +1,9 @@
 grammar MiniPython;
 
-start: (def_function | def_class | statement | COMMENT | NL)* EOF;
-
 INT         : [0-9]+;
 BOOL        : 'TRUE' | 'FALSE';
 STRING      : ["].*?["] | ['].*?['];
-COMMENT     : ~[END] [#][a-zA-Z_0-9]*;
-
-WS          : [ \t]+ -> skip;
-NL          : [\r\n]+;
-END         : '#end';
-ID          : [a-zA-Z][a-zA-Z_0-9]*;
+COMMENT     : ~[END] [#][a-zA-Z_0-9 ]*;
 
 IF          : 'if';
 ELIF        : 'elif';
@@ -20,15 +13,22 @@ RETURN      : 'return';
 CLASS_      : 'class';
 DEF         : 'def';
 SELF        : 'self';
+END         : '#end';
+
+WS          : [ \t]+ -> skip;
+NL          : [\r\n]+;
+ID          : [a-zA-Z][a-zA-Z_0-9]*;
 
 negation    : 'not';
 logic       : 'or' | 'and';
+multi_div   : '*' | '/';
+plus_minus  : '+' | '-';
 compare     : '>' | '<' | '=='| '!=' | '>=' | '<=';
-arithmetic  : '+' | '-' | '*' | '/';
 
-expression  : expression logic expression
+expression  : expression multi_div expression
+            | expression plus_minus expression
+            | expression logic expression
             | expression compare expression
-            | expression arithmetic expression
             | negation expression
             | ID | INT | BOOL | STRING;
 
@@ -46,3 +46,5 @@ statement   : assign | if | while | function | method;
 
 def_function: DEF ID '(' ID* (','ID)* ')' block RETURN expression? NL END;
 def_class   : CLASS_ ID '(' ID? ')' ':' NL def_function END;
+
+start: (def_function | def_class | statement | COMMENT | NL)* EOF;

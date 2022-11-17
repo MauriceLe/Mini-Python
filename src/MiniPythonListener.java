@@ -7,16 +7,6 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface MiniPythonListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link MiniPythonParser#start}.
-	 * @param ctx the parse tree
-	 */
-	void enterStart(MiniPythonParser.StartContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MiniPythonParser#start}.
-	 * @param ctx the parse tree
-	 */
-	void exitStart(MiniPythonParser.StartContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link MiniPythonParser#negation}.
 	 * @param ctx the parse tree
 	 */
@@ -37,6 +27,26 @@ public interface MiniPythonListener extends ParseTreeListener {
 	 */
 	void exitLogic(MiniPythonParser.LogicContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MiniPythonParser#multi_div}.
+	 * @param ctx the parse tree
+	 */
+	void enterMulti_div(MiniPythonParser.Multi_divContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniPythonParser#multi_div}.
+	 * @param ctx the parse tree
+	 */
+	void exitMulti_div(MiniPythonParser.Multi_divContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniPythonParser#plus_minus}.
+	 * @param ctx the parse tree
+	 */
+	void enterPlus_minus(MiniPythonParser.Plus_minusContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniPythonParser#plus_minus}.
+	 * @param ctx the parse tree
+	 */
+	void exitPlus_minus(MiniPythonParser.Plus_minusContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MiniPythonParser#compare}.
 	 * @param ctx the parse tree
 	 */
@@ -46,16 +56,6 @@ public interface MiniPythonListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCompare(MiniPythonParser.CompareContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MiniPythonParser#arithmetic}.
-	 * @param ctx the parse tree
-	 */
-	void enterArithmetic(MiniPythonParser.ArithmeticContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MiniPythonParser#arithmetic}.
-	 * @param ctx the parse tree
-	 */
-	void exitArithmetic(MiniPythonParser.ArithmeticContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniPythonParser#expression}.
 	 * @param ctx the parse tree
@@ -176,4 +176,14 @@ public interface MiniPythonListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDef_class(MiniPythonParser.Def_classContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniPythonParser#start}.
+	 * @param ctx the parse tree
+	 */
+	void enterStart(MiniPythonParser.StartContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniPythonParser#start}.
+	 * @param ctx the parse tree
+	 */
+	void exitStart(MiniPythonParser.StartContext ctx);
 }
