@@ -16,6 +16,18 @@ public class MiniPythonBaseListener implements MiniPythonListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterStart(MiniPythonParser.StartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStart(MiniPythonParser.StartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterNegation(MiniPythonParser.NegationContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -215,18 +227,6 @@ public class MiniPythonBaseListener implements MiniPythonListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDef_class(MiniPythonParser.Def_classContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterStart(MiniPythonParser.StartContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitStart(MiniPythonParser.StartContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

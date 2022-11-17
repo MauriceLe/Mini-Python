@@ -7,6 +7,16 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface MiniPythonListener extends ParseTreeListener {
 	/**
+	 * Enter a parse tree produced by {@link MiniPythonParser#start}.
+	 * @param ctx the parse tree
+	 */
+	void enterStart(MiniPythonParser.StartContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniPythonParser#start}.
+	 * @param ctx the parse tree
+	 */
+	void exitStart(MiniPythonParser.StartContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MiniPythonParser#negation}.
 	 * @param ctx the parse tree
 	 */
@@ -176,14 +186,4 @@ public interface MiniPythonListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDef_class(MiniPythonParser.Def_classContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MiniPythonParser#start}.
-	 * @param ctx the parse tree
-	 */
-	void enterStart(MiniPythonParser.StartContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MiniPythonParser#start}.
-	 * @param ctx the parse tree
-	 */
-	void exitStart(MiniPythonParser.StartContext ctx);
 }

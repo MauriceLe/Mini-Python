@@ -1,9 +1,11 @@
 grammar MiniPython;
 
+start: (def_function | def_class | statement | COMMENT | NL)* EOF;
+
 INT         : [0-9]+;
 BOOL        : 'TRUE' | 'FALSE';
 STRING      : ["].*?["] | ['].*?['];
-COMMENT     : ~[END] [#][a-zA-Z_0-9 ]*;
+COMMENT     : [#][a-zA-Z_0-9 ]*;
 
 IF          : 'if';
 ELIF        : 'elif';
@@ -46,5 +48,3 @@ statement   : assign | if | while | function | method;
 
 def_function: DEF ID '(' ID* (','ID)* ')' block RETURN expression? NL END;
 def_class   : CLASS_ ID '(' ID? ')' ':' NL def_function END;
-
-start: (def_function | def_class | statement | COMMENT | NL)* EOF;
