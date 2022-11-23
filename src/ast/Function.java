@@ -38,7 +38,7 @@ public class Function extends Statement{
 
     @Override
     public String toStringTree() {
-        return "Function: " + this.identifier.getIdentifier();
+        return "Function " + this.identifier.getIdentifier();
     }
     
 }

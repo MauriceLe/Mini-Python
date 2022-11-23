@@ -31,7 +31,9 @@ statement       : expression
                 | def_class
                 ;
 
-assignment      : ID ASSIGN expression;
+identifier      : ID;
+
+assignment      : identifier ASSIGN expression;
 
 condition       : expression COLON 
                 | LBRACKET expression RBRACKET COLON
@@ -39,7 +41,7 @@ condition       : expression COLON
 
 exp_parameter   : expression (COMMA expression)*;
 
-fun_parameter   : ID (COMMA ID)*;
+fun_parameter   : identifier (COMMA identifier)*;
 
 return          : RETURN expression;
 
@@ -49,12 +51,12 @@ if_statement    : IF condition statement*;
 elif_statement  : ELIF condition statement*;
 else_statement  : ELSE statement*;
 
-method          : ID '.' ID LBRACKET fun_parameter RBRACKET;
-function        : ID LBRACKET exp_parameter RBRACKET;
+method          : identifier '.' identifier LBRACKET fun_parameter RBRACKET;
+function        : identifier LBRACKET exp_parameter RBRACKET;
 
-def_function    : DEF ID LBRACKET fun_parameter RBRACKET COLON statement* END;
-def_method      : DEF ID LBRACKET SELF (COMMA fun_parameter)? RBRACKET COLON statement* END;
-def_class       : CLASS_ ID (COLON | LBRACKET ID RBRACKET COLON) def_method* END;
+def_function    : DEF identifier LBRACKET fun_parameter RBRACKET COLON statement* END;
+def_method      : DEF identifier LBRACKET SELF (COMMA fun_parameter)? RBRACKET COLON statement* END;
+def_class       : CLASS_ identifier (COLON | LBRACKET ID RBRACKET COLON) def_method* END;
 
 
 INT             : [0-9]+;

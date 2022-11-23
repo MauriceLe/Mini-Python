@@ -44,7 +44,7 @@ public class DefFunction extends Statement {
 
     @Override
     public String toStringTree() {
-        return "Def-Function: " + this.identifier.getIdentifier();
+        return "Def-Function " + this.identifier.getIdentifier();
     }
     
 

@@ -28,7 +28,7 @@ public class Assignment extends Statement {
         switch (i) {
             case 0: return this.identifier;
             case 1: return this.expression;
-            default: return null;
+            default: return super.getChild(i);
         }
     }
 

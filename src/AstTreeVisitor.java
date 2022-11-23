@@ -1,6 +1,5 @@
 import ast.*;
 import ast.types.*;
-import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 
@@ -38,6 +37,13 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 
     @Override 
     public Node visitIdExpression(MiniPythonParser.IdExpressionContext ctx) { 
+        Identifier identifier =  new Identifier();
+        identifier.setIdentifier(ctx.ID().getText());
+        return identifier;
+    }
+
+    @Override 
+    public Node visitIdentifier(MiniPythonParser.IdentifierContext ctx) { 
         Identifier identifier =  new Identifier();
         identifier.setIdentifier(ctx.ID().getText());
         return identifier;
@@ -134,7 +140,7 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 	@Override 
     public Node visitAssignment(MiniPythonParser.AssignmentContext ctx) { 
         Assignment assignment = new Assignment();
-        assignment.setIdentifier((Identifier) visit(ctx.ID()));
+        assignment.setIdentifier((Identifier) visit(ctx.identifier()));
         assignment.setExpression((Expression) visit(ctx.expression()));
         return assignment;
     }
@@ -157,7 +163,7 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 	@Override 
     public Node visitFunction(MiniPythonParser.FunctionContext ctx) { 
         Function function = new Function();
-        function.setIdentifier((Identifier) visit(ctx.ID()));
+        function.setIdentifier((Identifier) visit(ctx.identifier()));
 
         for (MiniPythonParser.ExpressionContext expression: ctx.exp_parameter().expression()) {
             function.setParameter((Expression) visit(expression));
@@ -169,9 +175,9 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 	@Override 
     public Node visitDef_function(MiniPythonParser.Def_functionContext ctx) { 
         DefFunction function = new DefFunction();
-        function.setIdentifier((Identifier) visit(ctx.ID()));
+        function.setIdentifier((Identifier) visit(ctx.identifier()));
 
-        for (TerminalNode identifier: ctx.fun_parameter().ID()) {
+        for (MiniPythonParser.IdentifierContext identifier: ctx.fun_parameter().identifier()) {
             function.setParameter((Identifier) visit(identifier));
         }
 
