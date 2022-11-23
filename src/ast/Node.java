@@ -23,8 +23,11 @@ public abstract class Node implements Tree {
     }
 
     @Override
-    public String toStringTree() {
-        return "";
-    };
+    public abstract String toStringTree();
+
+    @Override
+    public String toString() {
+        return toStringTree();
+    }
 
 }

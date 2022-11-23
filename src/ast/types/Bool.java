@@ -14,4 +14,9 @@ public class Bool extends Expression {
         this.value = value;
     }
 
+    @Override
+    public String toStringTree() {
+        return "Boolean: " +  this.value;
+    }
+
 }

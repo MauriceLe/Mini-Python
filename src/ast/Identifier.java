@@ -12,4 +12,9 @@ public class Identifier extends Expression {
         this.identifier = identifier;
     }
 
+    @Override
+    public String toStringTree() {
+        return "Identifier: " +  this.identifier;
+    }
+
 }

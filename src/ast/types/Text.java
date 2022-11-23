@@ -14,4 +14,9 @@ public class Text extends Expression {
         this.value = value;
     }
 
+    @Override
+    public String toStringTree() {
+        return "String: " +  this.value;
+    }
+
 }
