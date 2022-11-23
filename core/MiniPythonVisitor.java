@@ -183,6 +183,24 @@ public interface MiniPythonVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIf(MiniPythonParser.IfContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MiniPythonParser#if_statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIf_statement(MiniPythonParser.If_statementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPythonParser#elif_statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitElif_statement(MiniPythonParser.Elif_statementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPythonParser#else_statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitElse_statement(MiniPythonParser.Else_statementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MiniPythonParser#method}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

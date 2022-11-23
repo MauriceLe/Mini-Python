@@ -301,6 +301,36 @@ public interface MiniPythonListener extends ParseTreeListener {
 	 */
 	void exitIf(MiniPythonParser.IfContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MiniPythonParser#if_statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterIf_statement(MiniPythonParser.If_statementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniPythonParser#if_statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitIf_statement(MiniPythonParser.If_statementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniPythonParser#elif_statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterElif_statement(MiniPythonParser.Elif_statementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniPythonParser#elif_statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitElif_statement(MiniPythonParser.Elif_statementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniPythonParser#else_statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterElse_statement(MiniPythonParser.Else_statementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniPythonParser#else_statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitElse_statement(MiniPythonParser.Else_statementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MiniPythonParser#method}.
 	 * @param ctx the parse tree
 	 */

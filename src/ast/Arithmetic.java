@@ -2,6 +2,7 @@ package ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.antlr.v4.runtime.tree.Tree;
 
 public class Arithmetic extends Expression {
     
@@ -33,6 +34,16 @@ public class Arithmetic extends Expression {
 
     public void setOperand(Expression expression) {
         this.operands.add(expression);
+    }
+
+    @Override
+    public Tree getChild(int i) {
+        return this.operands.get(i);
+    }
+
+    @Override
+    public int getChildCount() {
+        return this.operands.size();
     }
 
     @Override

@@ -1,5 +1,6 @@
 import ast.*;
 import ast.types.*;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 
@@ -119,11 +120,6 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     public Node visitLessExpression(MiniPythonParser.LessExpressionContext ctx) { 
         return visitChildren(ctx); 
     }
-	
-	@Override 
-    public Node visitFunctionExpression(MiniPythonParser.FunctionExpressionContext ctx) { 
-        return visitChildren(ctx); 
-    }
 
 	@Override 
     public Node visitGreaterExpression(MiniPythonParser.GreaterExpressionContext ctx) { 
@@ -137,19 +133,12 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 
 	@Override 
     public Node visitAssignment(MiniPythonParser.AssignmentContext ctx) { 
-        return visitChildren(ctx); 
-    }
-
-	@Override 
-    public Node visitCondition(MiniPythonParser.ConditionContext ctx) { 
-        return visitChildren(ctx); 
+        Assignment assignment = new Assignment();
+        assignment.setIdentifier((Identifier) visit(ctx.ID()));
+        assignment.setExpression((Expression) visit(ctx.expression()));
+        return assignment;
     }
 	
-	@Override 
-    public Node visitReturn(MiniPythonParser.ReturnContext ctx) { 
-        return visitChildren(ctx); 
-    }
-
 	@Override 
     public Node visitWhile(MiniPythonParser.WhileContext ctx) { 
         return visitChildren(ctx); 
@@ -167,12 +156,37 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 	
 	@Override 
     public Node visitFunction(MiniPythonParser.FunctionContext ctx) { 
-        return visitChildren(ctx); 
+        Function function = new Function();
+        function.setIdentifier((Identifier) visit(ctx.ID()));
+
+        for (MiniPythonParser.ExpressionContext expression: ctx.exp_parameter().expression()) {
+            function.setParameter((Expression) visit(expression));
+        }
+
+        return function; 
     }
 	
 	@Override 
     public Node visitDef_function(MiniPythonParser.Def_functionContext ctx) { 
-        return visitChildren(ctx); 
+        DefFunction function = new DefFunction();
+        function.setIdentifier((Identifier) visit(ctx.ID()));
+
+        for (TerminalNode identifier: ctx.fun_parameter().ID()) {
+            function.setParameter((Identifier) visit(identifier));
+        }
+
+        for (MiniPythonParser.StatementContext statement: ctx.statement()) {
+            function.setStatement((Statement) visit(statement));
+        }
+
+        return function; 
+    }
+
+    @Override 
+    public Node visitReturn(MiniPythonParser.ReturnContext ctx) { 
+        Return ret = new Return();
+        ret.setExpression((Expression) visit(ctx.expression()));
+        return ret;
     }
 	
 	@Override 

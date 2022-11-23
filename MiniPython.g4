@@ -52,8 +52,8 @@ else_statement  : ELSE statement*;
 method          : ID '.' ID LBRACKET fun_parameter RBRACKET;
 function        : ID LBRACKET exp_parameter RBRACKET;
 
-def_function    : DEF ID LBRACKET fun_parameter RBRACKET COLON statement* return END;
-def_method      : DEF ID LBRACKET SELF (COMMA fun_parameter)? RBRACKET COLON statement* return END;
+def_function    : DEF ID LBRACKET fun_parameter RBRACKET COLON statement* END;
+def_method      : DEF ID LBRACKET SELF (COMMA fun_parameter)? RBRACKET COLON statement* END;
 def_class       : CLASS_ ID (COLON | LBRACKET ID RBRACKET COLON) def_method* END;
 
 
