@@ -52,9 +52,9 @@ elif_statement  : ELIF condition statement*;
 else_statement  : ELSE statement*;
 
 method          : identifier '.' identifier LBRACKET fun_parameter RBRACKET;
-function        : identifier LBRACKET exp_parameter RBRACKET;
+function        : identifier LBRACKET exp_parameter? RBRACKET;
 
-def_function    : DEF identifier LBRACKET fun_parameter RBRACKET COLON statement* END;
+def_function    : DEF identifier LBRACKET fun_parameter? RBRACKET COLON statement* END;
 def_method      : DEF identifier LBRACKET SELF (COMMA fun_parameter)? RBRACKET COLON statement* END;
 def_class       : CLASS_ identifier (COLON | LBRACKET ID RBRACKET COLON) def_method* END;
 
@@ -63,9 +63,6 @@ INT             : [0-9]+;
 BOOLEAN         : 'TRUE' | 'FALSE';
 STRING          : ["].*?["] | ['].*?['];
 COMMENT         : [#][a-zA-Z_0-9 ]*;
-
-WS              : [ \r\n\t]+ -> skip;
-ID              : [a-zA-Z][a-zA-Z_0-9]*;
 
 NOT             : 'not';
 OR              : 'or';
@@ -99,3 +96,6 @@ ASSIGN          : '=';
 COLON           : ':';
 DOT             : '.';
 COMMA           : ',';
+
+WS              : [ \r\n\t]+ -> skip;
+ID              : [a-zA-Z][a-zA-Z_0-9]*;
