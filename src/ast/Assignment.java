@@ -2,7 +2,7 @@ package ast;
 
 import org.antlr.v4.runtime.tree.Tree;
 
-public class Assignment extends Statement{
+public class Assignment extends Statement {
     
     private Identifier identifier;
     private Expression expression;
@@ -26,9 +26,9 @@ public class Assignment extends Statement{
     @Override
     public Tree getChild(int i) {
         switch (i) {
-            case 0: return identifier;
-            case 1: return expression;
-            default: return super.getChild(i);
+            case 0: return this.identifier;
+            case 1: return this.expression;
+            default: return null;
         }
     }
 
