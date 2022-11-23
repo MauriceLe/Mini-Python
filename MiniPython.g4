@@ -1,50 +1,99 @@
 grammar MiniPython;
 
-start: (def_function | def_class | statement | COMMENT | NL)* EOF;
+start: statement+? EOF;
 
-INT         : [0-9]+;
-BOOL        : 'TRUE' | 'FALSE';
-STRING      : ["].*?["] | ['].*?['];
-COMMENT     : [#][a-zA-Z_0-9 ]*;
+expression      : expression MULTIPLY expression        # MultiplyExpression
+                | expression DIVISION expression        # DivisionExpression  
+                | expression PLUS expression            # PlusExpression
+                | expression MINUS expression           # MinusExpression
+                | expression LESS expression            # LessExpression
+                | expression LESS_THEN expression       # LessThenExpression
+                | expression GREATER expression         # GreaterExpression
+                | expression GREATER_THEN expression    # GreaterThenExpression
+                | expression EQUAL expression           # EqualExpression
+                | expression NOT_EQUAL expression       # NotEqualExpression
+                | NOT expression                        # NotExpression
+                | function                              # FunctionExpression
+                | method                                # MethodExpression
+                | ID                                    # IdExpression
+                | INT                                   # IntExpression
+                | BOOLEAN                               # BoolExpression
+                | STRING                                # StringExpression
+                ;
 
-IF          : 'if';
-ELIF        : 'elif';
-ELSE        : 'else';
-WHILE       : 'while';
-RETURN      : 'return';
-CLASS_      : 'class';
-DEF         : 'def';
-SELF        : 'self';
-END         : '#end';
+statement       : expression
+                | assignment
+                | while 
+                | if
+                | function
+                | method
+                | def_function
+                | def_class
+                ;
 
-WS          : [ \t]+ -> skip;
-NL          : [\r\n]+;
-ID          : [a-zA-Z][a-zA-Z_0-9]*;
+assignment      : ID ASSIGN expression;
 
-negation    : 'not';
-logic       : 'or' | 'and';
-multi_div   : '*' | '/';
-plus_minus  : '+' | '-';
-compare     : '>' | '<' | '=='| '!=' | '>=' | '<=';
+condition       : expression COLON 
+                | LBRACKET expression RBRACKET COLON
+                ;
 
-expression  : expression multi_div expression
-            | expression plus_minus expression
-            | expression logic expression
-            | expression compare expression
-            | negation expression
-            | ID | INT | BOOL | STRING;
+exp_parameter   : expression (COMMA expression)*;
 
-block       : ':' NL statement*;
-param       : '(' expression* (','expression)* ')';
+fun_parameter   : ID (COMMA ID)*;
 
-if          : IF expression block (ELIF expression block)* (ELSE block)? END;
-while       : WHILE expression ':' NL statement* END;
-method      : ID '.' ID param NL;
-function    : ID param NL;
-object      : ID param NL;
+return          : RETURN expression;
 
-assign      : ID '=' (expression | object | function | method) NL;
-statement   : assign | if | while | function | method;
+while           : WHILE condition statement* END;
+if              : if_statement elif_statement* else_statement? END;
+if_statement    : IF condition statement*;
+elif_statement  : ELIF condition statement*;
+else_statement  : ELSE statement*;
 
-def_function: DEF ID '(' ID* (','ID)* ')' block RETURN expression? NL END;
-def_class   : CLASS_ ID '(' ID? ')' ':' NL def_function END;
+method          : ID '.' ID LBRACKET fun_parameter RBRACKET;
+function        : ID LBRACKET exp_parameter RBRACKET;
+
+def_function    : DEF ID LBRACKET fun_parameter RBRACKET COLON statement* return END;
+def_method      : DEF ID LBRACKET SELF (COMMA fun_parameter)? RBRACKET COLON statement* return END;
+def_class       : CLASS_ ID (COLON | LBRACKET ID RBRACKET COLON) def_method* END;
+
+
+INT             : [0-9]+;
+BOOLEAN         : 'TRUE' | 'FALSE';
+STRING          : ["].*?["] | ['].*?['];
+COMMENT         : [#][a-zA-Z_0-9 ]*;
+
+WS              : [ \r\n\t]+ -> skip;
+ID              : [a-zA-Z][a-zA-Z_0-9]*;
+
+NOT             : 'not';
+OR              : 'or';
+AND             : 'and';
+
+MULTIPLY        : '*';
+DIVISION        : '/';
+PLUS            : '+';
+MINUS           : '-';
+
+LESS            : '<';
+GREATER         : '>';
+LESS_THEN       : '<=';
+GREATER_THEN    : '>=';
+EQUAL           : '==';
+NOT_EQUAL       : '!=';
+
+IF              : 'if';
+ELIF            : 'elif';
+ELSE            : 'else';
+WHILE           : 'while';
+RETURN          : 'return';
+CLASS_          : 'class';
+DEF             : 'def';
+SELF            : 'self';
+END             : '#end';
+
+LBRACKET        : '(';
+RBRACKET        : ')';
+ASSIGN          : '=';
+COLON           : ':';
+DOT             : '.';
+COMMA           : ',';
