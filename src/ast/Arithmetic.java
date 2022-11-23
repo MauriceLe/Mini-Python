@@ -20,10 +20,6 @@ public class Arithmetic extends Expression {
         MINUS
     }
 
-    public Operator getOperator() {
-        return this.operator;
-    }
-
     public void setOperator(Operator operator) {
         this.operator = operator;
     }
@@ -48,7 +44,7 @@ public class Arithmetic extends Expression {
 
     @Override
     public String toStringTree() {
-        return "Operator: " +  this.operator;
+        return "Operator " +  this.operator;
     }
 
 }

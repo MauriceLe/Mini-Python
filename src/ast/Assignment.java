@@ -39,7 +39,7 @@ public class Assignment extends Statement {
 
     @Override
     public String toStringTree() {
-        return "Assign";
+        return "Assignment";
     }
 
 }

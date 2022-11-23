@@ -16,7 +16,7 @@ public class Int extends Expression {
 
     @Override
     public String toStringTree() {
-        return "Int: " +  this.value;
+        return "Int " +  this.value;
     }
 
 }

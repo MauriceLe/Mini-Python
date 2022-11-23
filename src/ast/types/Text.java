@@ -16,7 +16,7 @@ public class Text extends Expression {
 
     @Override
     public String toStringTree() {
-        return "String: " +  this.value;
+        return "String " +  this.value;
     }
 
 }

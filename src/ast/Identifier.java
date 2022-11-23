@@ -14,7 +14,7 @@ public class Identifier extends Expression {
 
     @Override
     public String toStringTree() {
-        return "Identifier: " +  this.identifier;
+        return "Identifier " +  this.identifier;
     }
 
 }

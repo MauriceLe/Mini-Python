@@ -1,6 +1,6 @@
 grammar MiniPython;
 
-start: statement+? EOF;
+start: (statement)* EOF;
 
 expression      : expression MULTIPLY expression        # MultiplyExpression
                 | expression DIVISION expression        # DivisionExpression  
@@ -39,30 +39,28 @@ condition       : expression COLON
                 | LBRACKET expression RBRACKET COLON
                 ;
 
-exp_parameter   : expression (COMMA expression)*;
+exp_parameter   : expression? (COMMA expression)*;
 
-fun_parameter   : identifier (COMMA identifier)*;
+fun_parameter   : identifier? (COMMA identifier)*;
 
 return          : RETURN expression;
 
-while           : WHILE condition statement* END;
-if              : if_statement elif_statement* else_statement? END;
-if_statement    : IF condition statement*;
-elif_statement  : ELIF condition statement*;
-else_statement  : ELSE statement*;
+while           : WHILE condition NL statement+? END;
+if              : if_statement elif_statement+? else_statement? END;
+if_statement    : IF condition NL statement+?;
+elif_statement  : ELIF condition NL statement+?;
+else_statement  : ELSE statement+?;
 
 method          : identifier '.' identifier LBRACKET fun_parameter RBRACKET;
-function        : identifier LBRACKET exp_parameter? RBRACKET;
+function        : identifier LBRACKET exp_parameter RBRACKET;
 
-def_function    : DEF identifier LBRACKET fun_parameter? RBRACKET COLON statement* END;
-def_method      : DEF identifier LBRACKET SELF (COMMA fun_parameter)? RBRACKET COLON statement* END;
-def_class       : CLASS_ identifier (COLON | LBRACKET ID RBRACKET COLON) def_method* END;
-
+def_function    : DEF identifier LBRACKET fun_parameter RBRACKET COLON NL statement* END;
+def_method      : DEF identifier LBRACKET SELF (COMMA fun_parameter)? RBRACKET COLON NL statement* END;
+def_class       : CLASS_ identifier (COLON | LBRACKET ID RBRACKET COLON) NL def_method* END;
 
 INT             : [0-9]+;
 BOOLEAN         : 'TRUE' | 'FALSE';
 STRING          : ["].*?["] | ['].*?['];
-COMMENT         : [#][a-zA-Z_0-9 ]*;
 
 NOT             : 'not';
 OR              : 'or';
@@ -88,7 +86,6 @@ RETURN          : 'return';
 CLASS_          : 'class';
 DEF             : 'def';
 SELF            : 'self';
-END             : '#end';
 
 LBRACKET        : '(';
 RBRACKET        : ')';
@@ -97,5 +94,8 @@ COLON           : ':';
 DOT             : '.';
 COMMA           : ',';
 
-WS              : [ \r\n\t]+ -> skip;
+NL              : [\n];
+END             : '#end' NL;
+
+WS              : [ \r\t]+ -> skip;
 ID              : [a-zA-Z][a-zA-Z_0-9]*;
