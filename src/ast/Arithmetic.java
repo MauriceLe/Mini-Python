@@ -1,9 +1,10 @@
 package ast;
 
+import java.util.List;
+
 public class Arithmetic extends Expression {
     
-    private Expression left;
-    private Expression right;
+    private List<Expression> operands;
     private Operator operator;
 
     public enum Operator {
@@ -21,20 +22,17 @@ public class Arithmetic extends Expression {
         this.operator = operator;
     }
 
-    public Expression getLeft() {
-        return this.left;
+    public List<Expression> getOperands() {
+        return this.operands;
     }
 
-    public Expression getRight() {
-        return this.right;
+    public void setOperand(Expression expression) {
+        this.operands.add(expression);
     }
 
-    public void setLeft(Expression left) {
-        this.left = left;
-    }
-
-    public void setRight(Expression right) {
-        this.right = right;
+    @Override
+    public String toStringTree() {
+        return "Operator: " +  this.operator;
     }
 
 }

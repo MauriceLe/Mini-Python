@@ -2,7 +2,7 @@ import ast.*;
 import ast.types.*;
 
 public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
-    
+
     @Override 
     public Node visitStart(MiniPythonParser.StartContext ctx) { 
         AstTree tree = new AstTree();
@@ -46,8 +46,11 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     public Node visitMultiplyExpression(MiniPythonParser.MultiplyExpressionContext ctx) {
         Arithmetic arithmetic = new Arithmetic();
         arithmetic.setOperator(Arithmetic.Operator.MULTI);
-        arithmetic.setLeft((Expression) visit(ctx.expression(0)));
-        arithmetic.setRight((Expression) visit(ctx.expression(1)));
+ 
+        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
+            arithmetic.setOperand((Expression) visit(expression));
+        }
+
         return arithmetic;
     }
 
@@ -55,8 +58,11 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     public Node visitDivisionExpression(MiniPythonParser.DivisionExpressionContext ctx) { 
         Arithmetic arithmetic = new Arithmetic();
         arithmetic.setOperator(Arithmetic.Operator.DIVIS);
-        arithmetic.setLeft((Expression) visit(ctx.expression(0)));
-        arithmetic.setRight((Expression) visit(ctx.expression(1)));
+    
+        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
+            arithmetic.setOperand((Expression) visit(expression));
+        }
+
         return arithmetic;
     }
 
@@ -64,8 +70,11 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     public Node visitPlusExpression(MiniPythonParser.PlusExpressionContext ctx) { 
         Arithmetic arithmetic = new Arithmetic();
         arithmetic.setOperator(Arithmetic.Operator.PLUS);
-        arithmetic.setLeft((Expression) visit(ctx.expression(0)));
-        arithmetic.setRight((Expression) visit(ctx.expression(1)));
+    
+        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
+            arithmetic.setOperand((Expression) visit(expression));
+        }
+
         return arithmetic;
     }
 
@@ -73,8 +82,11 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     public Node visitMinusExpression(MiniPythonParser.MinusExpressionContext ctx) { 
         Arithmetic arithmetic = new Arithmetic();
         arithmetic.setOperator(Arithmetic.Operator.MINUS);
-        arithmetic.setLeft((Expression) visit(ctx.expression(0)));
-        arithmetic.setRight((Expression) visit(ctx.expression(1)));
+    
+        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
+            arithmetic.setOperand((Expression) visit(expression));
+        }
+
         return arithmetic;
     }
 	
