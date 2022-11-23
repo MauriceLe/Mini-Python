@@ -1,11 +1,16 @@
 package ast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Arithmetic extends Expression {
     
     private List<Expression> operands;
     private Operator operator;
+
+    public Arithmetic() {
+        operands = new ArrayList<>();
+    }
 
     public enum Operator {
         MULTI,
