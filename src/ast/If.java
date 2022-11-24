@@ -33,6 +33,9 @@ public class If extends Statement {
     }
 
     public void setElifStatement(Expression expression, Statement statements) {
+        if(this.elif_statements.size() <= this.elif_condition.indexOf(expression)){
+            this.elif_statements.add(new ArrayList<Statement>());
+        }
         this.elif_statements.get(this.elif_condition.indexOf(expression)).add(statements);
     }
 

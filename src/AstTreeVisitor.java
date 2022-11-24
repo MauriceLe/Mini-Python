@@ -205,16 +205,16 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
         if(ctx.elif_statement() != null){
             for (MiniPythonParser.Elif_statementContext elif: ctx.elif_statement()) {
                 for (MiniPythonParser.StatementContext statement: elif.statement()) {
-                    if_statement.setElifCondition((Expression) visit(elif.condition().expression()));
-                    if_statement.setElifStatement((Expression) visit(elif.condition().expression()), 
-                    (Statement) visit(statement));
+                    Expression exp = (Expression) visit(elif.condition().expression());
+                    if_statement.setElifCondition(exp);
+                    if_statement.setElifStatement(exp, (Statement) visit(statement));
                 }
         }
         }
 
         if(ctx.else_statement() != null){
             for (MiniPythonParser.StatementContext statement: ctx.else_statement().statement()) {
-                if_statement.setElseStatement((Expression) visit(statement));
+                if_statement.setElseStatement((Statement) visit(statement));
             }
         }
 
