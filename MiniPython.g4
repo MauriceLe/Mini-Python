@@ -46,10 +46,10 @@ fun_parameter   : identifier? (COMMA identifier)*;
 return          : RETURN expression;
 
 while           : WHILE condition NL statement+ END;
-if              : if_statement elif_statement+? else_statement? END;
+if              : if_statement elif_statement* else_statement? END;
 if_statement    : IF condition NL statement+;
 elif_statement  : ELIF condition NL statement+;
-else_statement  : ELSE statement+?;
+else_statement  : ELSE statement+;
 
 method          : identifier '.' identifier LBRACKET fun_parameter RBRACKET;
 function        : identifier LBRACKET exp_parameter RBRACKET;
