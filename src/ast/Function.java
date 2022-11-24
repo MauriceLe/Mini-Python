@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.antlr.v4.runtime.tree.Tree;
 
-public class Function extends Statement{
+public class Function extends Expression{
 
     private Identifier identifier;
     private List<Expression> parameters;
@@ -26,6 +26,10 @@ public class Function extends Statement{
         this.parameters.add(parameter);
     }
     
+    public List<Expression> getParameters() {
+        return this.parameters;
+    }
+
     @Override
     public int getChildCount() {
         return this.parameters.size();

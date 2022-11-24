@@ -1,11 +1,18 @@
 import ast.*;
 import ast.types.*;
+import symbol.NativeFunction;
+import symbol.Scope;
 
 public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
+
+    private Scope scope;
 
     @Override 
     public Node visitStart(MiniPythonParser.StartContext ctx) { 
         AstTree tree = new AstTree();
+        this.scope = new Scope();
+        this.scope.bind("print", NativeFunction.print);
+        this.scope.bind("input", NativeFunction.input);
 
         for (MiniPythonParser.StatementContext statement: ctx.statement()) {
             tree.getStatements().add((Statement) visit(statement));
@@ -240,7 +247,14 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 
     @Override 
     public Node visitFunctionExpression(MiniPythonParser.FunctionExpressionContext ctx) { 
-        return visit(ctx.function()); 
+        Function function = new Function();
+        function.setIdentifier((Identifier) visit(ctx.function().identifier()));
+
+        for (MiniPythonParser.ExpressionContext expression: ctx.function().exp_parameter().expression()) {
+            function.setParameter((Expression) visit(expression));
+        }
+
+        return function; 
     }
 	
 	@Override 
@@ -259,6 +273,9 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     public Node visitDef_function(MiniPythonParser.Def_functionContext ctx) { 
         DefFunction function = new DefFunction();
         function.setIdentifier((Identifier) visit(ctx.identifier()));
+        symbol.Function f = new symbol.Function(function);
+        f.setScope(new Scope(scope));
+        this.scope.bind(function.getIdentifier().getIdentifier(), f);
 
         for (MiniPythonParser.IdentifierContext identifier: ctx.fun_parameter().identifier()) {
             function.setParameter((Identifier) visit(identifier));
