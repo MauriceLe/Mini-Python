@@ -47,15 +47,15 @@ return          : RETURN expression;
 
 while           : WHILE condition NL statement+ END;
 if              : if_statement elif_statement* else_statement? END;
-if_statement    : IF condition NL statement+;
-elif_statement  : ELIF condition NL statement+;
-else_statement  : ELSE statement+;
+if_statement    : IF condition NL (statement NL)+;
+elif_statement  : ELIF condition NL (statement NL)+;
+else_statement  : ELSE (statement NL)+;
 
 method          : identifier '.' identifier LBRACKET fun_parameter RBRACKET;
 function        : identifier LBRACKET exp_parameter RBRACKET;
 
-def_function    : DEF identifier LBRACKET fun_parameter RBRACKET COLON NL statement+ END;
-def_method      : DEF identifier LBRACKET SELF (COMMA fun_parameter)? RBRACKET COLON NL statement+ END;
+def_function    : DEF identifier LBRACKET fun_parameter RBRACKET COLON NL (statement NL)+ END;
+def_method      : DEF identifier LBRACKET SELF (COMMA fun_parameter)? RBRACKET COLON NL (statement NL)+ END;
 def_class       : CLASS_ identifier (COLON | LBRACKET identifier RBRACKET COLON) NL def_method+ END;
 
 INT             : [0-9]+;
