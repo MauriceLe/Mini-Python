@@ -5,13 +5,13 @@ import java.util.List;
 
 import org.antlr.v4.runtime.tree.Tree;
 
-public class DefFunction extends Statement {
-    
+public class DefMethod extends Statement {
+
     private Identifier identifier;
     private List<Identifier> parameters;
     private List<Statement> statements;
 
-    public DefFunction() {
+    public DefMethod() {
         parameters = new ArrayList<>();
         statements = new ArrayList<>();
     }
@@ -44,7 +44,7 @@ public class DefFunction extends Statement {
 
     @Override
     public String toStringTree() {
-        return "Def-Function " + this.identifier.getIdentifier();
+        return "Def-Method " + this.identifier.getIdentifier();
     }
     
 }

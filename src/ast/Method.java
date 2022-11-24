@@ -5,15 +5,13 @@ import java.util.List;
 
 import org.antlr.v4.runtime.tree.Tree;
 
-public class DefFunction extends Statement {
+public class Method extends Statement {
     
     private Identifier identifier;
     private List<Identifier> parameters;
-    private List<Statement> statements;
 
-    public DefFunction() {
+    public Method() {
         parameters = new ArrayList<>();
-        statements = new ArrayList<>();
     }
 
     public Identifier getIdentifier() {
@@ -27,24 +25,20 @@ public class DefFunction extends Statement {
     public void setParameter(Identifier parameter) {
         this.parameters.add(parameter);
     }
-
-    public void setStatement(Statement statement) {
-        this.statements.add(statement);
-    }
     
     @Override
     public int getChildCount() {
-        return this.statements.size();
+        return this.parameters.size();
     }
 
     @Override
     public Tree getChild(int i) {
-        return this.statements.get(i);
+        return this.parameters.get(i);
     }
 
     @Override
     public String toStringTree() {
-        return "Def-Function " + this.identifier.getIdentifier();
+        return "Method " + this.identifier.getIdentifier();
     }
-    
+
 }

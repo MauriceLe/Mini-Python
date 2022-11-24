@@ -99,42 +99,81 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 	
 	@Override 
     public Node visitEqualExpression(MiniPythonParser.EqualExpressionContext ctx) { 
-        return visitChildren(ctx); 
+        Compare compare = new Compare();
+        compare.setOperator(Compare.Operator.Equal);
+
+        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
+            compare.setOperand((Expression) visit(expression));
+        }
+
+        return compare;
     }
 	
 	@Override 
     public Node visitNotExpression(MiniPythonParser.NotExpressionContext ctx) { 
-        return visitChildren(ctx); 
-    }
-	
-	@Override 
-    public Node visitMethodExpression(MiniPythonParser.MethodExpressionContext ctx) { 
-        return visitChildren(ctx);
+        Negation not = new Negation();
+        not.setExpression((Expression) visit(ctx.expression()));
+        return not;
     }
 	
 	@Override 
     public Node visitGreaterThenExpression(MiniPythonParser.GreaterThenExpressionContext ctx) { 
-        return visitChildren(ctx); 
+        Compare compare = new Compare();
+        compare.setOperator(Compare.Operator.Greater_Then);
+
+        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
+            compare.setOperand((Expression) visit(expression));
+        }
+
+        return compare;
     }
 	
 	@Override 
     public Node visitNotEqualExpression(MiniPythonParser.NotEqualExpressionContext ctx) { 
-        return visitChildren(ctx); 
+        Compare compare = new Compare();
+        compare.setOperator(Compare.Operator.NotEqual);
+
+        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
+            compare.setOperand((Expression) visit(expression));
+        }
+
+        return compare;
     }
 	
 	@Override 
     public Node visitLessExpression(MiniPythonParser.LessExpressionContext ctx) { 
-        return visitChildren(ctx); 
+        Compare compare = new Compare();
+        compare.setOperator(Compare.Operator.Less);
+
+        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
+            compare.setOperand((Expression) visit(expression));
+        }
+
+        return compare;
     }
 
 	@Override 
     public Node visitGreaterExpression(MiniPythonParser.GreaterExpressionContext ctx) { 
-        return visitChildren(ctx); 
+        Compare compare = new Compare();
+        compare.setOperator(Compare.Operator.Greater);
+
+        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
+            compare.setOperand((Expression) visit(expression));
+        }
+
+        return compare;
     }
 
 	@Override 
     public Node visitLessThenExpression(MiniPythonParser.LessThenExpressionContext ctx) { 
-        return visitChildren(ctx); 
+        Compare compare = new Compare();
+        compare.setOperator(Compare.Operator.Less_Then);
+
+        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
+            compare.setOperand((Expression) visit(expression));
+        }
+
+        return compare;
     }
 
 	@Override 
@@ -152,12 +191,52 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 	
 	@Override 
     public Node visitIf(MiniPythonParser.IfContext ctx) { 
-        return visitChildren(ctx); 
+        If if_statement = new If();
+        if_statement.setIfCondition((Expression) visit(ctx.if_statement().condition().expression()));
+
+        for (MiniPythonParser.StatementContext statement: ctx.if_statement().statement()) {
+            if_statement.setIfStatement((Statement) visit(statement));
+        }
+
+        for (MiniPythonParser.StatementContext statement: ctx.if_statement().statement()) {
+            if_statement.setIfStatement((Statement) visit(statement));
+        }
+
+        for (MiniPythonParser.Elif_statementContext elif: ctx.elif_statement()) {
+            for (MiniPythonParser.StatementContext statement: elif.statement()) {
+                if_statement.setElifCondition((Expression) visit(elif.condition().expression()));
+                if_statement.setElifStatement((Expression) visit(elif.condition().expression()), 
+                (Statement) visit(statement));
+            }
+        }
+
+        for (MiniPythonParser.StatementContext statement: ctx.else_statement().statement()) {
+            if_statement.setElseStatement((Expression) visit(statement));
+        }
+
+        return if_statement;
     }
 	
+    @Override 
+    public Node visitMethodExpression(MiniPythonParser.MethodExpressionContext ctx) { 
+        return visit(ctx.method());
+    }
+
 	@Override 
     public Node visitMethod(MiniPythonParser.MethodContext ctx) { 
-        return visitChildren(ctx); 
+        Method method = new Method();
+        method.setIdentifier((Identifier) visit(ctx.identifier(0)));
+
+        for (MiniPythonParser.IdentifierContext parameter: ctx.identifier()) {
+            method.setParameter((Identifier) visit(parameter));
+        }
+
+        return method;
+    }
+
+    @Override 
+    public Node visitFunctionExpression(MiniPythonParser.FunctionExpressionContext ctx) { 
+        return visit(ctx.function()); 
     }
 	
 	@Override 
@@ -197,12 +276,34 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 	
 	@Override 
     public Node visitDef_method(MiniPythonParser.Def_methodContext ctx) { 
-        return visitChildren(ctx); 
+        DefMethod method = new DefMethod();
+        method.setIdentifier((Identifier) visit(ctx.identifier()));
+
+        for (MiniPythonParser.IdentifierContext identifier: ctx.fun_parameter().identifier()) {
+            method.setParameter((Identifier) visit(identifier));
+        }
+
+        for (MiniPythonParser.StatementContext statement: ctx.statement()) {
+            method.setStatement((Statement) visit(statement));
+        }
+
+        return method;
     }
 	
 	@Override 
     public Node visitDef_class(MiniPythonParser.Def_classContext ctx) { 
-        return visitChildren(ctx); 
+        DefClass new_class = new DefClass();
+        new_class.setIdentifier((Identifier) visit(ctx.identifier(0)));
+
+        if (ctx.identifier(1) != null) {
+            new_class.setSuperclass((Identifier) visit(ctx.identifier(1)));
+        }
+        
+        for (MiniPythonParser.Def_methodContext method: ctx.def_method()) {
+            new_class.setMethod((Method) visit(method));
+        }
+
+        return new_class;
     }
 
 }

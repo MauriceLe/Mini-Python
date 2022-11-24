@@ -45,18 +45,18 @@ fun_parameter   : identifier? (COMMA identifier)*;
 
 return          : RETURN expression;
 
-while           : WHILE condition NL statement+? END;
+while           : WHILE condition NL statement+ END;
 if              : if_statement elif_statement+? else_statement? END;
-if_statement    : IF condition NL statement+?;
-elif_statement  : ELIF condition NL statement+?;
+if_statement    : IF condition NL statement+;
+elif_statement  : ELIF condition NL statement+;
 else_statement  : ELSE statement+?;
 
 method          : identifier '.' identifier LBRACKET fun_parameter RBRACKET;
 function        : identifier LBRACKET exp_parameter RBRACKET;
 
-def_function    : DEF identifier LBRACKET fun_parameter RBRACKET COLON NL statement* END;
-def_method      : DEF identifier LBRACKET SELF (COMMA fun_parameter)? RBRACKET COLON NL statement* END;
-def_class       : CLASS_ identifier (COLON | LBRACKET ID RBRACKET COLON) NL def_method* END;
+def_function    : DEF identifier LBRACKET fun_parameter RBRACKET COLON NL statement+ END;
+def_method      : DEF identifier LBRACKET SELF (COMMA fun_parameter)? RBRACKET COLON NL statement+ END;
+def_class       : CLASS_ identifier (COLON | LBRACKET identifier RBRACKET COLON) NL def_method+ END;
 
 INT             : [0-9]+;
 BOOLEAN         : 'TRUE' | 'FALSE';
@@ -94,7 +94,7 @@ COLON           : ':';
 DOT             : '.';
 COMMA           : ',';
 
-NL              : [\n];
+NL              : [\r\n];
 END             : '#end' NL;
 
 WS              : [ \r\t]+ -> skip;
