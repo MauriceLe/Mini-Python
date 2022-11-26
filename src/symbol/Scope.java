@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Scope {
     
-    private final Scope parent;
+    private Scope parent;
     private Map<String, Symbol> symbols;
 
     public Scope(Scope parent){
@@ -20,7 +20,6 @@ public class Scope {
 
     public void bind(String id, Symbol s){
         this.symbols.put(id, s);
-        s.setScope(this);
     }
 
     public Symbol resolve(String id){
@@ -34,15 +33,21 @@ public class Scope {
         }
     }
 
-    
+    public Scope getParentScope(){
+        return this.parent;
+    }
+
+    public void setParentScope(Scope s){
+        this.parent = s;
+    }
 
     @Override
     public String toString(){
-        String out = "(";
+        String out = "";
         if(this.parent != null){
-            out = out + "(" + this.parent.toString() + ")";
+            out = out +this.parent.toString();
         }
-        out = out + this.symbols.toString() + ")";
+        out = out + this.symbols.toString();
         return out;
     }
 

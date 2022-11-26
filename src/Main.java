@@ -2,6 +2,7 @@ import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import ast.AstTree;
 
@@ -14,6 +15,11 @@ public class Main {
         ParseTree tree = parser.start();
         AstTreeVisitor visitor = new AstTreeVisitor();
         AstTree ast = (AstTree) visitor.visit(tree);
+
+        ParseTreeWalker walker = new ParseTreeWalker();
+        SymbolListener listener = new SymbolListener();
+        walker.walk(listener, tree);
+
         TreeViewer viewer = new TreeViewer(null, ast);
         viewer.open();
     }

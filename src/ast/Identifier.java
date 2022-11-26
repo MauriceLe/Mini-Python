@@ -4,6 +4,12 @@ public class Identifier extends Expression {
     
     private String identifier;
 
+    public Identifier(){}
+
+    public Identifier(String i){
+        this.identifier = i;
+    }
+
     public String getIdentifier() {
         return this.identifier;
     }
