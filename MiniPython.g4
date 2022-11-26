@@ -49,7 +49,7 @@ while           : WHILE condition statement+? END;
 if              : if_statement elif_statement* else_statement? END;
 if_statement    : IF condition statement+?;
 elif_statement  : ELIF condition statement+?;
-else_statement  : ELSE statement+?;
+else_statement  : ELSE COLON statement+?;
 
 method          : identifier '.' identifier LBRACKET fun_parameter RBRACKET;
 function        : identifier LBRACKET exp_parameter RBRACKET;

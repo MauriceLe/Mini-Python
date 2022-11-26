@@ -7,7 +7,7 @@ import ast.AstTree;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        MiniPythonLexer lexer = new MiniPythonLexer(CharStreams.fromFileName("src/../tests/test.minipy"));
+        MiniPythonLexer lexer = new MiniPythonLexer(CharStreams.fromFileName("src/../tests/main.mipy"));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         MiniPythonParser parser = new MiniPythonParser(tokens);
 
