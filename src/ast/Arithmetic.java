@@ -32,6 +32,10 @@ public class Arithmetic extends Expression {
         this.operands.add(expression);
     }
 
+    public Operator getOperator(){
+        return this.operator;
+    }
+
     @Override
     public Tree getChild(int i) {
         return this.operands.get(i);

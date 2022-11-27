@@ -31,6 +31,14 @@ public class Compare extends Expression {
         this.operands.add(expression);
     }
 
+    public List<Expression> getOperands() {
+        return this.operands;
+    }
+
+    public Operator getOperator(){
+        return this.operator;
+    }
+
     @Override
     public Tree getChild(int i) {
         return this.operands.get(i);
