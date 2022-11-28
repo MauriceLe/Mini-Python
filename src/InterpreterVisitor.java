@@ -1,5 +1,6 @@
 import ast.*;
 import ast.types.*;
+
 import java.util.List;
 import visitor.AstVisitor;
 import java.util.stream.Collectors;
@@ -11,6 +12,8 @@ public class InterpreterVisitor implements AstVisitor<Object>{
     @Override
     public Object visit(AstTree node) {
         env = new Environment();
+        env.define("print", NativeFun.print);
+        env.define("input", NativeFun.input);
         node.getBlock().accept(this);
         return env.getObjects();
     }
@@ -129,9 +132,15 @@ public class InterpreterVisitor implements AstVisitor<Object>{
 
     @Override
     public Object visit(Function node) {
+
         Fun fun = (Fun) this.env.get(node.getIdentifier().getIdentifier());
+
         List<Object> args = node.getParameters().stream().
         map(x -> x.accept(this)).collect(Collectors.toList());
+
+        if(fun instanceof NativeFun){
+            return ((NativeFun)fun).call(args);
+        }
 
         Environment prev = this.env;
 

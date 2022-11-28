@@ -1,7 +1,6 @@
 package symbol;
 
-import java.util.ArrayList;
-import ast.Expression;
+import java.util.List;
 
 public class Function extends Symbol implements Callable{
 
@@ -21,7 +20,7 @@ public class Function extends Symbol implements Callable{
     }
 
     @Override
-    public Object call(ArrayList<Expression> args) {
+    public Object call(List<Object> args) {
         return null;
     }
 

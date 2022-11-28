@@ -21,11 +21,10 @@ public class Environment {
     }
 
     public Object get(String name) {
-
         if (this.values.containsKey(name)){
-            this.values.get(name);
+            return this.values.get(name);
         } else if(this.enclosing != null) {
-            this.enclosing.get(name);
+            return this.enclosing.get(name);
         }
 
         return null;

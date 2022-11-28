@@ -1,7 +1,1 @@
-def func1(a, b):
-    return a + b
-#end
-
-test = func1(10, 20)
-
-
+input()

@@ -1,12 +1,16 @@
-package symbol;
-
 import java.util.List;
 import java.util.Iterator;
 import java.util.Scanner;
+import ast.Node;
+import symbol.Callable;
 
-public abstract class NativeFunction extends Function{
+public abstract class NativeFun extends Fun implements Callable{
 
-    public static final NativeFunction print = new NativeFunction() {
+    public NativeFun(Environment env, Node node) {
+        super(env, node);
+    }
+
+    public static final NativeFun print = new NativeFun(null, null) {
         @Override
         public Object call(List<Object> args){
             String out = "";
@@ -17,7 +21,7 @@ public abstract class NativeFunction extends Function{
             return null;
         }
     };
-    public static final NativeFunction input = new NativeFunction() {
+    public static final NativeFun input = new NativeFun(null, null) {
         private Scanner sc = new Scanner(System.in);
 
         @Override
@@ -25,4 +29,5 @@ public abstract class NativeFunction extends Function{
             return this.sc.nextLine();
         }
     };
+
 }
