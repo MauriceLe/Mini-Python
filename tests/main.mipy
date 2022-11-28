@@ -1,7 +1,8 @@
-def a(x, y):
-    z = x * y
-    print(z)
+def mult(x, y):
+    return x * y
 #end
 
-i = 7
-a(i,6)
+a = 7
+b = 10
+print(TRUE)
+print(mult(a, b))

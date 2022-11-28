@@ -157,7 +157,12 @@ public class InterpreterVisitor implements AstVisitor<Object>{
         }
 
         for(Statement stmt: ((DefFunction)fun.getNode()).getBody().getStatements()){
-            stmt.accept(this);
+            try{
+                Return ret = (Return)stmt;
+                return ret.accept(this);
+            } catch(Exception e){
+                stmt.accept(this);
+            }
         }
 
         this.env = prev;
