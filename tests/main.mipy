@@ -1,21 +1,7 @@
-a = 1 + 2
-print(a)
-
-a = 10 - 5
-a = "foo"
-
 def func1(a, b):
-    c = a + b
+    return a + b
 #end
 
-1 == 1
-7 >= 1 + 2
-
-a=1
-
-if (10 > 5):
-    print(a)
-#end
-
+test = func1(10, 20)
 
 

@@ -16,21 +16,19 @@ public class Environment {
         this.values = new LinkedHashMap<>();
     }
 
-    public void define(String name) {
-        
+    public void define(String name, Object object) {
+        this.values.put(name, object);
     }
 
-    public void assign(String name, Object value){
-        if(this.values.containsKey(name)){
-            this.values.put(name, value);
-        }
-        else if(this.enclosing != null) {
-            this.enclosing.assign(name, value);
-        }
-    }
+    public Object get(String name) {
 
-    public Object getObject(String name) {
-        return values.get(name);
+        if (this.values.containsKey(name)){
+            this.values.get(name);
+        } else if(this.enclosing != null) {
+            this.enclosing.get(name);
+        }
+
+        return null;
     }
 
     public Object getObjects() {

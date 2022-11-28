@@ -12,7 +12,7 @@ public class InterpreterVisitor implements AstVisitor<Object>{
     public Object visit(AstTree node) {
         env = new Environment();
         node.getBlock().accept(this);
-        return null;
+        return env.getObjects();
     }
 
     @Override
@@ -108,6 +108,7 @@ public class InterpreterVisitor implements AstVisitor<Object>{
 
     @Override
     public Object visit(Block node) {
+        this.env = new Environment(env);
 
         for (Statement statement: node.getStatements()) {
             statement.accept(this);
@@ -118,14 +119,6 @@ public class InterpreterVisitor implements AstVisitor<Object>{
 
     @Override
     public Object visit(If node) {
-
-        if ((Boolean) node.getCondition().accept(this)) {
-            return node.getIfBlock().accept(this);
-        }
-        else if (node.getElseBlock() != null) {
-            return node.getElseBlock().accept(this);
-        }
-
         return null;
     }
 
@@ -136,6 +129,20 @@ public class InterpreterVisitor implements AstVisitor<Object>{
 
     @Override
     public Object visit(Function node) {
+        Fun fun = (Fun) this.env.get(node.getIdentifier().getIdentifier());
+        List<Object> args = node.getParameters().stream().
+        map(x -> x.accept(this)).collect(Collectors.toList());
+
+        Environment prev = this.env;
+
+        for (int i=0; i < args.size(); i++) {
+            this.env.define(((DefFunction) fun.getNode()).getParameter().get(i).getIdentifier(), args.get(i));
+        }
+
+        fun.getNode().accept(this);
+
+        this.env = prev;
+
         return null;
     }
 
@@ -146,6 +153,7 @@ public class InterpreterVisitor implements AstVisitor<Object>{
 	
 	@Override
     public Object visit(Assignment node) {
+        this.env.define(node.getIdentifier().getIdentifier(), node.getExpression().accept(this));
         return null;
     }
 
@@ -156,11 +164,15 @@ public class InterpreterVisitor implements AstVisitor<Object>{
 
     @Override
     public Object visit(DefFunction node) {
+        Fun fun = new Fun(this.env, node);
+        this.env.define(node.getIdentifier().getIdentifier(), fun);
         return null;
     }
 
     @Override
     public Object visit(DefMethod node) {
+        Fun method = new Fun(this.env, node);
+        this.env.define(node.getIdentifier().getIdentifier(), method);
         return null;
     }
 

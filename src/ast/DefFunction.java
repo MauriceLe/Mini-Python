@@ -23,6 +23,10 @@ public class DefFunction extends Statement {
         this.identifier = identifier;
     }
 
+    public List<Identifier> getParameter() {
+        return this.parameters;
+    }
+
     public void setParameter(Identifier parameter) {
         this.parameters.add(parameter);
     }

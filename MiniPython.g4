@@ -29,6 +29,7 @@ statement       : expression
                 | method
                 | def_function
                 | def_class
+                | return
                 ;
 
 statements      : statement+?;
