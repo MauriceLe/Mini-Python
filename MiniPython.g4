@@ -54,7 +54,7 @@ if_statement    : IF condition statements;
 elif_statement  : ELIF condition statements;
 else_statement  : ELSE COLON statements;
 
-method          : identifier '.' identifier LBRACKET fun_parameter RBRACKET;
+method          : identifier '.' identifier LBRACKET exp_parameter RBRACKET;
 function        : identifier LBRACKET exp_parameter RBRACKET;
 
 def_function    : DEF identifier LBRACKET fun_parameter RBRACKET COLON statements END;
