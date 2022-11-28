@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.antlr.v4.runtime.tree.Tree;
 
+import visitor.AstVisitor;
+
 public class Arithmetic extends Expression {
     
     private List<Expression> operands;
@@ -49,6 +51,11 @@ public class Arithmetic extends Expression {
     @Override
     public String toStringTree() {
         return "Operator " +  this.operator;
+    }
+
+    @Override
+    public <T> T accept(AstVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
 }

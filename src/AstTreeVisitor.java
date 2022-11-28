@@ -6,12 +6,19 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     @Override 
     public Node visitStart(MiniPythonParser.StartContext ctx) { 
         AstTree tree = new AstTree();
+        tree.setBlock((Block) visit(ctx.statements()));
+        return tree;
+    }
+
+    @Override 
+    public Node visitStatements(MiniPythonParser.StatementsContext ctx) { 
+        Block block = new Block();
 
         for (MiniPythonParser.StatementContext statement: ctx.statement()) {
-            tree.getStatements().add((Statement) visit(statement));
-        }
+            block.setStatement((Statement) visit(statement));
+        } 
 
-        return tree;
+        return block;
     }
 	
 	@Override 
@@ -192,30 +199,20 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 	@Override 
     public Node visitIf(MiniPythonParser.IfContext ctx) { 
         If if_statement = new If();
-        if_statement.setIfCondition((Expression) visit(ctx.if_statement().condition().expression()));
+        if_statement.setCondition((Expression) visit(ctx.if_statement().condition().expression()));
+        if_statement.setIfBlock((Block) visit(ctx.if_statement().statements()));
 
-        for (MiniPythonParser.StatementContext statement: ctx.if_statement().statement()) {
-            if_statement.setIfStatement((Statement) visit(statement));
+        If fold = if_statement;
+        for (MiniPythonParser.Elif_statementContext elseIF: ctx.elif_statement()) {
+            If sub = new If();
+            sub.setCondition((Expression) visit(elseIF.condition().expression()));
+            sub.setIfBlock((Block) visit(elseIF.statements()));
+            fold.setElseBlock(new Block());
+            fold.getElseBlock().getStatements().add(sub);
+            fold = sub;
         }
-
-        for (MiniPythonParser.StatementContext statement: ctx.if_statement().statement()) {
-            if_statement.setIfStatement((Statement) visit(statement));
-        }
-
-        if(ctx.elif_statement() != null){
-            for (MiniPythonParser.Elif_statementContext elif: ctx.elif_statement()) {
-                for (MiniPythonParser.StatementContext statement: elif.statement()) {
-                    Expression exp = (Expression) visit(elif.condition().expression());
-                    if_statement.setElifCondition(exp);
-                    if_statement.setElifStatement(exp, (Statement) visit(statement));
-                }
-        }
-        }
-
-        if(ctx.else_statement() != null){
-            for (MiniPythonParser.StatementContext statement: ctx.else_statement().statement()) {
-                if_statement.setElseStatement((Statement) visit(statement));
-            }
+        if (ctx.else_statement() != null) {
+            fold.setElseBlock((Block) visit(ctx.else_statement().statements()));
         }
 
         return if_statement;
@@ -266,15 +263,12 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     public Node visitDef_function(MiniPythonParser.Def_functionContext ctx) { 
         DefFunction function = new DefFunction();
         function.setIdentifier((Identifier) visit(ctx.identifier()));
-        symbol.Function f = new symbol.Function(function);
 
         for (MiniPythonParser.IdentifierContext identifier: ctx.fun_parameter().identifier()) {
             function.setParameter((Identifier) visit(identifier));
         }
 
-        for (MiniPythonParser.StatementContext statement: ctx.statement()) {
-            function.setStatement((Statement) visit(statement));
-        }
+        function.setBody((Block) visit(ctx.statements()));
 
         return function; 
     }
@@ -295,9 +289,7 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
             method.setParameter((Identifier) visit(identifier));
         }
 
-        for (MiniPythonParser.StatementContext statement: ctx.statement()) {
-            method.setStatement((Statement) visit(statement));
-        }
+        method.setBody((Block) visit(ctx.statements()));
 
         return method;
     }

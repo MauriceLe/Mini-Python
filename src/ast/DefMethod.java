@@ -1,19 +1,18 @@
 package ast;
 
-import java.util.ArrayList;
 import java.util.List;
-
+import visitor.AstVisitor;
+import java.util.ArrayList;
 import org.antlr.v4.runtime.tree.Tree;
 
 public class DefMethod extends Statement {
 
     private Identifier identifier;
     private List<Identifier> parameters;
-    private List<Statement> statements;
+    private Block body;
 
     public DefMethod() {
         parameters = new ArrayList<>();
-        statements = new ArrayList<>();
     }
 
     public Identifier getIdentifier() {
@@ -28,23 +27,28 @@ public class DefMethod extends Statement {
         this.parameters.add(parameter);
     }
 
-    public void setStatement(Statement statement) {
-        this.statements.add(statement);
+    public void setBody(Block body) {
+        this.body = body;
     }
     
     @Override
     public int getChildCount() {
-        return this.statements.size();
+        return 1;
     }
 
     @Override
     public Tree getChild(int i) {
-        return this.statements.get(i);
+        return this.body;
     }
 
     @Override
     public String toStringTree() {
         return "Def-Method " + this.identifier.getIdentifier();
+    }
+
+    @Override
+    public <T> T accept(AstVisitor<T> visitor) {
+        return visitor.visit(this);
     }
     
 }

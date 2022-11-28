@@ -141,6 +141,12 @@ public interface MiniPythonVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatement(MiniPythonParser.StatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MiniPythonParser#statements}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStatements(MiniPythonParser.StatementsContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MiniPythonParser#identifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

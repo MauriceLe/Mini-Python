@@ -1,6 +1,7 @@
 package ast.types;
 
 import ast.Expression;
+import visitor.AstVisitor;
 
 public class Text extends Expression {
     
@@ -17,6 +18,11 @@ public class Text extends Expression {
     @Override
     public String toStringTree() {
         return "String " +  this.value;
+    }
+
+    @Override
+    public <T> T accept(AstVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
 }

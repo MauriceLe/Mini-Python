@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.antlr.v4.runtime.tree.Tree;
 
+import visitor.AstVisitor;
+
 public class Method extends Statement {
     
     private Identifier identifier;
@@ -39,6 +41,11 @@ public class Method extends Statement {
     @Override
     public String toStringTree() {
         return "Method " + this.identifier.getIdentifier();
+    }
+
+    @Override
+    public <T> T accept(AstVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
 }

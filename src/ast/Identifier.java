@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.AstVisitor;
+
 public class Identifier extends Expression {
     
     private String identifier;
@@ -21,6 +23,11 @@ public class Identifier extends Expression {
     @Override
     public String toStringTree() {
         return "Identifier " +  this.identifier;
+    }
+
+    @Override
+    public <T> T accept(AstVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
 }

@@ -1,8 +1,7 @@
 package symbol;
 
-import java.util.ArrayList;
-
 import ast.Expression;
+import java.util.ArrayList;
 
 public interface Callable {
     

@@ -1,13 +1,12 @@
 package symbol;
 
 import java.util.ArrayList;
-
 import ast.Expression;
 import ast.Identifier;
 
 public class Method extends Symbol implements Callable{
 
-    private ast.Identifier id;
+    private Identifier id;
 
     public Method(Identifier id){
         this.id = id;
@@ -20,7 +19,7 @@ public class Method extends Symbol implements Callable{
 
     @Override
     public String toString(){
-        return "Method";
+        return "Method ";
     }
     
 }

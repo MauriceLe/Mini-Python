@@ -2,6 +2,8 @@ package ast;
 
 import org.antlr.v4.runtime.tree.Tree;
 
+import visitor.AstVisitor;
+
 public abstract class Node implements Tree {
     
     @Override
@@ -29,5 +31,7 @@ public abstract class Node implements Tree {
     public String toString() {
         return toStringTree();
     }
+
+    public abstract <T> T accept(AstVisitor<T> visitor);
 
 }

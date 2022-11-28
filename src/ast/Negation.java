@@ -2,6 +2,8 @@ package ast;
 
 import org.antlr.v4.runtime.tree.Tree;
 
+import visitor.AstVisitor;
+
 public class Negation extends Expression{
 
     private Expression expression;
@@ -27,6 +29,11 @@ public class Negation extends Expression{
     @Override
     public String toStringTree() {
         return "Negation";
+    }
+
+    @Override
+    public <T> T accept(AstVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
 }

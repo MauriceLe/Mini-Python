@@ -1,8 +1,10 @@
 package symbol;
 
+import ast.DefClass;
+
 public class Class extends Symbol {
 
-    private ast.DefClass _class;
+    private DefClass _class;
 
     public Class(){
         this._class = null;

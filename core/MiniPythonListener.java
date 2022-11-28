@@ -231,6 +231,16 @@ public interface MiniPythonListener extends ParseTreeListener {
 	 */
 	void exitStatement(MiniPythonParser.StatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MiniPythonParser#statements}.
+	 * @param ctx the parse tree
+	 */
+	void enterStatements(MiniPythonParser.StatementsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniPythonParser#statements}.
+	 * @param ctx the parse tree
+	 */
+	void exitStatements(MiniPythonParser.StatementsContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MiniPythonParser#identifier}.
 	 * @param ctx the parse tree
 	 */

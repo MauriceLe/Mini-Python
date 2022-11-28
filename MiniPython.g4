@@ -1,6 +1,6 @@
 grammar MiniPython;
 
-start: (statement)* EOF;
+start: statements EOF;
 
 expression      : expression MULTIPLY expression        # MultiplyExpression
                 | expression DIVISION expression        # DivisionExpression  
@@ -31,6 +31,8 @@ statement       : expression
                 | def_class
                 ;
 
+statements      : statement+?;
+
 identifier      : ID;
 
 assignment      : identifier ASSIGN expression;
@@ -45,17 +47,17 @@ fun_parameter   : identifier? (COMMA identifier)*;
 
 return          : RETURN expression;
 
-while           : WHILE condition statement+? END;
+while           : WHILE condition statements END;
 if              : if_statement elif_statement* else_statement? END;
-if_statement    : IF condition statement+?;
-elif_statement  : ELIF condition statement+?;
-else_statement  : ELSE COLON statement+?;
+if_statement    : IF condition statements;
+elif_statement  : ELIF condition statements;
+else_statement  : ELSE COLON statements;
 
 method          : identifier '.' identifier LBRACKET fun_parameter RBRACKET;
 function        : identifier LBRACKET exp_parameter RBRACKET;
 
-def_function    : DEF identifier LBRACKET fun_parameter RBRACKET COLON statement+? END;
-def_method      : DEF identifier LBRACKET SELF (COMMA fun_parameter)? RBRACKET COLON statement+? END;
+def_function    : DEF identifier LBRACKET fun_parameter RBRACKET COLON statements END;
+def_method      : DEF identifier LBRACKET SELF (COMMA fun_parameter)? RBRACKET COLON statements END;
 def_class       : CLASS_ identifier (COLON | LBRACKET identifier RBRACKET COLON) def_method* END;
 
 INT             : [0-9]+;

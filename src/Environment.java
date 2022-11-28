@@ -1,4 +1,3 @@
-package interpreter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -17,14 +16,25 @@ public class Environment {
         this.values = new LinkedHashMap<>();
     }
 
-    public void assign(String s, Object c){
-        if(this.values.containsKey(s)){
-            this.values.put(s, c);
+    public void define(String name) {
+        
+    }
+
+    public void assign(String name, Object value){
+        if(this.values.containsKey(name)){
+            this.values.put(name, value);
         }
         else if(this.enclosing != null) {
-            this.enclosing.assign(s, c);
+            this.enclosing.assign(name, value);
         }
     }
 
+    public Object getObject(String name) {
+        return values.get(name);
+    }
+
+    public Object getObjects() {
+        return this.values.values();
+    }
 
 }

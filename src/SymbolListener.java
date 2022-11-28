@@ -17,7 +17,7 @@ public class SymbolListener extends MiniPythonBaseListener{
 
 	@Override 
     public void enterIdExpression(MiniPythonParser.IdExpressionContext ctx) {
-        Variable v = (Variable)this.scope.resolve(ctx.ID().getText());
+        Variable v = (Variable) this.scope.resolve(ctx.ID().getText());
     }
 
 	@Override 
@@ -32,8 +32,8 @@ public class SymbolListener extends MiniPythonBaseListener{
 	@Override 
     public void enterAssignment(MiniPythonParser.AssignmentContext ctx) {
         Variable v;
-        try{
-            v = (Variable)this.scope.resolve(ctx.identifier().getText());
+        try {
+            v = (Variable) this.scope.resolve(ctx.identifier().getText());
             v.setValue(ctx.expression());
         } catch(NullPointerException e){
             v = new Variable(new Identifier(ctx.identifier().getText()));

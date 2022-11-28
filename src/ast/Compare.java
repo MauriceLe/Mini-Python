@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.antlr.v4.runtime.tree.Tree;
 
+import visitor.AstVisitor;
+
 public class Compare extends Expression {
 
     private List<Expression> operands;
@@ -52,6 +54,11 @@ public class Compare extends Expression {
     @Override
     public String toStringTree() {
         return "Compare " + this.operator;
+    }
+
+    @Override
+    public <T> T accept(AstVisitor<T> visitor) {
+        return visitor.visit(this);
     }
     
 }

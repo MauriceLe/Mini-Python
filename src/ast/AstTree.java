@@ -1,25 +1,32 @@
 package ast;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.antlr.v4.runtime.tree.Tree;
+import visitor.AstVisitor;
 
 public class AstTree extends Node {
     
-    private List<Statement> statements;
+    private Block block;
 
     public AstTree() {
-        statements = new ArrayList<>();
+        block = new Block();
+    }
+
+    public Block getBlock() {
+        return this.block;
+    }
+
+    public void setBlock(Block block) {
+        this.block = block;
     }
 
     @Override
     public Tree getChild(int i) {
-        return this.statements.get(i);
+        return this.block;
     }
 
     @Override
     public int getChildCount() {
-        return this.statements.size();
+        return 1;
     }
 
     @Override
@@ -27,8 +34,9 @@ public class AstTree extends Node {
         return "Start";
     }
 
-    public List<Statement> getStatements() {
-        return this.statements;
+    @Override
+    public <T> T accept(AstVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
 }

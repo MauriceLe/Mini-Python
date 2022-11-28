@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.antlr.v4.runtime.tree.Tree;
 
+import visitor.AstVisitor;
+
 public class DefClass extends Statement {
 
     private Identifier identifier;
@@ -43,6 +45,11 @@ public class DefClass extends Statement {
     @Override
     public String toStringTree() {
         return "Def-Class " + this.identifier.getIdentifier();
+    }
+
+    @Override
+    public <T> T accept(AstVisitor<T> visitor) {
+        return visitor.visit(this);
     }
     
 }

@@ -1,61 +1,61 @@
 package ast;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import visitor.AstVisitor;
 import org.antlr.v4.runtime.tree.Tree;
 
 public class If extends Statement {
 
-    private Expression if_condition;
-    private List<Statement> if_statements;
-    private List<Expression> elif_condition;
-    private List<List<Statement>> elif_statements;
-    private List<Statement> else_statements;
+    private Expression condition;
+    private Block if_block;
+    private Block else_block;
 
-    public If() {
-        if_statements = new ArrayList<>();
-        elif_condition = new ArrayList<>();
-        elif_statements = new ArrayList<>();
-        else_statements = new ArrayList<>();
+    public Expression getCondition() {
+        return this.condition;
     }
 
-    public void setIfCondition(Expression condition) {
-        this.if_condition = condition;
+    public void setCondition(Expression condition) {
+        this.condition = condition;
     }
 
-    public void setIfStatement(Statement statement) {
-        this.if_statements.add(statement);
+    public Block getIfBlock() {
+        return this.if_block;
     }
 
-    public void setElifCondition(Expression expression) {
-        this.elif_condition.add(expression);
+    public void setIfBlock(Block block) {
+        this.if_block = block;
     }
 
-    public void setElifStatement(Expression expression, Statement statements) {
-        if(this.elif_statements.size() <= this.elif_condition.indexOf(expression)){
-            this.elif_statements.add(new ArrayList<Statement>());
-        }
-        this.elif_statements.get(this.elif_condition.indexOf(expression)).add(statements);
+    public Block getElseBlock() {
+        return this.else_block;
     }
 
-    public void setElseStatement(Statement statement) {
-        this.else_statements.add(statement);
+    public void setElseBlock(Block block) {
+        this.else_block = block;
     }
-
+    
     @Override
     public int getChildCount() {
-        return 0;
+        return 1 + (if_block != null ? 1 : 0) + (else_block != null ? 1 : 0);
     }
 
     @Override
     public Tree getChild(int i) {
-        return null;
+        switch (i) {
+            case 0: return condition;
+            case 1: return if_block;
+            case 2: return else_block;
+            default: return super.getChild(i);
+        }
     }
 
     @Override
     public String toStringTree() {
-        return "If" + this.if_condition.toString();
+        return "If";
+    }
+
+    @Override
+    public <T> T accept(AstVisitor<T> visitor) {
+        return visitor.visit(this);
     }
     
 }

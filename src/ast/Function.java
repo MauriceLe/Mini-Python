@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.antlr.v4.runtime.tree.Tree;
 
+import visitor.AstVisitor;
+
 public class Function extends Expression{
 
     private Identifier identifier;
@@ -45,4 +47,9 @@ public class Function extends Expression{
         return "Function " + this.identifier.getIdentifier();
     }
     
+    @Override
+    public <T> T accept(AstVisitor<T> visitor) {
+        return visitor.visit(this);
+    }
+
 }
