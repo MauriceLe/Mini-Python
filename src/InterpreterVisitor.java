@@ -122,6 +122,12 @@ public class InterpreterVisitor implements AstVisitor<Object>{
 
     @Override
     public Object visit(If node) {
+        if((boolean)node.getCondition().accept(this)){
+            node.getIfBlock().accept(this);
+        } else {
+            if(node.getElseBlock() == null){return null;}
+            visit(node.getElseBlock());
+        }
         return null;
     }
 
@@ -144,11 +150,15 @@ public class InterpreterVisitor implements AstVisitor<Object>{
 
         Environment prev = this.env;
 
+        this.env = new Environment(this.env);
+
         for (int i=0; i < args.size(); i++) {
             this.env.define(((DefFunction) fun.getNode()).getParameter().get(i).getIdentifier(), args.get(i));
         }
 
-        fun.getNode().accept(this);
+        for(Statement stmt: ((DefFunction)fun.getNode()).getBody().getStatements()){
+            stmt.accept(this);
+        }
 
         this.env = prev;
 

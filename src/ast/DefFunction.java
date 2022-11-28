@@ -34,6 +34,10 @@ public class DefFunction extends Statement {
     public void setBody(Block body) {
         this.body = body;
     }
+
+    public Block getBody(){
+        return this.body;
+    }
     
     @Override
     public int getChildCount() {
@@ -54,5 +58,5 @@ public class DefFunction extends Statement {
     public <T> T accept(AstVisitor<T> visitor) {
         return visitor.visit(this);
     }
-    
+
 }

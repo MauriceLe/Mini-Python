@@ -1,2 +1,7 @@
-a = input()
-print(a+5)
+def a(x, y):
+    z = x * y
+    print(z)
+#end
+
+i = 7
+a(i,6)
