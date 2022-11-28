@@ -17,7 +17,11 @@ public class SymbolListener extends MiniPythonBaseListener{
 
 	@Override 
     public void enterIdExpression(MiniPythonParser.IdExpressionContext ctx) {
-        Variable v = (Variable) this.scope.resolve(ctx.ID().getText());
+        try{
+            Variable v = (Variable) this.scope.resolve(ctx.ID().getText());
+        } catch(Exception e){
+            symbol.Class c = (symbol.Class) this.scope.resolve(ctx.ID().getText());
+        }
     }
 
 	@Override 
@@ -50,7 +54,6 @@ public class SymbolListener extends MiniPythonBaseListener{
 
 	@Override 
     public void enterMethod(MiniPythonParser.MethodContext ctx) {
-        //TODO: Recognize class???
         symbol.Method m = (symbol.Method)this.scope.resolve(ctx.identifier().get(1).getText());
         this.scope = m.getScope();
     }
@@ -99,16 +102,17 @@ public class SymbolListener extends MiniPythonBaseListener{
     public void enterDef_method(MiniPythonParser.Def_methodContext ctx) {
         symbol.Method m = new symbol.Method(new Identifier(ctx.identifier().getText()));
         m.setScope(new Scope(scope));
-        for (MiniPythonParser.IdentifierContext identifier: ctx.fun_parameter().identifier()) {
-            m.getScope().bind(identifier.getText(), new Variable(new Identifier(identifier.getText())));
+        if(ctx.fun_parameter() != null){
+            for (MiniPythonParser.IdentifierContext identifier: ctx.fun_parameter().identifier()) {
+                m.getScope().bind(identifier.getText(), new Variable(new Identifier(identifier.getText())));
+            }
         }
         this.scope.bind(ctx.identifier().getText(), m);
-        this.scope = m.getScope();
     }
 
 	@Override 
     public void exitDef_method(MiniPythonParser.Def_methodContext ctx) {
-        this.scope = this.scope.getParentScope();
+        System.out.println(this.scope);
     }
 
 	@Override 
@@ -119,8 +123,6 @@ public class SymbolListener extends MiniPythonBaseListener{
             c.getScope().setParentScope(this.scope.resolve(ctx.identifier().get(1).getText()).getScope());
         } catch(Exception e){}
 
-        //TODO: Bind attributes
-
         for (MiniPythonParser.Def_methodContext method: ctx.def_method()) {
             c.getScope().bind(method.identifier().getText(), new symbol.Method(new Identifier(method.identifier().getText())));
         }
@@ -128,13 +130,5 @@ public class SymbolListener extends MiniPythonBaseListener{
     }
 
 	@Override 
-    public void exitDef_class(MiniPythonParser.Def_classContext ctx) {
-        try{
-            this.scope = this.scope.resolve(ctx.identifier().get(1).getText()).getScope().getParentScope();
-        } catch(Exception e){
-            if(this.scope.getParentScope() != null){
-                this.scope = this.scope.getParentScope();
-            }
-        }
-    }
+    public void exitDef_class(MiniPythonParser.Def_classContext ctx) {}
 }

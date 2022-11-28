@@ -145,10 +145,8 @@ public class InterpreterVisitor implements AstVisitor<Object>{
 
         this.env = new Environment(this.env);
 
-        if(((DefMethod) fun.getNode()).getParameters().size() > 0){
-            for (int i=0; i < args.size(); i++) {
-                this.env.define(((DefMethod) fun.getNode()).getParameters().get(i).getIdentifier(), args.get(i));
-            }
+        for (int i=0; i < args.size(); i++) {
+            this.env.define(((DefMethod) fun.getNode()).getParameters().get(i).getIdentifier(), args.get(i));
         }
 
         for(Statement stmt: ((DefMethod)fun.getNode()).getBody().getStatements()){
@@ -240,6 +238,14 @@ public class InterpreterVisitor implements AstVisitor<Object>{
     public Object visit(DefMethod node) {
         Fun method = new Fun(this.env, node);
         this.env.define(node.getIdentifier().getIdentifier(), method);
+        return null;
+    }
+
+    @Override
+    public Object visit(While node) {
+        while((Boolean)node.getCondition().accept(this)){
+            node.getBody().accept(this);
+        }
         return null;
     }
 

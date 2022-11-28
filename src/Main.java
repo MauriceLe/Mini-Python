@@ -22,6 +22,6 @@ public class Main {
         //SymbolListener listener = new SymbolListener();
         //walker.walk(listener, tree);
 
-        System.out.println(ast.accept(new InterpreterVisitor()));
+        ast.accept(new InterpreterVisitor());
     }
 }

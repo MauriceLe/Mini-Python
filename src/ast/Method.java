@@ -7,11 +7,11 @@ import org.antlr.v4.runtime.tree.Tree;
 
 import visitor.AstVisitor;
 
-public class Method extends Statement {
+public class Method extends Expression {
     
     private Identifier instance;
     private Identifier identifier;
-    private List<Identifier> parameters;
+    private List<Expression> parameters;
 
     public Method() {
         parameters = new ArrayList<>();
@@ -33,11 +33,11 @@ public class Method extends Statement {
         return this.instance;
     }
 
-    public void setParameter(Identifier parameter) {
+    public void setParameter(Expression parameter) {
         this.parameters.add(parameter);
     }
 
-    public List<Identifier> getParameters(){
+    public List<Expression> getParameters(){
         return this.parameters;
     }
     

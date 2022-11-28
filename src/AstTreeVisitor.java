@@ -193,7 +193,10 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 	
 	@Override 
     public Node visitWhile(MiniPythonParser.WhileContext ctx) { 
-        return visitChildren(ctx); 
+        While _while = new While();
+        _while.setCondition((Expression) visit(ctx.condition().expression()));
+        _while.setBody((Block) visit(ctx.statements()));
+        return _while; 
     }
 	
 	@Override 
@@ -226,14 +229,12 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 	@Override 
     public Node visitMethod(MiniPythonParser.MethodContext ctx) { 
         Method method = new Method();
-        
-        System.out.println(ctx.identifier().toString());
 
         method.setInstance((Identifier) visit(ctx.identifier().get(0)));
         method.setIdentifier((Identifier) visit(ctx.identifier().get(1)));
 
-        for (MiniPythonParser.IdentifierContext parameter: ctx.identifier()) {
-            method.setParameter((Identifier) visit(parameter));
+        for (MiniPythonParser.ExpressionContext parameter: ctx.exp_parameter().expression()) {
+            method.setParameter((Expression) visit(parameter));
         }
 
         return method;

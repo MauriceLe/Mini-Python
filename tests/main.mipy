@@ -1,14 +1,30 @@
-class a:
-    def b(self):
-        print("test")
+class Dog:
+
+    def age(self):
+        return 20
     #end
 
-    def c(self):
-        print("ein anderer test")
+    def woof(self, amount):
+        i = 0
+        while i < amount:
+            print("woof")
+            i = i + 1
+        #end
     #end
+
+    def feed(self, food, amount):
+        if amount < 10:
+            print("Thats not enough")
+        elif amount > 50:
+            print("Thats to much")
+        else:
+            print("Thanks")
+        #end
+    #end
+
 #end
 
-x = a()
-
-x.b()
-x.c()
+dog1 = Dog()
+dog1.woof(5)
+print(dog1.age())
+dog1.feed("Meat", 15)
