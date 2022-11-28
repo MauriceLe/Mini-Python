@@ -1,8 +1,14 @@
-def mult(x, y):
-    return x * y
+class a:
+    def b(self):
+        print("test")
+    #end
+
+    def c(self):
+        print("ein anderer test")
+    #end
 #end
 
-a = 7
-b = 10
-print(TRUE)
-print(mult(a, b))
+x = a()
+
+x.b()
+x.c()

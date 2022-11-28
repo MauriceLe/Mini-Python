@@ -9,6 +9,7 @@ import visitor.AstVisitor;
 
 public class Method extends Statement {
     
+    private Identifier instance;
     private Identifier identifier;
     private List<Identifier> parameters;
 
@@ -24,8 +25,20 @@ public class Method extends Statement {
         this.identifier = identifier;
     }
 
+    public void setInstance(Identifier identifier) {
+        this.instance = identifier;
+    }
+
+    public Identifier getInstance(){
+        return this.instance;
+    }
+
     public void setParameter(Identifier parameter) {
         this.parameters.add(parameter);
+    }
+
+    public List<Identifier> getParameters(){
+        return this.parameters;
     }
     
     @Override

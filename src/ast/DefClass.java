@@ -10,7 +10,7 @@ public class DefClass extends Statement {
 
     private Identifier identifier;
     private Identifier superclass;
-    private List<Method> methods;
+    private List<DefMethod> methods;
 
     public DefClass() {
         methods = new ArrayList<>();
@@ -18,6 +18,10 @@ public class DefClass extends Statement {
 
     public void setIdentifier(Identifier identifier) {
         this.identifier = identifier;
+    }
+
+    public Identifier getIdentifier(){
+        return this.identifier;
     }
 
     public Identifier getSuperclass() {
@@ -28,8 +32,12 @@ public class DefClass extends Statement {
         this.superclass = superclass;
     }
 
-    public void setMethod(Method method) {
+    public void setMethod(DefMethod method) {
         this.methods.add(method);
+    }
+
+    public List<DefMethod> getMethods(){
+        return this.methods;
     }
 
     @Override

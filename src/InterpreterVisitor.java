@@ -2,6 +2,7 @@ import ast.*;
 import ast.types.*;
 
 import java.util.List;
+
 import visitor.AstVisitor;
 import java.util.stream.Collectors;
 
@@ -133,6 +134,34 @@ public class InterpreterVisitor implements AstVisitor<Object>{
 
     @Override
     public Object visit(Method node) {
+
+        Instance id = (Instance)this.env.get(node.getInstance().getIdentifier());
+        Fun fun = (Fun)(id.get(node.getIdentifier().getIdentifier()));
+
+        List<Object> args = node.getParameters().stream().
+        map(x -> x.accept(this)).collect(Collectors.toList());
+
+        Environment prev = this.env;
+
+        this.env = new Environment(this.env);
+
+        if(((DefMethod) fun.getNode()).getParameters().size() > 0){
+            for (int i=0; i < args.size(); i++) {
+                this.env.define(((DefMethod) fun.getNode()).getParameters().get(i).getIdentifier(), args.get(i));
+            }
+        }
+
+        for(Statement stmt: ((DefMethod)fun.getNode()).getBody().getStatements()){
+            try{
+                Return ret = (Return)stmt;
+                return ret.accept(this);
+            } catch(Exception e){
+                stmt.accept(this);
+            }
+        }
+
+        this.env = prev;
+
         return null;
     }
 
@@ -146,6 +175,10 @@ public class InterpreterVisitor implements AstVisitor<Object>{
 
         if(fun instanceof NativeFun){
             return ((NativeFun)fun).call(args);
+        }
+
+        if(fun instanceof Class){
+            return ((Class)fun).call(args);
         }
 
         Environment prev = this.env;
@@ -183,6 +216,16 @@ public class InterpreterVisitor implements AstVisitor<Object>{
 
     @Override
     public Object visit(DefClass node) {
+        Environment prev = this.env;
+        this.env = new Environment(this.env);
+
+        for(DefMethod method: node.getMethods()){
+            method.accept(this);
+        }
+
+        Class clazz = new Class(this.env, node);
+        this.env = prev;
+        this.env.define(node.getIdentifier().getIdentifier(), clazz);
         return null;
     }
 

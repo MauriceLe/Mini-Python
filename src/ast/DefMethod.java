@@ -27,10 +27,18 @@ public class DefMethod extends Statement {
         this.parameters.add(parameter);
     }
 
+    public List<Identifier> getParameters(){
+        return this.parameters;
+    }
+
     public void setBody(Block body) {
         this.body = body;
     }
     
+    public Block getBody(){
+        return this.body;
+    }
+
     @Override
     public int getChildCount() {
         return 1;

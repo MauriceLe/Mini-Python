@@ -226,7 +226,11 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 	@Override 
     public Node visitMethod(MiniPythonParser.MethodContext ctx) { 
         Method method = new Method();
-        method.setIdentifier((Identifier) visit(ctx.identifier(0)));
+        
+        System.out.println(ctx.identifier().toString());
+
+        method.setInstance((Identifier) visit(ctx.identifier().get(0)));
+        method.setIdentifier((Identifier) visit(ctx.identifier().get(1)));
 
         for (MiniPythonParser.IdentifierContext parameter: ctx.identifier()) {
             method.setParameter((Identifier) visit(parameter));
@@ -285,8 +289,10 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
         DefMethod method = new DefMethod();
         method.setIdentifier((Identifier) visit(ctx.identifier()));
 
-        for (MiniPythonParser.IdentifierContext identifier: ctx.fun_parameter().identifier()) {
-            method.setParameter((Identifier) visit(identifier));
+        if(ctx.fun_parameter() != null){
+            for (MiniPythonParser.IdentifierContext identifier: ctx.fun_parameter().identifier()) {
+                method.setParameter((Identifier) visit(identifier));
+            }
         }
 
         method.setBody((Block) visit(ctx.statements()));
@@ -304,7 +310,7 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
         }
         
         for (MiniPythonParser.Def_methodContext method: ctx.def_method()) {
-            new_class.setMethod((Method) visit(method));
+            new_class.setMethod((DefMethod) visit(method));
         }
 
         return new_class;

@@ -18,9 +18,9 @@ public class Main {
         TreeViewer viewer = new TreeViewer(null, ast);
         viewer.open();
 
-        ParseTreeWalker walker = new ParseTreeWalker();
-        SymbolListener listener = new SymbolListener();
-        walker.walk(listener, tree);
+        //ParseTreeWalker walker = new ParseTreeWalker();
+        //SymbolListener listener = new SymbolListener();
+        //walker.walk(listener, tree);
 
         System.out.println(ast.accept(new InterpreterVisitor()));
     }
