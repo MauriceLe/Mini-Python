@@ -157,7 +157,7 @@ public class InterpreterVisitor implements AstVisitor<Object>{
 
     @Override
     public Object visit(Identifier node) {
-        return null;
+        return env.get(node.getIdentifier());
     }
 	
 	@Override
