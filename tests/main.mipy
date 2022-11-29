@@ -23,7 +23,6 @@ class Dog:
     #end
 
 #end
-
 dog1 = Dog()
 dog1.woof(5)
 print(dog1.age())
