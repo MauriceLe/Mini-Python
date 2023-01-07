@@ -31,3 +31,4 @@ print(dog1.age())
 dog1.feed("Meat", 15)
 
 print(var_a)
+test("1")
