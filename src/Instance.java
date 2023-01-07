@@ -1,6 +1,6 @@
 public class Instance {
     
-    public Class clazz;
+    private Class clazz;
 
     public Instance(Class clazz){
         this.clazz = clazz;
