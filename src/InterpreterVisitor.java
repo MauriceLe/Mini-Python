@@ -3,6 +3,10 @@ import ast.types.*;
 import java.util.List;
 import visitor.AstVisitor;
 import java.util.stream.Collectors;
+import org.antlr.v4.gui.TreeViewer;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 
 public class InterpreterVisitor implements AstVisitor<Object>{
@@ -249,6 +253,30 @@ public class InterpreterVisitor implements AstVisitor<Object>{
     }
 
     @Override
+    public Object visit(ImportModule node) {
+        try {
+            MiniPythonLexer lexer = new MiniPythonLexer(CharStreams.fromFileName("tests/" + node.toString() + ".mipy"));
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            MiniPythonParser parser = new MiniPythonParser(tokens);
+    
+            ParseTree tree = parser.start();
+            AstTreeVisitor visitor = new AstTreeVisitor();
+            AstTree ast = (AstTree) visitor.visit(tree);
+    
+            TreeViewer viewer = new TreeViewer(null, ast);
+            viewer.open();
+            
+            InterpreterVisitor interpreterVisitor = new InterpreterVisitor();
+            ast.accept(interpreterVisitor);
+            this.env.addEnvironment(interpreterVisitor.getEnvironment());
+
+        } catch (Exception e) {
+            e.printStackTrace();;
+        }
+        return null;
+    }
+
+    @Override
     public Object visit(Return node) {
         return node.getExpression().accept(this);
     }
@@ -276,6 +304,10 @@ public class InterpreterVisitor implements AstVisitor<Object>{
     @Override
     public Object visit(Bool node) {
         return node.getValue();
+    }
+
+    public Environment getEnvironment(){
+        return this.env;
     }
 
 }

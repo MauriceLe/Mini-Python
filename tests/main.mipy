@@ -1,3 +1,5 @@
+import vars
+
 class Dog:
 
     def age(self):
@@ -27,3 +29,5 @@ dog1 = Dog()
 dog1.woof(5)
 print(dog1.age())
 dog1.feed("Meat", 15)
+
+print(var_a)

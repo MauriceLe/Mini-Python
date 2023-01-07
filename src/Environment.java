@@ -20,6 +20,12 @@ public class Environment {
         this.values.put(name, object);
     }
 
+    public void addEnvironment(Environment env){
+        for (Map.Entry<String, Object> entry : env.getValues().entrySet()){
+            this.define(entry.getKey(), entry.getValue());;
+        }
+    }
+
     public Object get(String name) {
         if (this.values.containsKey(name)){
             return this.values.get(name);
@@ -32,6 +38,10 @@ public class Environment {
 
     public Object getObjects() {
         return this.values.values();
+    }
+
+    public Map<String, Object> getValues(){
+        return this.values;
     }
 
 }

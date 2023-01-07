@@ -317,4 +317,10 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
         return new_class;
     }
 
+    @Override 
+    public Node visitImport_module(MiniPythonParser.Import_moduleContext ctx) { 
+        ImportModule module = new ImportModule((Identifier) visit(ctx.identifier()));
+        return module;
+    }
+
 }

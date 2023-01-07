@@ -24,4 +24,5 @@ public interface AstVisitor<T> {
     T visit(Bool node);
     T visit(Block node);
     T visit(While node);
+    T visit(ImportModule node);
 }
