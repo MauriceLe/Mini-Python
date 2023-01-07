@@ -1,10 +1,9 @@
 import ast.*;
 import ast.types.*;
-
 import java.util.List;
-
 import visitor.AstVisitor;
 import java.util.stream.Collectors;
+
 
 public class InterpreterVisitor implements AstVisitor<Object>{
 
@@ -151,7 +150,7 @@ public class InterpreterVisitor implements AstVisitor<Object>{
 
         for(Statement stmt: ((DefMethod)fun.getNode()).getBody().getStatements()){
             try{
-                Return ret = (Return)stmt;
+                Return ret = (Return) stmt;
                 return ret.accept(this);
             } catch(Exception e){
                 stmt.accept(this);
@@ -243,7 +242,7 @@ public class InterpreterVisitor implements AstVisitor<Object>{
 
     @Override
     public Object visit(While node) {
-        while((Boolean)node.getCondition().accept(this)){
+        while((Boolean) node.getCondition().accept(this)){
             node.getBody().accept(this);
         }
         return null;

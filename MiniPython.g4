@@ -25,11 +25,13 @@ statement       : expression
                 | assignment
                 | while 
                 | if
+                | try
                 | function
                 | method
                 | def_function
                 | def_class
                 | return
+                | import_module
                 ;
 
 statements      : statement+?;
@@ -53,6 +55,11 @@ if              : if_statement elif_statement* else_statement? END;
 if_statement    : IF condition statements;
 elif_statement  : ELIF condition statements;
 else_statement  : ELSE COLON statements;
+
+import_module   : IMPORT identifier;
+
+exception       : ZERO_DIVISON;
+try             : TRY COLON statements* EXCEPT exception COLON statements* END;
 
 method          : identifier '.' identifier LBRACKET exp_parameter RBRACKET;
 function        : identifier LBRACKET exp_parameter RBRACKET;
@@ -81,6 +88,7 @@ GREATER_THEN    : '>=';
 EQUAL           : '==';
 NOT_EQUAL       : '!=';
 
+IMPORT          : 'import';
 IF              : 'if';
 ELIF            : 'elif';
 ELSE            : 'else';
@@ -89,6 +97,10 @@ RETURN          : 'return';
 CLASS_          : 'class';
 DEF             : 'def';
 SELF            : 'self';
+TRY             : 'try';
+EXCEPT          : 'except';
+
+ZERO_DIVISON    : 'ZeroDivisionError';
 
 LBRACKET        : '(';
 RBRACKET        : ')';

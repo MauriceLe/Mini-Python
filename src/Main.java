@@ -3,7 +3,6 @@ import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -17,10 +16,6 @@ public class Main {
 
         TreeViewer viewer = new TreeViewer(null, ast);
         viewer.open();
-
-        //ParseTreeWalker walker = new ParseTreeWalker();
-        //SymbolListener listener = new SymbolListener();
-        //walker.walk(listener, tree);
 
         ast.accept(new InterpreterVisitor());
     }
