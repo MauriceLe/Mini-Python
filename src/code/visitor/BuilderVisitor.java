@@ -2,13 +2,34 @@ package code.visitor;
 
 import code.ast.*;
 import code.ast.types.*;
+import code.core.MiniPythonLexer;
+import code.core.MiniPythonParser;
+
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
+
 import CBuilder.literals.*;
+import CBuilder.objects.MPyClass;
+import CBuilder.objects.functions.ReturnStatement;
 import CBuilder.ProgramBuilder;
 import CBuilder.Reference;
+import CBuilder.conditions.IfThenElseStatement;
+import CBuilder.conditions.conditionalStatement.ElifStatement;
+import CBuilder.conditions.conditionalStatement.ElseStatement;
+import CBuilder.conditions.conditionalStatement.IfStatement;
+import CBuilder.conditions.conditionalStatement.WhileStatement;
 import CBuilder.keywords.bool.NotKeyword;
 
 public class BuilderVisitor implements AstVisitor<Object> {
+
+    ProgramBuilder program = new ProgramBuilder();
 
     @Override
     public Object visit(Int node) {
@@ -94,7 +115,19 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
     @Override
     public Object visit(If node) {
-        return null;
+        IfStatement ifStatement = new IfStatement(
+            (CBuilder.Expression) node.getCondition().accept(this),
+            (List<CBuilder.Statement>) node.getIfBlock().accept(this)
+        );
+        Optional<List<ElifStatement>> elifStatements = null;
+        Optional<ElseStatement> elseStatement = null;
+        /**
+         * TODO: Not sure if optional is working this way.
+         */
+        if(node.getElseBlock() != null){
+            elseStatement = Optional.of(new ElseStatement((List<CBuilder.Statement>) node.getElseBlock().accept(this)));
+        }
+        return new IfThenElseStatement(ifStatement, elifStatements, elseStatement);
     }
 
     @Override
@@ -104,44 +137,120 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
     @Override
     public Object visit(Return node) {
-        return null;
+        CBuilder.Expression returnValue = (CBuilder.Expression) node.getExpression();
+        return new ReturnStatement(returnValue);
     }
 
     @Override
     public Object visit(DefClass node) {
-        return null;
+        String className = node.getIdentifier().getIdentifier();
+        Reference parent = null;
+        List<CBuilder.objects.functions.Function> methods = new ArrayList<>();
+        for(DefMethod method : node.getMethods()){
+            CBuilder.objects.functions.Function fun = (CBuilder.objects.functions.Function) method.accept(this);
+            methods.add(fun);
+        }
+        Map<Reference, CBuilder.Expression> attributes = null;
+        MPyClass pyClass = new MPyClass(
+            className,
+            parent,
+            methods,
+            attributes
+        );
+        this.program.addClass(pyClass);
+        return pyClass;
     }
 
     @Override
     public Object visit(DefFunction node) {
-        return null;
+        String functionName = node.getIdentifier().getIdentifier();
+        List<CBuilder.Statement> statements = (List<CBuilder.Statement>) node.getBody().accept(this);
+        List<CBuilder.objects.functions.Argument> positionalArguments = new ArrayList<>();
+        List<CBuilder.variables.VariableDeclaration> localVariables = new ArrayList<>();
+        for(int i = 0; i < node.getParameter().size(); i++){
+            String paramName = node.getParameter().get(i).getIdentifier();
+            positionalArguments.add(new CBuilder.objects.functions.Argument(paramName, i));
+        }
+        CBuilder.objects.functions.Function fun = new CBuilder.objects.functions.Function(
+            functionName,
+            statements,
+            positionalArguments,
+            localVariables
+        );
+        this.program.addFunction(fun);
+        return fun;
     }
 
     @Override
     public Object visit(DefMethod node) {
-        return null;
+        String functionName = node.getIdentifier().getIdentifier();
+        List<CBuilder.Statement> statements = (List<CBuilder.Statement>) node.getBody().accept(this);
+        List<CBuilder.objects.functions.Argument> positionalArguments = new ArrayList<>();
+        List<CBuilder.variables.VariableDeclaration> localVariables = new ArrayList<>();
+        for(int i = 0; i < node.getParameters().size(); i++){
+            String paramName = node.getParameters().get(i).getIdentifier();
+            positionalArguments.add(new CBuilder.objects.functions.Argument(paramName, i));
+        }
+        CBuilder.objects.functions.Function fun = new CBuilder.objects.functions.Function(
+            functionName,
+            statements,
+            positionalArguments,
+            localVariables
+        );
+        return fun;
     }
 
     @Override
     public Object visit(Block node) {
-        return null;
+        List<CBuilder.Statement> statements = new ArrayList<>();
+        for(Statement statement : node.getStatements()){
+            CBuilder.Statement cStatement = (CBuilder.Statement) statement.accept(this);
+            statements.add(cStatement);
+        }
+        return statements;
     }
 
     @Override
     public Object visit(While node) {
-        return null;
+        CBuilder.Expression condition = (CBuilder.Expression) node.getCondition().accept(this);
+        List<CBuilder.Statement> statements = (List<CBuilder.Statement>) node.getBody().accept(this);
+        WhileStatement statement = new WhileStatement(condition, statements);
+        return statement;
     }
 
     @Override
     public Object visit(ImportModule node) {
+        /**
+         * TODO: Add imported environment to current environment
+         */
+
+        try {
+            MiniPythonLexer lexer = new MiniPythonLexer(CharStreams.fromFileName("src/test/" + node.toString() + ".mipy"));
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            MiniPythonParser parser = new MiniPythonParser(tokens);
+    
+            ParseTree tree = parser.start();
+            AstTreeVisitor visitor = new AstTreeVisitor();
+            AstTree ast = (AstTree) visitor.visit(tree);
+            BuilderVisitor build = new BuilderVisitor();
+            ast.accept(build);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public Object visit(AstTree node) {
-        ProgramBuilder program = new ProgramBuilder();
-        program.writeProgram(Path.of("out"));
-        return null;
+        node.getBlock().accept(this);
+        this.program.writeProgram(Path.of("out"));
+        return this.program;
+    }
+
+    public ProgramBuilder getProgram(){
+        return this.program;
     }
     
 }
