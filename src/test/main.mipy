@@ -1,1 +1,12 @@
-v = 1 + 2
+import lib
+
+def a(b):
+    b
+#end
+
+class x:
+    y
+    def z(self, v):
+        m
+    #end
+#end

@@ -4,6 +4,7 @@ import code.ast.*;
 import code.ast.types.*;
 import code.core.MiniPythonLexer;
 import code.core.MiniPythonParser;
+import code.environment.Environment;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import CBuilder.literals.*;
 import CBuilder.objects.MPyClass;
 import CBuilder.objects.functions.ReturnStatement;
+import CBuilder.variables.VariableDeclaration;
 import CBuilder.ProgramBuilder;
 import CBuilder.Reference;
 import CBuilder.conditions.IfThenElseStatement;
@@ -29,7 +31,8 @@ import CBuilder.keywords.bool.NotKeyword;
 
 public class BuilderVisitor implements AstVisitor<Object> {
 
-    ProgramBuilder program = new ProgramBuilder();
+    private ProgramBuilder program = new ProgramBuilder();
+    private Environment env = new Environment();
 
     @Override
     public Object visit(Int node) {
@@ -64,7 +67,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
             default: operator = "";
         }
 
-        return null;
+        return operator;
     }
 
     @Override
@@ -82,7 +85,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
             default: operator = "";
         }
 
-        return null;
+        return operator;
     }
 
     @Override
@@ -100,12 +103,12 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
     @Override
     public Object visit(Statement node) {
-        return null;
+        return node.accept(this);
     }
 
     @Override
     public Object visit(Expression node) {
-        return null;
+        return node.accept(this);
     }
 
     @Override
@@ -137,7 +140,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
     @Override
     public Object visit(Return node) {
-        CBuilder.Expression returnValue = (CBuilder.Expression) node.getExpression();
+        CBuilder.Expression returnValue = (CBuilder.Expression) node.getExpression().accept(this);
         return new ReturnStatement(returnValue);
     }
 
@@ -158,6 +161,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
             attributes
         );
         this.program.addClass(pyClass);
+        this.env.define(className, pyClass);
         return pyClass;
     }
 
@@ -178,6 +182,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
             localVariables
         );
         this.program.addFunction(fun);
+        this.env.define(functionName, fun);
         return fun;
     }
 
@@ -235,6 +240,15 @@ public class BuilderVisitor implements AstVisitor<Object> {
             BuilderVisitor build = new BuilderVisitor();
             ast.accept(build);
 
+            for (Map.Entry<String, Object> entry : build.getEnvironment().getValues().entrySet()){
+                if(entry.getValue() instanceof MPyClass){
+                    this.program.addClass((MPyClass) entry.getValue());
+                } else if (entry.getValue() instanceof CBuilder.objects.functions.Function){
+                    this.program.addFunction((CBuilder.objects.functions.Function) entry.getValue());
+                } else if (entry.getValue() instanceof VariableDeclaration){
+                    //this.program.addVariable((VariableDeclaration) entry.getValue());
+                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -249,8 +263,8 @@ public class BuilderVisitor implements AstVisitor<Object> {
         return this.program;
     }
 
-    public ProgramBuilder getProgram(){
-        return this.program;
+    public Environment getEnvironment(){
+        return this.env;
     }
     
 }
