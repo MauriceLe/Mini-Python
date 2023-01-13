@@ -1,6 +1,8 @@
 {
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "antlr-4.11.1-complete.jar"
-    ]
+        "antlr-4.11.1-complete.jar",
+        "Mini-Python-Builder-1.0-SNAPSHOT.jar"
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

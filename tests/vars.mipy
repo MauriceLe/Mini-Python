@@ -1,7 +1,0 @@
-var_a = "a"
-var_b = "b"
-
-
-def test(x):
-    print("test: " + x)
-#end
