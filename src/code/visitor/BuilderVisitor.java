@@ -89,16 +89,6 @@ public class BuilderVisitor implements AstVisitor<Object> {
     }
 
     @Override
-    public Object visit(Method node) {
-        return null;
-    }
-
-    @Override
-    public Object visit(Function node) {
-        return null;
-    }
-
-    @Override
     public Object visit(If node) {
         return new IfThenElseStatement(
             new IfStatement(
@@ -113,6 +103,14 @@ public class BuilderVisitor implements AstVisitor<Object> {
     }
 
     @Override
+    public Object visit(While node) {
+        CBuilder.Expression condition = (CBuilder.Expression) node.getCondition().accept(this);
+        List<CBuilder.Statement> statements = (List<CBuilder.Statement>) node.getBody().accept(this);
+
+        return new WhileStatement(condition, statements);
+    }
+
+    @Override
     public Object visit(Identifier node) {
         return new Reference(node.getIdentifier());
     }
@@ -120,6 +118,16 @@ public class BuilderVisitor implements AstVisitor<Object> {
     @Override
     public Object visit(Return node) {
         return new ReturnStatement((CBuilder.Expression) node.getExpression().accept(this));
+    }
+
+    @Override
+    public Object visit(Method node) {
+        return null;
+    }
+
+    @Override
+    public Object visit(Function node) {
+        return null;
     }
 
     @Override
@@ -159,8 +167,10 @@ public class BuilderVisitor implements AstVisitor<Object> {
             positionalArguments,
             localVariables
         );
+        
         this.program.addFunction(fun);
         this.env.define(functionName, fun);
+
         return fun;
     }
 
@@ -190,14 +200,6 @@ public class BuilderVisitor implements AstVisitor<Object> {
         }
 
         return statements;
-    }
-
-    @Override
-    public Object visit(While node) {
-        CBuilder.Expression condition = (CBuilder.Expression) node.getCondition().accept(this);
-        List<CBuilder.Statement> statements = (List<CBuilder.Statement>) node.getBody().accept(this);
-
-        return new WhileStatement(condition, statements);
     }
 
     @Override

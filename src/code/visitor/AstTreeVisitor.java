@@ -63,7 +63,7 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     @Override 
     public Node visitMultiplyExpression(MiniPythonParser.MultiplyExpressionContext ctx) {
         Arithmetic arithmetic = new Arithmetic();
-        arithmetic.setOperator(Arithmetic.Operator.MULTI);
+        arithmetic.setOperator(Arithmetic.Operator.Multiplication);
  
         for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
             arithmetic.setOperand((Expression) visit(expression));
@@ -75,7 +75,7 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     @Override 
     public Node visitDivisionExpression(MiniPythonParser.DivisionExpressionContext ctx) { 
         Arithmetic arithmetic = new Arithmetic();
-        arithmetic.setOperator(Arithmetic.Operator.DIVIS);
+        arithmetic.setOperator(Arithmetic.Operator.Division);
 
         for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
             arithmetic.setOperand((Expression) visit(expression));
@@ -87,7 +87,7 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     @Override
     public Node visitPlusExpression(MiniPythonParser.PlusExpressionContext ctx) { 
         Arithmetic arithmetic = new Arithmetic();
-        arithmetic.setOperator(Arithmetic.Operator.PLUS);
+        arithmetic.setOperator(Arithmetic.Operator.Plus);
 
         for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
             arithmetic.setOperand((Expression) visit(expression));
@@ -99,7 +99,7 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     @Override 
     public Node visitMinusExpression(MiniPythonParser.MinusExpressionContext ctx) { 
         Arithmetic arithmetic = new Arithmetic();
-        arithmetic.setOperator(Arithmetic.Operator.MINUS);
+        arithmetic.setOperator(Arithmetic.Operator.Minus);
 
         for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
             arithmetic.setOperand((Expression) visit(expression));
