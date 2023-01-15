@@ -85,10 +85,12 @@ public class BuilderVisitor implements AstVisitor<Object> {
         CBuilder.Expression identifier = (CBuilder.Expression) node.getIdentifier().accept(this);
         CBuilder.Expression expression = (CBuilder.Expression) node.getExpression().accept(this);
 
-        if (this.env.get(node.getIdentifier().getIdentifier()) != null){
+        if (this.env.get(node.getIdentifier().getIdentifier()) == null){
             VariableDeclaration var = new VariableDeclaration(node.getIdentifier().getIdentifier());
             this.env.define(node.getIdentifier().getIdentifier(), expression);
             this.program.addVariable(var);
+        } else {
+            this.env.define(node.getIdentifier().getIdentifier(), expression);
         }
 
         return new CBuilder.variables.Assignment((Reference) identifier, expression);
