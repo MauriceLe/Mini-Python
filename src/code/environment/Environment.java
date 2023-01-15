@@ -45,4 +45,8 @@ public class Environment {
         return this.values;
     }
 
+    public Environment getParent(){
+        return this.enclosing;
+    }
+
 }

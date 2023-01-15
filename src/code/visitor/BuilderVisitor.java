@@ -58,8 +58,8 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
     @Override
     public Object visit(Arithmetic node) {
-        Expression left = (Expression) node.getOperands().get(0).accept(this);
-        Expression right = (Expression) node.getOperands().get(1).accept(this);
+        CBuilder.Expression left = (CBuilder.Expression) node.getOperands().get(0).accept(this);
+        CBuilder.Expression right = (CBuilder.Expression) node.getOperands().get(1).accept(this);
 
         return new Call(
             new AttributeReference(node.getOperator(), (CBuilder.Expression) left),
@@ -69,8 +69,8 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
     @Override
     public Object visit(Compare node) {
-        Expression left = (Expression) node.getOperands().get(0).accept(this);
-        Expression right = (Expression) node.getOperands().get(1).accept(this);
+        CBuilder.Expression left = (CBuilder.Expression) node.getOperands().get(0).accept(this);
+        CBuilder.Expression right = (CBuilder.Expression) node.getOperands().get(1).accept(this);
 
         return new Call(
             new AttributeReference(node.getOperator(), (CBuilder.Expression) left),
@@ -85,12 +85,10 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
         if (this.env.get(node.getIdentifier().getIdentifier()) == null){
             VariableDeclaration var = new VariableDeclaration(node.getIdentifier().getIdentifier());
-            this.env.define(node.getIdentifier().getIdentifier(), expression);
             this.program.addVariable(var);
-        } else {
-            this.env.define(node.getIdentifier().getIdentifier(), expression);
         }
 
+        this.env.define(node.getIdentifier().getIdentifier(), expression);
         return new CBuilder.variables.Assignment((Reference) identifier, expression);
     }
 
@@ -128,16 +126,26 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
     @Override
     public Object visit(Method node) {
-        return null;
+        List<CBuilder.Expression> args = new ArrayList<>();
+        for (Expression ex : node.getParameters()){
+            args.add((CBuilder.Expression) ex.accept(this));
+        }
+        return new Call((CBuilder.Expression) node.getIdentifier().accept(this), args);
     }
 
     @Override
     public Object visit(Function node) {
-        return null;
+        List<CBuilder.Expression> args = new ArrayList<>();
+        for (Expression ex : node.getParameters()){
+            args.add((CBuilder.Expression) ex.accept(this));
+        }
+        return new Call((CBuilder.Expression) node.getIdentifier().accept(this), args);
     }
 
     @Override
     public Object visit(DefClass node) {
+        Environment parentEnv = env;
+        this.env = new Environment(parentEnv);
         String className = node.getIdentifier().getIdentifier();
         Reference parent = null;
         List<CBuilder.objects.functions.Function> methods = new ArrayList<>();
@@ -153,12 +161,15 @@ public class BuilderVisitor implements AstVisitor<Object> {
             attributes
         );
         this.program.addClass(pyClass);
+        this.env = parentEnv;
         this.env.define(className, pyClass);
         return pyClass;
     }
 
     @Override
     public Object visit(DefFunction node) {
+        Environment parent = env;
+        this.env = new Environment(parent);
         String functionName = node.getIdentifier().getIdentifier();
         List<CBuilder.Statement> statements = (List<CBuilder.Statement>) node.getBody().accept(this);
         List<CBuilder.objects.functions.Argument> positionalArguments = new ArrayList<>();
@@ -175,6 +186,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
         );
 
         this.program.addFunction(fun);
+        this.env = parent;
         this.env.define(functionName, fun);
 
         return fun;
@@ -182,6 +194,8 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
     @Override
     public Object visit(DefMethod node) {
+        Environment parent = env;
+        this.env = new Environment(parent);
         List<CBuilder.objects.functions.Argument> positionalArguments = new ArrayList<>();
         List<CBuilder.variables.VariableDeclaration> localVariables = new ArrayList<>();
         for(int i = 0; i < node.getParameters().size(); i++){
@@ -194,6 +208,8 @@ public class BuilderVisitor implements AstVisitor<Object> {
             positionalArguments,
             localVariables
         );
+        this.env = parent;
+        this.env.define(node.getIdentifier().getIdentifier(), fun);
         return fun;
     }
 
@@ -202,7 +218,9 @@ public class BuilderVisitor implements AstVisitor<Object> {
         List<CBuilder.Statement> statements = new ArrayList<>();
 
         for(Statement statement : node.getStatements()){
-            statements.add((CBuilder.Statement) statement.accept(this));
+            if(this.env.getParent() == null){
+                statements.add((CBuilder.Statement) statement.accept(this));
+            }
             this.program.addStatement((CBuilder.Statement) statement.accept(this));
         }
 
@@ -229,7 +247,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
                 } else if (entry.getValue() instanceof CBuilder.objects.functions.Function){
                     this.program.addFunction((CBuilder.objects.functions.Function) entry.getValue());
                 } else if (entry.getValue() instanceof VariableDeclaration) {
-                    //this.program.addVariable((VariableDeclaration) entry.getValue());
+                    this.program.addVariable((VariableDeclaration) entry.getValue());
                 }
             }
 
