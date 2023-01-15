@@ -11,8 +11,6 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import CBuilder.literals.*;
 import CBuilder.objects.*;
-import CBuilder.objects.Call;
-import CBuilder.objects.MPyClass;
 import CBuilder.objects.functions.ReturnStatement;
 import CBuilder.variables.VariableDeclaration;
 import CBuilder.ProgramBuilder;
@@ -60,29 +58,29 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
     @Override
     public Object visit(Arithmetic node) {
+        Expression left = (Expression) node.getOperands().get(0).accept(this);
+        Expression right = (Expression) node.getOperands().get(1).accept(this);
+
         return new Call(
-            new AttributeReference(
-                node.getOperator(), 
-                (CBuilder.Expression) node.getOperands().get(0).accept(this)
-            ), 
-            List.of((CBuilder.Expression) node.getOperands().get(1).accept(this))
+            new AttributeReference(node.getOperator(), (CBuilder.Expression) left),
+            List.of(new CBuilder.Expression[] {(CBuilder.Expression) right})
         );
     }
 
     @Override
     public Object visit(Compare node) {
+        Expression left = (Expression) node.getOperands().get(0).accept(this);
+        Expression right = (Expression) node.getOperands().get(1).accept(this);
+
         return new Call(
-            new AttributeReference(
-                node.getOperator(), 
-                (CBuilder.Expression) node.getOperands().get(0).accept(this)
-            ), 
-            List.of((CBuilder.Expression) node.getOperands().get(1).accept(this))
+            new AttributeReference(node.getOperator(), (CBuilder.Expression) left),
+            List.of(new CBuilder.Expression[] {(CBuilder.Expression) right})
         );
     }
 
     @Override
     public Object visit(Assignment node) {
-        CBuilder.Expression identifier = (CBuilder.Expression) node.getIdentifier().accept(this);
+        CBuilder.Reference identifier = (CBuilder.Reference) node.getIdentifier().accept(this);
         CBuilder.Expression expression = (CBuilder.Expression) node.getExpression().accept(this);
 
         if (this.env.get(node.getIdentifier().getIdentifier()) == null){
