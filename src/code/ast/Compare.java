@@ -43,8 +43,8 @@ public class Compare extends Expression {
             case NotEqual: return "__ne__";
             case Greater: return "__ge__";
             case Greater_Then: return "__gt__";
-            case Less: return "__le__";
-            case Less_Then: return "__lt__";
+            case Less: return "__lt__";
+            case Less_Then: return "__le__";
             default: return "";
         }
     }

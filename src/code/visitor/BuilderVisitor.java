@@ -52,11 +52,6 @@ public class BuilderVisitor implements AstVisitor<Object> {
     }
 
     @Override
-    public Object visit(Negation node) {
-        return new NotKeyword((CBuilder.Expression) node.getExpression().accept(this));
-    }
-
-    @Override
     public Object visit(Arithmetic node) {
         CBuilder.Expression left = (CBuilder.Expression) node.getOperands().get(0).accept(this);
         CBuilder.Expression right = (CBuilder.Expression) node.getOperands().get(1).accept(this);
@@ -76,6 +71,11 @@ public class BuilderVisitor implements AstVisitor<Object> {
             new AttributeReference(node.getOperator(), (CBuilder.Expression) left),
             List.of(new CBuilder.Expression[] {(CBuilder.Expression) right})
         );
+    }
+
+    @Override
+    public Object visit(Negation node) {
+        return new NotKeyword((CBuilder.Expression) node.getExpression().accept(this));
     }
 
     @Override
