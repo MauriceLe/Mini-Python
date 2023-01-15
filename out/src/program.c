@@ -16,14 +16,5 @@
 
 
 int main() {
-	__mpy_builtins_setup();
-	
-	
-	
-	
-	
-	
-	
-	__mpy_builtins_cleanup();
 	return 0;
 }

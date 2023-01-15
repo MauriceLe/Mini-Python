@@ -1,10 +1,11 @@
 package code.ast;
 
-import java.util.ArrayList;
-import java.util.List;
-import code.visitor.AstVisitor;
 
+import java.util.List;
+import java.util.ArrayList;
+import code.visitor.AstVisitor;
 import org.antlr.v4.runtime.tree.Tree;
+
 
 public class Arithmetic extends Expression {
     
@@ -16,10 +17,10 @@ public class Arithmetic extends Expression {
     }
 
     public enum Operator {
-        MULTI,
-        DIVIS,
-        PLUS,
-        MINUS
+        Multiplication,
+        Division,
+        Plus,
+        Minus
     }
 
     public void setOperator(Operator operator) {
@@ -34,8 +35,14 @@ public class Arithmetic extends Expression {
         this.operands.add(expression);
     }
 
-    public Operator getOperator(){
-        return this.operator;
+    public String getOperator() {
+        switch(this.operator) {
+            case Multiplication: return "__mul__";
+            case Division: return "__div__";
+            case Plus: return "__add__";
+            case Minus: return "__sub__";
+            default: return "";
+        }
     }
 
     @Override

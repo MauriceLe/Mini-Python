@@ -17,6 +17,7 @@ public abstract class NativeFunction extends Function{
             return null;
         }
     };
+
     public static final NativeFunction input = new NativeFunction() {
         private Scanner sc = new Scanner(System.in);
 
@@ -25,4 +26,5 @@ public abstract class NativeFunction extends Function{
             return this.sc.nextLine();
         }
     };
+    
 }

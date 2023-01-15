@@ -9,13 +9,11 @@ public class SymbolListener extends MiniPythonBaseListener{
     private Scope scope;
 
 	@Override public void enterStart(MiniPythonParser.StartContext ctx) {
-        
         this.scope = new Scope();
         NativeFunction.print.setScope(this.scope);
         NativeFunction.input.setScope(this.scope);
         this.scope.bind("print", NativeFunction.print);
         this.scope.bind("input", NativeFunction.input);
-
     }
 
 	@Override 

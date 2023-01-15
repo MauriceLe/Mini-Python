@@ -1,9 +1,11 @@
 package code.ast;
 
-import java.util.ArrayList;
+
 import java.util.List;
+import java.util.ArrayList;
 import code.visitor.AstVisitor;
 import org.antlr.v4.runtime.tree.Tree;
+
 
 public class Compare extends Expression {
 
@@ -35,8 +37,16 @@ public class Compare extends Expression {
         return this.operands;
     }
 
-    public Operator getOperator(){
-        return this.operator;
+    public String getOperator() {
+        switch(this.operator) {
+            case Equal: return "__eq__";
+            case NotEqual: return "__ne__";
+            case Greater: return "__ge__";
+            case Greater_Then: return "__gt__";
+            case Less: return "__le__";
+            case Less_Then: return "__lt__";
+            default: return "";
+        }
     }
 
     @Override
