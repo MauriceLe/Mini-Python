@@ -34,19 +34,19 @@ public class InterpreterVisitor implements AstVisitor<Object>{
 
         if (values.stream().allMatch(x -> x instanceof Integer)) {
             switch(node.getOperator()) {
-                case MULTI: 
+                case "__mul__": 
                     return values.stream().reduce((x,y) -> (int)x * (int)y).orElse(1);
-                case DIVIS: 
+                case "__div__": 
                     return values.stream().reduce((x,y) -> (int)x / (int)y).orElse(1);
-                case PLUS: 
+                case "__add__": 
                     return values.stream().reduce((x,y) -> (int)x + (int)y).orElse(0);
-                case MINUS: 
+                case "__sub__": 
                     return values.stream().reduce((x,y) -> (int)x - (int)y).orElse(0);
             }
         }
 
         if (values.stream().anyMatch(x -> x instanceof String) 
-            && node.getOperator() == Arithmetic.Operator.PLUS) {
+            && node.getOperator() == "__add__") {
             return values.stream().reduce((x,y) -> x + y.toString()).orElse("");
         }
     
@@ -61,43 +61,43 @@ public class InterpreterVisitor implements AstVisitor<Object>{
 
         if (values.stream().allMatch(x -> x instanceof Integer)) {
             switch (node.getOperator()) {
-                case Equal:
+                case "__eq__":
                     return values.stream().reduce((x,y) -> (int)x == (int)y).orElse(true);
-                case NotEqual:
+                case "__ne__":
                     return values.stream().reduce((x,y) -> (int)x != (int)y).orElse(true);
-                case Greater:
+                case "__ge__":
                     return values.stream().reduce((x,y) -> (int)x > (int)y).orElse(true);
-                case Greater_Then:
+                case "__gt__":
                     return values.stream().reduce((x,y) -> (int)x >= (int)y).orElse(true);
-                case Less:
+                case "__le__":
                     return values.stream().reduce((x,y) -> (int)x < (int)y).orElse(true);
-                case Less_Then:
+                case "__lt__":
                     return values.stream().reduce((x,y) -> (int)x <= (int)y).orElse(true);
             }
         }
 
         if (values.stream().allMatch(x -> x instanceof String)) {
             switch (node.getOperator()) {
-                case Equal:
+                case "__eq__":
                     return values.stream().reduce((x,y) -> ((String)x).compareTo((String)y) == 0).orElse(true);
-                case NotEqual:
+                case "__ne__":
                     return values.stream().reduce((x,y) -> ((String)x).compareTo((String)y) != 0).orElse(true);
-                case Greater:
+                case "__ge__":
                     return values.stream().reduce((x,y) -> ((String)x).compareTo((String)y) > 0).orElse(true);
-                case Greater_Then:
+                case "__gt__":
                     return values.stream().reduce((x,y) -> ((String)x).compareTo((String)y) >= 0).orElse(true);
-                case Less:
+                case "__le__":
                     return values.stream().reduce((x,y) -> ((String)x).compareTo((String)y) < 0).orElse(true);
-                case Less_Then:
+                case "__lt__":
                     return values.stream().reduce((x,y) -> ((String)x).compareTo((String)y) <= 0).orElse(true);
             }
         }
 
         if (values.stream().allMatch(x -> x instanceof Boolean)) {
             switch (node.getOperator()) {
-                case Equal:
+                case "__eq__":
                     return values.stream().reduce((x,y) -> (boolean)x == (boolean)y).orElse(true);
-                case NotEqual:
+                case "__ne__":
                     return values.stream().reduce((x,y) -> (boolean)x != (boolean)y).orElse(true);
                 default: break;
             }
