@@ -65,7 +65,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
                 node.getOperator(), 
                 (CBuilder.Expression) node.getOperands().get(0).accept(this)
             ), 
-            Collections.singletonList((CBuilder.Expression) node.getOperands().get(1).accept(this))
+            List.of((CBuilder.Expression) node.getOperands().get(1).accept(this))
         );
     }
 
@@ -76,7 +76,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
                 node.getOperator(), 
                 (CBuilder.Expression) node.getOperands().get(0).accept(this)
             ), 
-            Collections.singletonList((CBuilder.Expression) node.getOperands().get(1).accept(this))
+            List.of((CBuilder.Expression) node.getOperands().get(1).accept(this))
         );
     }
 
@@ -167,7 +167,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
             positionalArguments,
             localVariables
         );
-        
+
         this.program.addFunction(fun);
         this.env.define(functionName, fun);
 
@@ -197,6 +197,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
         for(Statement statement : node.getStatements()){
             statements.add((CBuilder.Statement) statement.accept(this));
+            this.program.addStatement((CBuilder.Statement) statement.accept(this));
         }
 
         return statements;
