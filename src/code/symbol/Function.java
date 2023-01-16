@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Function extends Symbol implements Callable{
 
-    private code.ast.DefFunction function;
+    private code.ast.Function function;
     private code.ast.Identifier id;
 
     public Function(){
@@ -15,7 +15,7 @@ public class Function extends Symbol implements Callable{
         this.id = id;
     }
 
-    public Function(code.ast.DefFunction f){
+    public Function(code.ast.Function f){
         this.function = f;
     }
 
@@ -24,7 +24,7 @@ public class Function extends Symbol implements Callable{
         return null;
     }
 
-    public code.ast.DefFunction getFunction(){
+    public code.ast.Function getFunction(){
         return this.function;
     }
 

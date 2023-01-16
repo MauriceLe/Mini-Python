@@ -171,7 +171,7 @@ public class InterpreterVisitor implements AstVisitor<Object>{
     }
 
     @Override
-    public Object visit(Function node) {
+    public Object visit(Callable node) {
 
         Fun fun = (Fun) this.env.get(node.getIdentifier().getText());
 
@@ -191,10 +191,10 @@ public class InterpreterVisitor implements AstVisitor<Object>{
         this.env = new Environment(this.env);
 
         for (int i=0; i < args.size(); i++) {
-            this.env.define(((DefFunction) fun.getNode()).getParameter().get(i).getText(), args.get(i));
+            this.env.define(((Function) fun.getNode()).getParameter().get(i).getText(), args.get(i));
         }
 
-        for(Statement stmt: ((DefFunction)fun.getNode()).getBody().getStatements()){
+        for(Statement stmt: ((Function)fun.getNode()).getBody().getStatements()){
             try{
                 Return ret = (Return)stmt;
                 return ret.accept(this);
@@ -220,7 +220,7 @@ public class InterpreterVisitor implements AstVisitor<Object>{
     }
 
     @Override
-    public Object visit(DefClass node) {
+    public Object visit(Class node) {
         Environment prev = this.env;
         this.env = new Environment(this.env);
 
@@ -235,7 +235,7 @@ public class InterpreterVisitor implements AstVisitor<Object>{
     }
 
     @Override
-    public Object visit(DefFunction node) {
+    public Object visit(Function node) {
         Fun fun = new Fun(this.env, node);
         this.env.define(node.getIdentifier().getText(), fun);
         return null;

@@ -1,8 +1,8 @@
 package code;
 
-import code.core.*;
 import code.visitor.*;
 import code.ast.AstTree;
+import code.core.*;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.CommonTokenStream;

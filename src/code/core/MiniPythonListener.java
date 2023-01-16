@@ -78,18 +78,6 @@ public interface MiniPythonListener extends ParseTreeListener {
 	 */
 	void exitNotExpression(MiniPythonParser.NotExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code MethodExpression}
-	 * labeled alternative in {@link MiniPythonParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void enterMethodExpression(MiniPythonParser.MethodExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code MethodExpression}
-	 * labeled alternative in {@link MiniPythonParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void exitMethodExpression(MiniPythonParser.MethodExpressionContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code BoolExpression}
 	 * labeled alternative in {@link MiniPythonParser#expression}.
 	 * @param ctx the parse tree
@@ -137,18 +125,6 @@ public interface MiniPythonListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLessExpression(MiniPythonParser.LessExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code FunctionExpression}
-	 * labeled alternative in {@link MiniPythonParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void enterFunctionExpression(MiniPythonParser.FunctionExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code FunctionExpression}
-	 * labeled alternative in {@link MiniPythonParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void exitFunctionExpression(MiniPythonParser.FunctionExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code MinusExpression}
 	 * labeled alternative in {@link MiniPythonParser#expression}.
@@ -222,6 +198,18 @@ public interface MiniPythonListener extends ParseTreeListener {
 	 */
 	void exitLessThenExpression(MiniPythonParser.LessThenExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code CallExpression}
+	 * labeled alternative in {@link MiniPythonParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterCallExpression(MiniPythonParser.CallExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code CallExpression}
+	 * labeled alternative in {@link MiniPythonParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitCallExpression(MiniPythonParser.CallExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MiniPythonParser#statement}.
 	 * @param ctx the parse tree
 	 */
@@ -281,16 +269,6 @@ public interface MiniPythonListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExp_parameter(MiniPythonParser.Exp_parameterContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MiniPythonParser#fun_parameter}.
-	 * @param ctx the parse tree
-	 */
-	void enterFun_parameter(MiniPythonParser.Fun_parameterContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MiniPythonParser#fun_parameter}.
-	 * @param ctx the parse tree
-	 */
-	void exitFun_parameter(MiniPythonParser.Fun_parameterContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniPythonParser#return}.
 	 * @param ctx the parse tree
@@ -438,15 +416,25 @@ public interface MiniPythonListener extends ParseTreeListener {
 	 */
 	void exitFin_statement(MiniPythonParser.Fin_statementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniPythonParser#method}.
+	 * Enter a parse tree produced by {@link MiniPythonParser#call}.
 	 * @param ctx the parse tree
 	 */
-	void enterMethod(MiniPythonParser.MethodContext ctx);
+	void enterCall(MiniPythonParser.CallContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MiniPythonParser#method}.
+	 * Exit a parse tree produced by {@link MiniPythonParser#call}.
 	 * @param ctx the parse tree
 	 */
-	void exitMethod(MiniPythonParser.MethodContext ctx);
+	void exitCall(MiniPythonParser.CallContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniPythonParser#fun_parameter}.
+	 * @param ctx the parse tree
+	 */
+	void enterFun_parameter(MiniPythonParser.Fun_parameterContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniPythonParser#fun_parameter}.
+	 * @param ctx the parse tree
+	 */
+	void exitFun_parameter(MiniPythonParser.Fun_parameterContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniPythonParser#function}.
 	 * @param ctx the parse tree
@@ -458,33 +446,13 @@ public interface MiniPythonListener extends ParseTreeListener {
 	 */
 	void exitFunction(MiniPythonParser.FunctionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniPythonParser#def_function}.
+	 * Enter a parse tree produced by {@link MiniPythonParser#class}.
 	 * @param ctx the parse tree
 	 */
-	void enterDef_function(MiniPythonParser.Def_functionContext ctx);
+	void enterClass(MiniPythonParser.ClassContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MiniPythonParser#def_function}.
+	 * Exit a parse tree produced by {@link MiniPythonParser#class}.
 	 * @param ctx the parse tree
 	 */
-	void exitDef_function(MiniPythonParser.Def_functionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MiniPythonParser#def_method}.
-	 * @param ctx the parse tree
-	 */
-	void enterDef_method(MiniPythonParser.Def_methodContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MiniPythonParser#def_method}.
-	 * @param ctx the parse tree
-	 */
-	void exitDef_method(MiniPythonParser.Def_methodContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MiniPythonParser#def_class}.
-	 * @param ctx the parse tree
-	 */
-	void enterDef_class(MiniPythonParser.Def_classContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MiniPythonParser#def_class}.
-	 * @param ctx the parse tree
-	 */
-	void exitDef_class(MiniPythonParser.Def_classContext ctx);
+	void exitClass(MiniPythonParser.ClassContext ctx);
 }

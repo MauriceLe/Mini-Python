@@ -13,8 +13,7 @@ expression      : expression MULTIPLY expression        # MultiplyExpression
                 | expression EQUAL expression           # EqualExpression
                 | expression NOT_EQUAL expression       # NotEqualExpression
                 | NOT expression                        # NotExpression
-                | function                              # FunctionExpression
-                | method                                # MethodExpression
+                | call                                  # CallExpression
                 | ID                                    # IdExpression
                 | INT                                   # IntExpression
                 | BOOLEAN                               # BoolExpression
@@ -26,10 +25,9 @@ statement       : expression
                 | while 
                 | if
                 | try
+                | call
                 | function
-                | method
-                | def_function
-                | def_class
+                | class
                 | return
                 | import_module
                 ;
@@ -45,8 +43,6 @@ condition       : expression COLON
                 ;
 
 exp_parameter   : expression? (COMMA expression)*;
-
-fun_parameter   : identifier? (COMMA identifier)*;
 
 return          : RETURN expression;
 
@@ -68,12 +64,17 @@ try_statement   : TRY COLON statements*;
 exc_statement   : EXCEPT exception COLON statements*;
 fin_statement   : FINALLY COLON statements*;
 
-method          : identifier '.' identifier LBRACKET exp_parameter RBRACKET;
-function        : identifier LBRACKET exp_parameter RBRACKET;
 
-def_function    : DEF identifier LBRACKET fun_parameter RBRACKET COLON statements END;
-def_method      : DEF identifier LBRACKET SELF (COMMA fun_parameter)? RBRACKET COLON statements END;
-def_class       : CLASS_ identifier (COLON | LBRACKET identifier RBRACKET COLON) def_method* END;
+call            : identifier LBRACKET exp_parameter RBRACKET
+                | identifier DOT identifier LBRACKET exp_parameter RBRACKET
+                ;
+
+fun_parameter   : identifier? (COMMA identifier)*;
+
+function        : DEF identifier LBRACKET fun_parameter RBRACKET COLON statements END;
+
+class           : CLASS_ identifier (COLON | LBRACKET identifier RBRACKET COLON) function* END;
+
 
 INT             : [0-9]+;
 BOOLEAN         : 'True' | 'False';
@@ -122,4 +123,4 @@ COMMA           : ',';
 END             : '#end' ('\n' | '\r\n')?;
 
 WS              : [ \t\r\n]+ -> skip;
-ID              : [a-zA-Z][a-zA-Z_0-9]*;
+ID              : [a-z_A-Z][a-zA-Z_0-9]*;

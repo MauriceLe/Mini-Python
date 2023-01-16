@@ -1,9 +1,9 @@
-def fun(a):
-    print(a)
-    b = 1
-    print(b)
+var = 10
+
+if (var>9):
+    print("kleiner")
+elif (var>8):
+    print("kleinererer")
+else: 
+    print('klappt')
 #end
-
-fun(10)
-
-

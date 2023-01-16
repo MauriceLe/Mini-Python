@@ -89,18 +89,6 @@ public class MiniPythonBaseListener implements MiniPythonListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMethodExpression(MiniPythonParser.MethodExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitMethodExpression(MiniPythonParser.MethodExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterBoolExpression(MiniPythonParser.BoolExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -144,18 +132,6 @@ public class MiniPythonBaseListener implements MiniPythonListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitLessExpression(MiniPythonParser.LessExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFunctionExpression(MiniPythonParser.FunctionExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFunctionExpression(MiniPythonParser.FunctionExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -233,6 +209,18 @@ public class MiniPythonBaseListener implements MiniPythonListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterCallExpression(MiniPythonParser.CallExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCallExpression(MiniPythonParser.CallExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterStatement(MiniPythonParser.StatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -300,18 +288,6 @@ public class MiniPythonBaseListener implements MiniPythonListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExp_parameter(MiniPythonParser.Exp_parameterContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFun_parameter(MiniPythonParser.Fun_parameterContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFun_parameter(MiniPythonParser.Fun_parameterContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -485,13 +461,25 @@ public class MiniPythonBaseListener implements MiniPythonListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMethod(MiniPythonParser.MethodContext ctx) { }
+	@Override public void enterCall(MiniPythonParser.CallContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMethod(MiniPythonParser.MethodContext ctx) { }
+	@Override public void exitCall(MiniPythonParser.CallContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFun_parameter(MiniPythonParser.Fun_parameterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFun_parameter(MiniPythonParser.Fun_parameterContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -509,37 +497,13 @@ public class MiniPythonBaseListener implements MiniPythonListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDef_function(MiniPythonParser.Def_functionContext ctx) { }
+	@Override public void enterClass(MiniPythonParser.ClassContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDef_function(MiniPythonParser.Def_functionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterDef_method(MiniPythonParser.Def_methodContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitDef_method(MiniPythonParser.Def_methodContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterDef_class(MiniPythonParser.Def_classContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitDef_class(MiniPythonParser.Def_classContext ctx) { }
+	@Override public void exitClass(MiniPythonParser.ClassContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

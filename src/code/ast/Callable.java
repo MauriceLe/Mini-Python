@@ -3,17 +3,24 @@ package code.ast;
 import java.util.ArrayList;
 import java.util.List;
 import code.visitor.AstVisitor;
-
 import org.antlr.v4.runtime.tree.Tree;
 
-public class Method extends Expression {
-    
-    private Identifier instance;
+public class Callable extends Expression {
+
+    private Identifier class_identifier;
     private Identifier identifier;
     private List<Expression> parameters;
 
-    public Method() {
+    public Callable() {
         parameters = new ArrayList<>();
+    }
+
+    public Identifier getClassIdentifier() {
+        return this.class_identifier;
+    }
+
+    public void setClassIdentifier(Identifier identifier) {
+        this.class_identifier = identifier;
     }
 
     public Identifier getIdentifier() {
@@ -24,22 +31,14 @@ public class Method extends Expression {
         this.identifier = identifier;
     }
 
-    public void setInstance(Identifier identifier) {
-        this.instance = identifier;
-    }
-
-    public Identifier getInstance(){
-        return this.instance;
-    }
-
     public void setParameter(Expression parameter) {
         this.parameters.add(parameter);
     }
-
-    public List<Expression> getParameters(){
+    
+    public List<Expression> getParameters() {
         return this.parameters;
     }
-    
+
     @Override
     public int getChildCount() {
         return this.parameters.size();
@@ -52,9 +51,9 @@ public class Method extends Expression {
 
     @Override
     public String toStringTree() {
-        return "Method " + this.identifier.getIdentifier();
+        return "Function " + this.identifier.getText();
     }
-
+    
     @Override
     public <T> T accept(AstVisitor<T> visitor) {
         return visitor.visit(this);

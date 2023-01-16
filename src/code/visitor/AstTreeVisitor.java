@@ -1,9 +1,12 @@
 package code.visitor;
 
+
 import code.ast.*;
+import code.ast.Class;
 import code.ast.types.*;
 import code.core.MiniPythonBaseVisitor;
 import code.core.MiniPythonParser;
+
 
 public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 
@@ -175,72 +178,64 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 	
 	@Override 
     public Node visitIf(MiniPythonParser.IfContext ctx) { 
-        If if_statement = new If();
+        If _if = new If();
 
-        if_statement.setCondition((Expression) visit(ctx.if_statement().condition().expression()));
-        if_statement.setIfBlock((Block) visit(ctx.if_statement().statements()));
+        _if.setCondition((Expression) visit(ctx.if_statement().condition().expression()));
+        _if.setIfBlock((Block) visit(ctx.if_statement().statements()));
 
-        for (MiniPythonParser.Elif_statementContext elseIF: ctx.elif_statement()) {
-            Expression condition = (Expression) visit(elseIF.condition().expression());
-            Block block = (Block) visit(elseIF.statements());
-            if_statement.setElifBlock(condition, block);
+        for (MiniPythonParser.Elif_statementContext _else: ctx.elif_statement()) {
+            Expression condition = (Expression) visit(_else.condition().expression());
+            Block block = (Block) visit(_else.statements());
+            _if.setElifBlock(condition, block);
         }
 
         if (ctx.else_statement() != null) {
-            if_statement.setElseBlock((Block) visit(ctx.else_statement().statements()));
+            _if.setElseBlock((Block) visit(ctx.else_statement().statements()));
         }
 
-        return if_statement;
+        return _if;
     }
 	
-    @Override 
-    public Node visitMethodExpression(MiniPythonParser.MethodExpressionContext ctx) { 
-        return visit(ctx.method());
-    }
+    @Override public Node visitCallExpression(MiniPythonParser.CallExpressionContext ctx) { 
+        Callable callable = new Callable();
 
-	@Override 
-    public Node visitMethod(MiniPythonParser.MethodContext ctx) { 
-        Method method = new Method();
-
-        method.setInstance((Identifier) visit(ctx.identifier().get(0)));
-        method.setIdentifier((Identifier) visit(ctx.identifier().get(1)));
-
-        for (MiniPythonParser.ExpressionContext parameter: ctx.exp_parameter().expression()) {
-            method.setParameter((Expression) visit(parameter));
+        if (ctx.call().identifier().size() == 1) {
+            callable.setIdentifier((Identifier) visit(ctx.call().identifier(0)));
+        } else {
+            callable.setClassIdentifier((Identifier) visit(ctx.call().identifier(0)));
+            callable.setIdentifier((Identifier) visit(ctx.call().identifier(1)));
         }
 
-        return method;
-    }
-
-    @Override 
-    public Node visitFunctionExpression(MiniPythonParser.FunctionExpressionContext ctx) { 
-        Function function = new Function();
-        function.setIdentifier((Identifier) visit(ctx.function().identifier()));
-
-        for (MiniPythonParser.ExpressionContext expression: ctx.function().exp_parameter().expression()) {
-            function.setParameter((Expression) visit(expression));
+        for (MiniPythonParser.ExpressionContext expression: ctx.call().exp_parameter().expression()) {
+            callable.setParameter((Expression) visit(expression));
         }
 
-        return function; 
+        return callable; 
+    }
+
+	@Override public Node visitCall(MiniPythonParser.CallContext ctx) { 
+        Callable callable = new Callable();
+
+        if (ctx.identifier().size() == 1) {
+            callable.setIdentifier((Identifier) visit(ctx.identifier(0)));
+        } else {
+            callable.setClassIdentifier((Identifier) visit(ctx.identifier(0)));
+            callable.setIdentifier((Identifier) visit(ctx.identifier(1)));
+        }
+
+        for (MiniPythonParser.ExpressionContext expression: ctx.exp_parameter().expression()) {
+            callable.setParameter((Expression) visit(expression));
+        }
+
+        return callable; 
     }
 	
 	@Override 
     public Node visitFunction(MiniPythonParser.FunctionContext ctx) { 
         Function function = new Function();
+
         function.setIdentifier((Identifier) visit(ctx.identifier()));
-
-        for (MiniPythonParser.ExpressionContext expression: ctx.exp_parameter().expression()) {
-            function.setParameter((Expression) visit(expression));
-        }
-
-        return function; 
-    }
-	
-	@Override 
-    public Node visitDef_function(MiniPythonParser.Def_functionContext ctx) { 
-        DefFunction function = new DefFunction();
-        function.setIdentifier((Identifier) visit(ctx.identifier()));
-
+        
         for (MiniPythonParser.IdentifierContext identifier: ctx.fun_parameter().identifier()) {
             function.setParameter((Identifier) visit(identifier));
         }
@@ -249,46 +244,30 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 
         return function; 
     }
+	
+    @Override public Node visitClass(MiniPythonParser.ClassContext ctx) { 
+        Class _class = new Class();
 
+        _class.setIdentifier((Identifier) visit(ctx.identifier(0)));
+        
+        if (ctx.identifier(1) != null) {
+            _class.setSuperclass((Identifier) visit(ctx.identifier(1)));
+        }
+
+        for (MiniPythonParser.FunctionContext method: ctx.function()) {
+            _class.setMethod((Function) visit(method));
+        }
+
+        return _class; 
+    }
+	
     @Override 
     public Node visitReturn(MiniPythonParser.ReturnContext ctx) { 
-        Return ret = new Return();
-        ret.setExpression((Expression) visit(ctx.expression()));
-        return ret;
+        Return _return = new Return();
+        _return.setExpression((Expression) visit(ctx.expression()));
+        return _return;
     }
 	
-	@Override 
-    public Node visitDef_method(MiniPythonParser.Def_methodContext ctx) { 
-        DefMethod method = new DefMethod();
-        method.setIdentifier((Identifier) visit(ctx.identifier()));
-
-        if(ctx.fun_parameter() != null){
-            for (MiniPythonParser.IdentifierContext identifier: ctx.fun_parameter().identifier()) {
-                method.setParameter((Identifier) visit(identifier));
-            }
-        }
-
-        method.setBody((Block) visit(ctx.statements()));
-
-        return method;
-    }
-	
-	@Override 
-    public Node visitDef_class(MiniPythonParser.Def_classContext ctx) { 
-        DefClass new_class = new DefClass();
-        new_class.setIdentifier((Identifier) visit(ctx.identifier(0)));
-
-        if (ctx.identifier(1) != null) {
-            new_class.setSuperclass((Identifier) visit(ctx.identifier(1)));
-        }
-        
-        for (MiniPythonParser.Def_methodContext method: ctx.def_method()) {
-            new_class.setMethod((DefMethod) visit(method));
-        }
-
-        return new_class;
-    }
-
     @Override 
     public Node visitImport_module(MiniPythonParser.Import_moduleContext ctx) { 
         return new ImportModule((Identifier) visit(ctx.identifier()));

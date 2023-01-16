@@ -1,6 +1,8 @@
 package code.visitor;
 
 import code.ast.*;
+import code.ast.Class;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import code.ast.types.*;
@@ -90,16 +92,34 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
     @Override
     public Object visit(If node) {
-        return new IfThenElseStatement(
+
+        List<CBuilder.Statement> enclosing_statements = statements;
+        statements = new ArrayList<>();
+
+        List<ElifStatement> elif_statements = new ArrayList<>();
+
+        for (Map.Entry<Expression, Block> elif: node.getElifBlock().entrySet()) {
+            elif_statements.add(
+                new ElifStatement((CBuilder.Expression) elif.getKey().accept(this), 
+                (List<CBuilder.Statement>) elif.getValue().accept(this))
+            );
+        }
+
+        IfThenElseStatement _if = new IfThenElseStatement(
             new IfStatement(
                 (CBuilder.Expression) node.getCondition().accept(this),
                 (List<CBuilder.Statement>) node.getIfBlock().accept(this)
             ),
-            Optional.empty(), 
+            Optional.of(elif_statements), 
             node.getElseBlock() == null 
                 ? Optional.empty() 
                 : Optional.of(new ElseStatement((List<CBuilder.Statement>) node.getElseBlock().accept(this)))
         );
+
+        statements = enclosing_statements;
+        statements.add(_if);
+
+        return _if;
     }
 
     @Override
@@ -125,19 +145,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
     }
 
     @Override
-    public Object visit(Method node) {
-        Call method = new Call(
-            (CBuilder.Reference) node.getIdentifier().accept(this), 
-            node.getParameters().stream().map(x->(CBuilder.Expression) x.accept(this)).collect(Collectors.toList())
-        );
-
-        statements.add(method);
-
-        return method;
-    }
-
-    @Override
-    public Object visit(Function node) {
+    public Object visit(Callable node) {
         Call function = new Call(
             (CBuilder.Reference) node.getIdentifier().accept(this), 
             node.getParameters().stream().map(x->(CBuilder.Expression) x.accept(this)).collect(Collectors.toList())
@@ -149,7 +157,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
     }
 
     @Override
-    public Object visit(DefFunction node) {
+    public Object visit(Function node) {
 
         List<CBuilder.variables.VariableDeclaration> enclosing_variables = variables;
         List<CBuilder.Statement> enclosing_statements = statements;
@@ -157,10 +165,10 @@ public class BuilderVisitor implements AstVisitor<Object> {
         variables = new ArrayList<>();
         statements = new ArrayList<>();
 
-        List<CBuilder.objects.functions.Argument> arguments = new ArrayList<>();
+        List<Argument> arguments = new ArrayList<>();
         
         for (int i=0; i<node.getParameter().size(); i++) {
-            arguments.add(new CBuilder.objects.functions.Argument(node.getParameter().get(i).getText(), i));
+            arguments.add(new Argument(node.getParameter().get(i).getText(), i));
         }
 
         CBuilder.objects.functions.Function function = new CBuilder.objects.functions.Function(
@@ -179,12 +187,12 @@ public class BuilderVisitor implements AstVisitor<Object> {
     }
 
     @Override
-    public Object visit(DefClass node) {
+    public Object visit(Class node) {
 
         List<CBuilder.objects.functions.Function> enclosing = functions;
         functions = new ArrayList<>();
 
-        if (node.getMethods().stream().noneMatch(f -> f.getIdentifier().getText().equals("__init__"))) {
+        if (node.getFunctions().stream().noneMatch(f -> f.getIdentifier().getText().equals("__init__"))) {
             functions.add(new CBuilder.objects.functions.Function(
                 "__init__",
                 List.of(new CBuilder.objects.SuperCall(List.of())),
@@ -193,8 +201,8 @@ public class BuilderVisitor implements AstVisitor<Object> {
             ));
         }
 
-        for (DefMethod method: node.getMethods()) {
-            method.accept(this);
+        for (Function function: node.getFunctions()) {
+            function.accept(this);
         }
 
         CBuilder.objects.MPyClass _class = new CBuilder.objects.MPyClass(
@@ -211,35 +219,6 @@ public class BuilderVisitor implements AstVisitor<Object> {
         classes.add(_class);
 
         return _class;
-    }
-
-    @Override
-    public Object visit(DefMethod node) {
-        List<CBuilder.variables.VariableDeclaration> enclosing_variables = variables;
-        List<CBuilder.Statement> enclosing_statements = statements;
-
-        variables = new ArrayList<>();
-        statements = new ArrayList<>();
-
-        List<Argument> arguments = new ArrayList<>();
-        
-        for (int i=0; i<node.getParameters().size(); i++) {
-            arguments.add(new Argument(node.getParameters().get(i).getText(), i));
-        }
-
-        CBuilder.objects.functions.Function function = new CBuilder.objects.functions.Function(
-            node.getIdentifier().getText(), 
-            (List<CBuilder.Statement>) node.getBody().accept(this), 
-            arguments,
-            variables
-        );
-        
-        statements = enclosing_statements;
-        variables = enclosing_variables;
-
-        functions.add(function);
-
-        return function;
     }
 
     @Override

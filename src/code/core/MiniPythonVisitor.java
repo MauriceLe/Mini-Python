@@ -52,13 +52,6 @@ public interface MiniPythonVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNotExpression(MiniPythonParser.NotExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code MethodExpression}
-	 * labeled alternative in {@link MiniPythonParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMethodExpression(MiniPythonParser.MethodExpressionContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code BoolExpression}
 	 * labeled alternative in {@link MiniPythonParser#expression}.
 	 * @param ctx the parse tree
@@ -86,13 +79,6 @@ public interface MiniPythonVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitLessExpression(MiniPythonParser.LessExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code FunctionExpression}
-	 * labeled alternative in {@link MiniPythonParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFunctionExpression(MiniPythonParser.FunctionExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code MinusExpression}
 	 * labeled alternative in {@link MiniPythonParser#expression}.
@@ -136,6 +122,13 @@ public interface MiniPythonVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitLessThenExpression(MiniPythonParser.LessThenExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code CallExpression}
+	 * labeled alternative in {@link MiniPythonParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCallExpression(MiniPythonParser.CallExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MiniPythonParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -171,12 +164,6 @@ public interface MiniPythonVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitExp_parameter(MiniPythonParser.Exp_parameterContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MiniPythonParser#fun_parameter}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFun_parameter(MiniPythonParser.Fun_parameterContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MiniPythonParser#return}.
 	 * @param ctx the parse tree
@@ -265,11 +252,17 @@ public interface MiniPythonVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFin_statement(MiniPythonParser.Fin_statementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniPythonParser#method}.
+	 * Visit a parse tree produced by {@link MiniPythonParser#call}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMethod(MiniPythonParser.MethodContext ctx);
+	T visitCall(MiniPythonParser.CallContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPythonParser#fun_parameter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFun_parameter(MiniPythonParser.Fun_parameterContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MiniPythonParser#function}.
 	 * @param ctx the parse tree
@@ -277,21 +270,9 @@ public interface MiniPythonVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFunction(MiniPythonParser.FunctionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniPythonParser#def_function}.
+	 * Visit a parse tree produced by {@link MiniPythonParser#class}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDef_function(MiniPythonParser.Def_functionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MiniPythonParser#def_method}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDef_method(MiniPythonParser.Def_methodContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MiniPythonParser#def_class}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDef_class(MiniPythonParser.Def_classContext ctx);
+	T visitClass(MiniPythonParser.ClassContext ctx);
 }

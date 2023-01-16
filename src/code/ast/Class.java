@@ -1,19 +1,18 @@
 package code.ast;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 import code.visitor.AstVisitor;
-
 import org.antlr.v4.runtime.tree.Tree;
 
-public class DefClass extends Statement {
+public class Class extends Statement {
 
     private Identifier identifier;
     private Identifier superclass;
-    private List<DefMethod> methods;
+    private List<Function> functions;
 
-    public DefClass() {
-        methods = new ArrayList<>();
+    public Class() {
+        functions = new ArrayList<>();
     }
 
     public void setIdentifier(Identifier identifier) {
@@ -32,27 +31,27 @@ public class DefClass extends Statement {
         this.superclass = superclass;
     }
 
-    public void setMethod(DefMethod method) {
-        this.methods.add(method);
+    public void setMethod(Function functions) {
+        this.functions.add(functions);
     }
 
-    public List<DefMethod> getMethods(){
-        return this.methods;
+    public List<Function> getFunctions(){
+        return this.functions;
     }
 
     @Override
     public int getChildCount() {
-        return this.methods.size();
+        return this.functions.size();
     }
 
     @Override
     public Tree getChild(int i) {
-        return this.methods.get(i);
+        return this.functions.get(i);
     }
 
     @Override
     public String toStringTree() {
-        return "Def-Class " + this.identifier.getIdentifier();
+        return "Def-Class " + this.identifier.getText();
     }
 
     @Override

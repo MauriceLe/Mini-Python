@@ -19,7 +19,7 @@ public class ImportModule extends Statement {
     }
 
     public String toString(){
-        return module.getIdentifier();
+        return module.getText();
     }
 
     @Override

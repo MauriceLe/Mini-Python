@@ -1,16 +1,16 @@
 package code.symbol;
 
-import code.ast.DefClass;
+import code.ast.Class;
 
 public class Class extends Symbol {
 
-    private DefClass _class;
+    private Class _class;
 
     public Class(){
         this._class = null;
     }
 
-    public Class(code.ast.DefClass c){
+    public Class(code.ast.Class c){
         this._class = c;
     }
 

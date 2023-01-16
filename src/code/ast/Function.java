@@ -1,14 +1,15 @@
 package code.ast;
 
-import java.util.ArrayList;
 import java.util.List;
 import code.visitor.AstVisitor;
+import java.util.ArrayList;
 import org.antlr.v4.runtime.tree.Tree;
 
-public class Function extends Expression{
-
+public class Function extends Statement {
+    
     private Identifier identifier;
-    private List<Expression> parameters;
+    private List<Identifier> parameters;
+    private Block body;
 
     public Function() {
         parameters = new ArrayList<>();
@@ -22,29 +23,37 @@ public class Function extends Expression{
         this.identifier = identifier;
     }
 
-    public void setParameter(Expression parameter) {
-        this.parameters.add(parameter);
-    }
-    
-    public List<Expression> getParameters() {
+    public List<Identifier> getParameter() {
         return this.parameters;
     }
 
+    public void setParameter(Identifier parameter) {
+        this.parameters.add(parameter);
+    }
+
+    public void setBody(Block body) {
+        this.body = body;
+    }
+
+    public Block getBody(){
+        return this.body;
+    }
+    
     @Override
     public int getChildCount() {
-        return this.parameters.size();
+        return 1;
     }
 
     @Override
     public Tree getChild(int i) {
-        return this.parameters.get(i);
+        return this.body;
     }
 
     @Override
     public String toStringTree() {
-        return "Function " + this.identifier.getIdentifier();
+        return "Def-Function " + this.identifier.getText();
     }
-    
+
     @Override
     public <T> T accept(AstVisitor<T> visitor) {
         return visitor.visit(this);

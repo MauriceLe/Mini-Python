@@ -1,8 +1,8 @@
 package code.ast;
 
 import code.visitor.AstVisitor;
+import java.util.LinkedHashMap;
 import java.util.Map;
-
 import org.antlr.v4.runtime.tree.Tree;
 
 public class If extends Statement {
@@ -11,6 +11,10 @@ public class If extends Statement {
     private Block if_block;
     private Map<Expression, Block> elif_block;
     private Block else_block;
+
+    public If() {
+        this.elif_block = new LinkedHashMap<>();
+    }
 
     public Expression getCondition() {
         return this.condition;
