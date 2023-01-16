@@ -2,7 +2,6 @@ package code.visitor;
 
 import code.ast.*;
 import code.ast.Class;
-
 import java.util.*;
 import java.util.stream.Collectors;
 import code.ast.types.*;
@@ -91,9 +90,21 @@ public class BuilderVisitor implements AstVisitor<Object> {
     }
 
     @Override
+    public Object visit(Identifier node) {
+        return new Reference(node.getText());
+    }
+
+    @Override
+    public Object visit(Return node) {
+        return new ReturnStatement((CBuilder.Expression) node.getExpression().accept(this));
+    }
+
+    @Override
     public Object visit(If node) {
 
+        List<CBuilder.variables.VariableDeclaration> enclosing_variables = variables;
         List<CBuilder.Statement> enclosing_statements = statements;
+        variables = new ArrayList<>();
         statements = new ArrayList<>();
 
         List<ElifStatement> elif_statements = new ArrayList<>();
@@ -117,6 +128,8 @@ public class BuilderVisitor implements AstVisitor<Object> {
         );
 
         statements = enclosing_statements;
+        variables = enclosing_variables;
+
         statements.add(_if);
 
         return _if;
@@ -124,36 +137,35 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
     @Override
     public Object visit(While node) {
-        WhileStatement while_Statement = new WhileStatement(
+
+        List<CBuilder.variables.VariableDeclaration> enclosing_variables = variables;
+        List<CBuilder.Statement> enclosing_statements = statements;
+        variables = new ArrayList<>();
+        statements = new ArrayList<>();
+
+        WhileStatement _while = new WhileStatement(
             (CBuilder.Expression) node.getCondition().accept(this), 
             (List<CBuilder.Statement>) node.getBody().accept(this)
         );
 
-        statements.add(while_Statement);
+        statements = enclosing_statements;
+        variables = enclosing_variables;
 
-        return while_Statement;
-    }
+        statements.add(_while);
 
-    @Override
-    public Object visit(Identifier node) {
-        return new Reference(node.getText());
-    }
-
-    @Override
-    public Object visit(Return node) {
-        return new ReturnStatement((CBuilder.Expression) node.getExpression().accept(this));
+        return _while;
     }
 
     @Override
     public Object visit(Callable node) {
-        Call function = new Call(
+        Call call = new Call(
             (CBuilder.Reference) node.getIdentifier().accept(this), 
             node.getParameters().stream().map(x->(CBuilder.Expression) x.accept(this)).collect(Collectors.toList())
         );
-
-        statements.add(function);
+        
+        statements.add(call);
       
-        return function;
+        return call;
     }
 
     @Override
@@ -161,7 +173,6 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
         List<CBuilder.variables.VariableDeclaration> enclosing_variables = variables;
         List<CBuilder.Statement> enclosing_statements = statements;
-
         variables = new ArrayList<>();
         statements = new ArrayList<>();
 
@@ -192,17 +203,17 @@ public class BuilderVisitor implements AstVisitor<Object> {
         List<CBuilder.objects.functions.Function> enclosing = functions;
         functions = new ArrayList<>();
 
-        if (node.getFunctions().stream().noneMatch(f -> f.getIdentifier().getText().equals("__init__"))) {
-            functions.add(new CBuilder.objects.functions.Function(
-                "__init__",
-                List.of(new CBuilder.objects.SuperCall(List.of())),
-                List.of(new CBuilder.objects.functions.Argument("self", 0)),
-                List.of()
-            ));
-        }
-
         for (Function function: node.getFunctions()) {
-            function.accept(this);
+            if (function.getIdentifier().getText().equals("__init__")) {
+                functions.add(new CBuilder.objects.functions.Function(
+                    "__init__",
+                    List.of(new CBuilder.objects.SuperCall(List.of())),
+                    List.of(new CBuilder.objects.functions.Argument("self", 0)),
+                    List.of()
+                ));
+            } else { 
+                function.accept(this);
+            }
         }
 
         CBuilder.objects.MPyClass _class = new CBuilder.objects.MPyClass(

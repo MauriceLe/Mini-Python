@@ -1,9 +1,19 @@
 var = 10
 
-if (var>9):
-    print("kleiner")
-elif (var>8):
-    print("kleinererer")
-else: 
-    print('klappt')
+def function(a, b):
+    print(a + b)
 #end
+
+if (var > 1):
+    print('Ja!')
+else:
+    print('Nein!')
+#end
+
+while (var <= 15):
+    var = var + 1
+    print('Schleife')
+#end
+
+function(10, 20)
+function('scuffed', 'code')

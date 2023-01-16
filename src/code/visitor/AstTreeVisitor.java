@@ -206,7 +206,7 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
             callable.setIdentifier((Identifier) visit(ctx.call().identifier(1)));
         }
 
-        for (MiniPythonParser.ExpressionContext expression: ctx.call().exp_parameter().expression()) {
+        for (MiniPythonParser.ExpressionContext expression: ctx.call().expression_parameter().expression()) {
             callable.setParameter((Expression) visit(expression));
         }
 
@@ -223,7 +223,7 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
             callable.setIdentifier((Identifier) visit(ctx.identifier(1)));
         }
 
-        for (MiniPythonParser.ExpressionContext expression: ctx.exp_parameter().expression()) {
+        for (MiniPythonParser.ExpressionContext expression: ctx.expression_parameter().expression()) {
             callable.setParameter((Expression) visit(expression));
         }
 
@@ -236,7 +236,7 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 
         function.setIdentifier((Identifier) visit(ctx.identifier()));
         
-        for (MiniPythonParser.IdentifierContext identifier: ctx.fun_parameter().identifier()) {
+        for (MiniPythonParser.IdentifierContext identifier: ctx.function_parameter().identifier()) {
             function.setParameter((Identifier) visit(identifier));
         }
 

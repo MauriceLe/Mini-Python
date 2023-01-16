@@ -42,8 +42,8 @@ public class Compare extends Expression {
         switch(this.operator) {
             case Equal: return "__eq__";
             case NotEqual: return "__ne__";
-            case Greater: return "__gt__";
-            case Greater_Then: return "__ge__";
+            case Greater: return "__ge__";
+            case Greater_Then: return "__gt__";
             case Less: return "__lt__";
             case Less_Then: return "__le__";
             default: return "";

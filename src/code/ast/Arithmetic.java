@@ -25,7 +25,7 @@ public class Arithmetic extends Expression {
     }
 
     public Expression getRight() {
-        return this.left;
+        return this.right;
     }
 
     public void setLeft(Expression expression) {
