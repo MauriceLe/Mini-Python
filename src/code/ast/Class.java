@@ -2,6 +2,8 @@ package code.ast;
 
 import java.util.List;
 import java.util.ArrayList;
+
+import code.symbol.Scope;
 import code.visitor.AstVisitor;
 import org.antlr.v4.runtime.tree.Tree;
 
@@ -10,6 +12,7 @@ public class Class extends Statement {
     private Identifier identifier;
     private Identifier superclass;
     private List<Function> functions;
+    private Scope scope;
 
     public Class() {
         functions = new ArrayList<>();
@@ -57,6 +60,14 @@ public class Class extends Statement {
     @Override
     public <T> T accept(AstVisitor<T> visitor) {
         return visitor.visit(this);
+    }
+
+    public Scope getScope() {
+        return scope;
+    }
+
+    public void setScope(Scope scope) {
+        this.scope = scope;
     }
     
 }

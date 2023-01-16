@@ -1,11 +1,15 @@
 package code.ast;
 
 import java.util.List;
+
+import code.symbol.Scope;
 import code.visitor.AstVisitor;
 import java.util.ArrayList;
 import org.antlr.v4.runtime.tree.Tree;
 
 public class Block extends Statement {
+
+    private Scope scope;
 
     private List<Statement> statements;
 
@@ -39,6 +43,14 @@ public class Block extends Statement {
     @Override
     public <T> T accept(AstVisitor<T> visitor) {
         return visitor.visit(this);
+    }
+
+    public Scope getScope() {
+        return scope;
+    }
+
+    public void setScope(Scope scope) {
+        this.scope = scope;
     }
 
 }
