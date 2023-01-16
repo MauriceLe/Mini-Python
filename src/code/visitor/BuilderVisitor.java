@@ -3,6 +3,7 @@ package code.visitor;
 import code.ast.*;
 import code.ast.Class;
 import code.ast.Exception;
+import code.ast.exceptions.ImportError;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -144,6 +145,39 @@ public class BuilderVisitor implements AstVisitor<Object> {
     }
 
     @Override
+    public Object visit(Try node) {
+        Exception err = (Exception) node.getException();
+        List<Exception> enclosing = this.exceptions;
+        this.exceptions = new ArrayList<>();
+
+        for (CBuilder.Statement stmt : (List<CBuilder.Statement>) node.getTryBlock().accept(this)){
+            if(err != null){
+                if (this.exceptions.contains(err)){
+                    this.exceptions.remove(err);
+                    for (CBuilder.Statement ex_stmt : (List<CBuilder.Statement>) node.getExceptBlock().accept(this)){
+                        statements.add(ex_stmt);
+                    }
+                    break;
+                }
+            } else if (!this.exceptions.isEmpty()){
+                for (CBuilder.Statement ex_stmt : (List<CBuilder.Statement>) node.getExceptBlock().accept(this)){
+                    statements.add(ex_stmt);
+                }
+            } else {
+                statements.add(stmt);
+            }
+        }
+        if (node.getFinallyBlock() != null){
+            for (CBuilder.Statement stmt : (List<CBuilder.Statement>) node.getFinallyBlock().accept(this)){
+                statements.add(stmt);
+            }
+        }
+
+        this.exceptions = enclosing;
+        return null;
+    }
+
+    @Override
     public Object visit(While node) {
 
         List<CBuilder.variables.VariableDeclaration> enclosing_variables = variables;
@@ -262,7 +296,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
             classes = build.getClasses();
             statements = build.getStatements();
         } catch(java.lang.Exception e){
-            e.printStackTrace();
+            this.exceptions.add(new ImportError());
         }
 
         for (CBuilder.variables.VariableDeclaration var : variables){

@@ -18,9 +18,9 @@ public class Main {
         AstTreeVisitor visitor = new AstTreeVisitor();
         AstTree ast = (AstTree) visitor.visit(tree);
 
-        TreeViewer viewer = new TreeViewer(null, ast);
-        viewer.open();
+        //TreeViewer viewer = new TreeViewer(null, ast);
+        //viewer.open();
 
-        //ast.accept(new BuilderVisitor());
+        ast.accept(new BuilderVisitor());
     }
 }

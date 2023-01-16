@@ -44,7 +44,7 @@ public class Try extends Statement{
 
     @Override
     public int getChildCount() {
-        return 2 + (finally_block != null ? 1 : 0);
+        return 2 + (finally_block != null ? 1 : 0) + (exception != null ? 1 : 0);
     }
 
     @Override
@@ -53,6 +53,7 @@ public class Try extends Statement{
             case 0: return try_block;
             case 1: return except_block;
             case 2: return finally_block;
+            case 3: return exception;
             default: return super.getChild(i);
         }
     }

@@ -2,13 +2,15 @@ package code.visitor;
 
 import java.util.function.Supplier;
 import code.ast.*;
-import code.ast.Assignment;
 import code.ast.Class;
+import code.ast.types.Bool;
+import code.ast.types.Int;
+import code.ast.types.Text;
 import code.symbol.Scope;
 import code.symbol.Symbol;
 import code.symbol.Variable;
 
-public class SymbolVisitor extends AstVisitorBase<Object>{
+public class SymbolVisitor implements AstVisitor<Object>{
 
     protected Scope scope;
 
@@ -167,6 +169,28 @@ public class SymbolVisitor extends AstVisitorBase<Object>{
         return null;
     };
 
-    public Object visit(ImportModule node){return null;};
+    public Object visit(ImportModule node){
+        return null;
+    }
+
+    @Override
+    public Object visit(Int node) {
+        return null;
+    }
+
+    @Override
+    public Object visit(Text node) {
+        return null;
+    }
+
+    @Override
+    public Object visit(Bool node) {
+        return null;
+    }
+
+    @Override
+    public Object visit(Try node) {
+        return null;
+    };
     
 }

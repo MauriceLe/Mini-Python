@@ -15,6 +15,7 @@ import code.ast.ImportModule;
 import code.ast.Negation;
 import code.ast.Return;
 import code.ast.Statement;
+import code.ast.Try;
 import code.ast.While;
 import code.ast.types.Bool;
 import code.ast.types.Int;
@@ -132,6 +133,12 @@ public class AstVisitorBase<T> implements AstVisitor<T>{
 
     @Override
     public T visit(ImportModule node) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public T visit(Try node) {
         // TODO Auto-generated method stub
         return null;
     }

@@ -314,4 +314,16 @@ public class InterpreterVisitor implements AstVisitor<Object>{
         return this.env;
     }
 
+    @Override
+    public Object visit(code.ast.Class node) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Object visit(Try node) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
