@@ -20,6 +20,8 @@ int main() {
 	
 	
 	
+	__mpy_obj_ref_dec(__mpy_call(print, __mpy_tuple_assign(0, __mpy_obj_init_str_static(""Module not found""), __mpy_obj_init_tuple(1)), NULL));
+	__mpy_obj_ref_dec(__mpy_call(print, __mpy_tuple_assign(0, __mpy_obj_init_str_static(""Module not found""), __mpy_obj_init_tuple(1)), NULL));
 	
 	
 	

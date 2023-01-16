@@ -152,7 +152,13 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
         for (CBuilder.Statement stmt : (List<CBuilder.Statement>) node.getTryBlock().accept(this)){
             if(err != null){
-                if (this.exceptions.contains(err)){
+                boolean isError = false;
+                for (Exception e : this.exceptions){
+                    if (e.getClass() == err.getClass()){
+                        isError = true;
+                    }
+                }
+                if (isError){
                     this.exceptions.remove(err);
                     for (CBuilder.Statement ex_stmt : (List<CBuilder.Statement>) node.getExceptBlock().accept(this)){
                         statements.add(ex_stmt);
