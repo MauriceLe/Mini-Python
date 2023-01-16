@@ -151,29 +151,22 @@ public class BuilderVisitor implements AstVisitor<Object> {
         this.exceptions = new ArrayList<>();
         boolean isError = false;
 
-        for (CBuilder.Statement stmt : (List<CBuilder.Statement>) node.getTryBlock().accept(this)){
-            if(err != null){
-                for (Exception e : this.exceptions){
-                    if (e.getClass() == err.getClass()){
-                        isError = true;
-                    }
+        List<CBuilder.Statement> tryStatements = (List<CBuilder.Statement>) node.getTryBlock().accept(this);
+        if(err != null){
+             for (Exception e : this.exceptions){
+                if (e.getClass() == err.getClass()){
+                    isError = true;
                 }
-            } else if (!this.exceptions.isEmpty()){
-                isError = true;
-            } else {
-                statements.add(stmt);
             }
+        } else if (!this.exceptions.isEmpty()){
+            isError = true;
         }
         if (isError){
             this.exceptions.remove(err);
-            for (CBuilder.Statement ex_stmt : (List<CBuilder.Statement>) node.getExceptBlock().accept(this)){
-                statements.add(ex_stmt);
-            }
+            List<CBuilder.Statement> exceptStatements = (List<CBuilder.Statement>) node.getExceptBlock().accept(this);
         }
         if (node.getFinallyBlock() != null){
-            for (CBuilder.Statement stmt : (List<CBuilder.Statement>) node.getFinallyBlock().accept(this)){
-                statements.add(stmt);
-            }
+            List<CBuilder.Statement> finallyStatements = (List<CBuilder.Statement>) node.getFinallyBlock().accept(this);
         }
 
         this.exceptions = enclosing;
