@@ -149,28 +149,25 @@ public class BuilderVisitor implements AstVisitor<Object> {
         Exception err = (Exception) node.getException();
         List<Exception> enclosing = this.exceptions;
         this.exceptions = new ArrayList<>();
+        boolean isError = false;
 
         for (CBuilder.Statement stmt : (List<CBuilder.Statement>) node.getTryBlock().accept(this)){
             if(err != null){
-                boolean isError = false;
                 for (Exception e : this.exceptions){
                     if (e.getClass() == err.getClass()){
                         isError = true;
                     }
                 }
-                if (isError){
-                    this.exceptions.remove(err);
-                    for (CBuilder.Statement ex_stmt : (List<CBuilder.Statement>) node.getExceptBlock().accept(this)){
-                        statements.add(ex_stmt);
-                    }
-                    break;
-                }
             } else if (!this.exceptions.isEmpty()){
-                for (CBuilder.Statement ex_stmt : (List<CBuilder.Statement>) node.getExceptBlock().accept(this)){
-                    statements.add(ex_stmt);
-                }
+                isError = true;
             } else {
                 statements.add(stmt);
+            }
+        }
+        if (isError){
+            this.exceptions.remove(err);
+            for (CBuilder.Statement ex_stmt : (List<CBuilder.Statement>) node.getExceptBlock().accept(this)){
+                statements.add(ex_stmt);
             }
         }
         if (node.getFinallyBlock() != null){
