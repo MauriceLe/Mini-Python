@@ -233,25 +233,25 @@ public class MiniPythonBaseListener implements MiniPythonListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterValueError(MiniPythonParser.ValueErrorContext ctx) { }
+	@Override public void enterNameError(MiniPythonParser.NameErrorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitValueError(MiniPythonParser.ValueErrorContext ctx) { }
+	@Override public void exitNameError(MiniPythonParser.NameErrorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssignError(MiniPythonParser.AssignErrorContext ctx) { }
+	@Override public void enterImportError(MiniPythonParser.ImportErrorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAssignError(MiniPythonParser.AssignErrorContext ctx) { }
+	@Override public void exitImportError(MiniPythonParser.ImportErrorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

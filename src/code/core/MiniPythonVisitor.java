@@ -136,19 +136,19 @@ public interface MiniPythonVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitZeroDivisionError(MiniPythonParser.ZeroDivisionErrorContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ValueError}
+	 * Visit a parse tree produced by the {@code NameError}
 	 * labeled alternative in {@link MiniPythonParser#exception}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitValueError(MiniPythonParser.ValueErrorContext ctx);
+	T visitNameError(MiniPythonParser.NameErrorContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code AssignError}
+	 * Visit a parse tree produced by the {@code ImportError}
 	 * labeled alternative in {@link MiniPythonParser#exception}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAssignError(MiniPythonParser.AssignErrorContext ctx);
+	T visitImportError(MiniPythonParser.ImportErrorContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MiniPythonParser#statement}.
 	 * @param ctx the parse tree

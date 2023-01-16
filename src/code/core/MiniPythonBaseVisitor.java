@@ -144,14 +144,14 @@ public class MiniPythonBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitValueError(MiniPythonParser.ValueErrorContext ctx) { return visitChildren(ctx); }
+	@Override public T visitNameError(MiniPythonParser.NameErrorContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitAssignError(MiniPythonParser.AssignErrorContext ctx) { return visitChildren(ctx); }
+	@Override public T visitImportError(MiniPythonParser.ImportErrorContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

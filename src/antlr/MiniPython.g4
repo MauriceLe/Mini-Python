@@ -23,8 +23,8 @@ expression          : expression MULTIPLY expression        # MultiplyExpression
                     ;
 
 exception           : ZERO_DIVIS_ERROR                      # ZeroDivisionError
-                    | VALUE_ERROR                           # ValueError
-                    | ASSIGN_ERROR                          # AssignError
+                    | NAME_ERROR                            # NameError
+                    | IMPORT_ERROR                          # ImportError
                     ;
 
 statement           : expression
@@ -61,9 +61,9 @@ elif_statement      : ELIF condition statements;
 else_statement      : ELSE COLON statements;
                 
 try                 : try_statement exc_statement fin_statement? END;
-try_statement       : TRY COLON statements*;
-exc_statement       : EXCEPT exception COLON statements*;
-fin_statement       : FINALLY COLON statements*;
+try_statement       : TRY COLON statements;
+exc_statement       : EXCEPT exception? COLON statements;
+fin_statement       : FINALLY COLON statements;
 
 expression_parameter: expression? (COMMA expression)*;
 
@@ -114,8 +114,8 @@ EXCEPT              : 'except';
 FINALLY             : 'finally';
 
 ZERO_DIVIS_ERROR    : 'ZeroDivisionError';
-VALUE_ERROR         : 'ValueError';
-ASSIGN_ERROR        : 'AssignError';
+NAME_ERROR          : 'NameError';
+IMPORT_ERROR        : 'ImportError';
 
 LBRACKET            : '(';
 RBRACKET            : ')';

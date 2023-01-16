@@ -2,17 +2,16 @@ package code.visitor;
 
 import code.ast.*;
 import code.ast.Class;
+import code.ast.Exception;
+
 import java.util.*;
 import java.util.stream.Collectors;
-
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-
 import code.ast.types.*;
 import code.core.MiniPythonLexer;
 import code.core.MiniPythonParser;
-
 import java.nio.file.Path;
 import CBuilder.literals.*;
 import CBuilder.objects.*;
@@ -29,6 +28,7 @@ import CBuilder.keywords.bool.NotKeyword;
 @SuppressWarnings("unchecked")
 public class BuilderVisitor implements AstVisitor<Object> {
 
+    private List<Exception> exceptions = new ArrayList<>();
     private List<CBuilder.Statement> statements = new ArrayList<>();
     private List<CBuilder.objects.MPyClass> classes = new ArrayList<>();
     private List<CBuilder.objects.functions.Function> functions = new ArrayList<>();
@@ -261,22 +261,19 @@ public class BuilderVisitor implements AstVisitor<Object> {
             functions = build.getFunctions();
             classes = build.getClasses();
             statements = build.getStatements();
-        } catch(Exception e){
+        } catch(java.lang.Exception e){
             e.printStackTrace();
         }
 
         for (CBuilder.variables.VariableDeclaration var : variables){
             this.variables.add(var);
         }
-
         for (CBuilder.objects.functions.Function fun : functions){
             this.functions.add(fun);
         }
-
         for (CBuilder.objects.MPyClass cla : classes){
             this.classes.add(cla);
         }
-
         for (CBuilder.Statement stmt : statements){
             this.statements.add(stmt);
         }
@@ -320,19 +317,19 @@ public class BuilderVisitor implements AstVisitor<Object> {
         return null;
     }
 
-    public List<CBuilder.variables.VariableDeclaration> getVariables(){
+    public List<CBuilder.variables.VariableDeclaration> getVariables() {
         return this.variables;
     }
 
-    public List<CBuilder.objects.functions.Function> getFunctions(){
+    public List<CBuilder.objects.functions.Function> getFunctions() {
         return this.functions;
     }
 
-    public List<CBuilder.objects.MPyClass> getClasses(){
+    public List<CBuilder.objects.MPyClass> getClasses() {
         return this.classes;
     }
 
-    public List<CBuilder.Statement> getStatements(){
+    public List<CBuilder.Statement> getStatements() {
         return this.statements;
     }
 

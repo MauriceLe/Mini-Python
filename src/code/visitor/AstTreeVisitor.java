@@ -3,6 +3,10 @@ package code.visitor;
 
 import code.ast.*;
 import code.ast.Class;
+import code.ast.Exception;
+import code.ast.exceptions.ImportError;
+import code.ast.exceptions.NameError;
+import code.ast.exceptions.ZeroDivisionError;
 import code.ast.types.*;
 import code.core.MiniPythonBaseVisitor;
 import code.core.MiniPythonParser;
@@ -194,6 +198,39 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
         }
 
         return _if;
+    }
+
+    @Override 
+    public Node visitZeroDivisionError(MiniPythonParser.ZeroDivisionErrorContext ctx) { 
+        return new ZeroDivisionError(); 
+    }
+
+    @Override 
+    public Node visitNameError(MiniPythonParser.NameErrorContext ctx) { 
+        return new NameError();
+    }
+
+    @Override 
+    public Node visitImportError(MiniPythonParser.ImportErrorContext ctx) { 
+        return new ImportError(); 
+    }
+
+    @Override 
+    public Node visitTry(MiniPythonParser.TryContext ctx) { 
+        Try _try = new Try();
+
+        if (ctx.exc_statement().exception() != null) {
+            _try.setException((Exception) visit(ctx.exc_statement().exception()));
+        }
+
+        _try.setTryBlock((Block) visit(ctx.try_statement().statements()));
+        _try.setExceptBlock((Block) visit(ctx.exc_statement().statements()));
+
+        if (ctx.fin_statement() != null) {
+            _try.setFinallyBlock((Block) visit(ctx.fin_statement().statements()));
+        }
+
+        return _try; 
     }
 	
     @Override public Node visitCallExpression(MiniPythonParser.CallExpressionContext ctx) { 

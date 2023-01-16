@@ -222,29 +222,29 @@ public interface MiniPythonListener extends ParseTreeListener {
 	 */
 	void exitZeroDivisionError(MiniPythonParser.ZeroDivisionErrorContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code ValueError}
+	 * Enter a parse tree produced by the {@code NameError}
 	 * labeled alternative in {@link MiniPythonParser#exception}.
 	 * @param ctx the parse tree
 	 */
-	void enterValueError(MiniPythonParser.ValueErrorContext ctx);
+	void enterNameError(MiniPythonParser.NameErrorContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code ValueError}
+	 * Exit a parse tree produced by the {@code NameError}
 	 * labeled alternative in {@link MiniPythonParser#exception}.
 	 * @param ctx the parse tree
 	 */
-	void exitValueError(MiniPythonParser.ValueErrorContext ctx);
+	void exitNameError(MiniPythonParser.NameErrorContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code AssignError}
+	 * Enter a parse tree produced by the {@code ImportError}
 	 * labeled alternative in {@link MiniPythonParser#exception}.
 	 * @param ctx the parse tree
 	 */
-	void enterAssignError(MiniPythonParser.AssignErrorContext ctx);
+	void enterImportError(MiniPythonParser.ImportErrorContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code AssignError}
+	 * Exit a parse tree produced by the {@code ImportError}
 	 * labeled alternative in {@link MiniPythonParser#exception}.
 	 * @param ctx the parse tree
 	 */
-	void exitAssignError(MiniPythonParser.AssignErrorContext ctx);
+	void exitImportError(MiniPythonParser.ImportErrorContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniPythonParser#statement}.
 	 * @param ctx the parse tree

@@ -1,19 +1,5 @@
-var = 10
-
-def function(a, b):
-    print(a + b)
+try:
+    var = 1/0
+except ZeroDivisionError:
+    print('fehler')
 #end
-
-if (var > 1):
-    print('Ja!')
-else:
-    print('Nein!')
-#end
-
-while (var <= 15):
-    var = var + 1
-    print('Schleife')
-#end
-
-function(10, 20)
-function('scuffed', 'code')

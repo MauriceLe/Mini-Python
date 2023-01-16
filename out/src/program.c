@@ -12,23 +12,25 @@
 #include "type-hierarchy/object.h"
 #include "type-hierarchy/type.h"
 
-__MPyObj *var;
 
-__MPyObj *function;
-__MPyObj* func_function(__MPyObj *args, __MPyObj *kwargs) {
+__MPyObj *test;
+__MPyObj* func_test(__MPyObj *args, __MPyObj *kwargs) {
 	assert(args != NULL && kwargs != NULL);
 	
-	__MPyGetArgsState argHelper = __mpy_args_init("function", args, kwargs, 2);
-	__MPyObj *a = __mpy_args_get_positional(&argHelper, 0, "a");
-	__MPyObj *b = __mpy_args_get_positional(&argHelper, 1, "b");
+	__MPyGetArgsState argHelper = __mpy_args_init("test", args, kwargs, 3);
+	__MPyObj *x = __mpy_args_get_positional(&argHelper, 0, "x");
+	__MPyObj *y = __mpy_args_get_positional(&argHelper, 1, "y");
+	__MPyObj *z = __mpy_args_get_positional(&argHelper, 2, "z");
 	__mpy_args_finish(&argHelper);
 	
 	__MPyObj *retValue = NULL;
 	
-	__mpy_obj_ref_dec(__mpy_call(print, __mpy_tuple_assign(0, __mpy_call(__mpy_obj_get_attr(a, "__add__"), __mpy_tuple_assign(0, b, __mpy_obj_init_tuple(1)), NULL), __mpy_obj_init_tuple(1)), NULL));
+	retValue = __mpy_call(__mpy_obj_get_attr(__mpy_call(__mpy_obj_get_attr(x, "__mul__"), __mpy_tuple_assign(0, y, __mpy_obj_init_tuple(1)), NULL), "__add__"), __mpy_tuple_assign(0, z, __mpy_obj_init_tuple(1)), NULL);
+	goto ret;
 	
-	__mpy_obj_ref_dec(a);
-	__mpy_obj_ref_dec(b);
+	__mpy_obj_ref_dec(x);
+	__mpy_obj_ref_dec(y);
+	__mpy_obj_ref_dec(z);
 	
 	goto ret;
 	ret:
@@ -38,35 +40,56 @@ __MPyObj* func_function(__MPyObj *args, __MPyObj *kwargs) {
 	return __mpy_obj_return(retValue);
 }
 
+__MPyObj *cooleKlasse;
+__MPyObj* func_cooleKlasse_methode(__MPyObj *args, __MPyObj *kwargs) {
+	assert(args != NULL && kwargs != NULL);
+	
+	__MPyGetArgsState argHelper = __mpy_args_init("methode", args, kwargs, 3);
+	__MPyObj *a = __mpy_args_get_positional(&argHelper, 0, "a");
+	__MPyObj *b = __mpy_args_get_positional(&argHelper, 1, "b");
+	__MPyObj *c = __mpy_args_get_positional(&argHelper, 2, "c");
+	__mpy_args_finish(&argHelper);
+	
+	__MPyObj *retValue = NULL;
+	
+	retValue = __mpy_call(__mpy_obj_get_attr(__mpy_call(__mpy_obj_get_attr(a, "__add__"), __mpy_tuple_assign(0, b, __mpy_obj_init_tuple(1)), NULL), "__add__"), __mpy_tuple_assign(0, c, __mpy_obj_init_tuple(1)), NULL);
+	goto ret;
+	
+	__mpy_obj_ref_dec(a);
+	__mpy_obj_ref_dec(b);
+	__mpy_obj_ref_dec(c);
+	
+	goto ret;
+	ret:
+	if (retValue == NULL) {
+		retValue = __mpy_obj_init_object();
+	}
+	return __mpy_obj_return(retValue);
+}
 
 int main() {
 	__mpy_builtins_setup();
-	var = __mpy_obj_init_object();
-	__mpy_obj_ref_inc(var);
 	
-	function = __mpy_obj_init_func(&func_function);
-	__mpy_obj_ref_inc(function);
+	test = __mpy_obj_init_func(&func_test);
+	__mpy_obj_ref_inc(test);
+	
+	cooleKlasse = __mpy_obj_init_type("cooleKlasse", __MPyType_Object);
+	__mpy_obj_ref_inc(cooleKlasse);
+	{
+		__MPyObj *methode;
+		methode = __mpy_obj_init_func(&func_cooleKlasse_methode);
+		__mpy_obj_ref_inc(methode);
+		__mpy_obj_set_attr(cooleKlasse, "methode", methode);
+		__mpy_obj_ref_dec(methode);
+	}
+	
+	__mpy_obj_ref_dec(__mpy_call(test, __mpy_tuple_assign(0, __mpy_obj_init_int(10), __mpy_tuple_assign(1, __mpy_obj_init_int(20), __mpy_tuple_assign(2, __mpy_obj_init_int(30), __mpy_obj_init_tuple(3)))), NULL));
+	__mpy_obj_ref_dec(__mpy_call(print, __mpy_tuple_assign(0, __mpy_call(test, __mpy_tuple_assign(0, __mpy_obj_init_int(10), __mpy_tuple_assign(1, __mpy_obj_init_int(20), __mpy_tuple_assign(2, __mpy_obj_init_int(30), __mpy_obj_init_tuple(3)))), NULL), __mpy_obj_init_tuple(1)), NULL));
 	
 	
-	__mpy_obj_ref_dec(var);
-	var = __mpy_obj_init_int(10);
-	__mpy_obj_ref_inc(var);
-	if (__mpy_boolean_raw(__mpy_call(__mpy_obj_get_attr(__mpy_call(__mpy_obj_get_attr(var, "__ge__"), __mpy_tuple_assign(0, __mpy_obj_init_int(1), __mpy_obj_init_tuple(1)), NULL), "__bool__"), __mpy_obj_init_tuple(0), NULL))) {
-		__mpy_obj_ref_dec(__mpy_call(print, __mpy_tuple_assign(0, __mpy_obj_init_str_static("'Ja!'"), __mpy_obj_init_tuple(1)), NULL));
-	}else {
-		__mpy_obj_ref_dec(__mpy_call(print, __mpy_tuple_assign(0, __mpy_obj_init_str_static("'Nein!'"), __mpy_obj_init_tuple(1)), NULL));
-	}while (__mpy_boolean_raw(__mpy_call(__mpy_obj_get_attr(__mpy_call(__mpy_obj_get_attr(var, "__le__"), __mpy_tuple_assign(0, __mpy_obj_init_int(15), __mpy_obj_init_tuple(1)), NULL), "__bool__"), __mpy_obj_init_tuple(0), NULL))) {
-		__mpy_obj_ref_dec(var);
-	var = __mpy_call(__mpy_obj_get_attr(var, "__add__"), __mpy_tuple_assign(0, __mpy_obj_init_int(1), __mpy_obj_init_tuple(1)), NULL);
-	__mpy_obj_ref_inc(var);
-		__mpy_obj_ref_dec(__mpy_call(print, __mpy_tuple_assign(0, __mpy_obj_init_str_static("'Schleife'"), __mpy_obj_init_tuple(1)), NULL));
-	}__mpy_obj_ref_dec(__mpy_call(function, __mpy_tuple_assign(0, __mpy_obj_init_int(10), __mpy_tuple_assign(1, __mpy_obj_init_int(20), __mpy_obj_init_tuple(2))), NULL));
-	__mpy_obj_ref_dec(__mpy_call(function, __mpy_tuple_assign(0, __mpy_obj_init_str_static("'scuffed'"), __mpy_tuple_assign(1, __mpy_obj_init_str_static("'code'"), __mpy_obj_init_tuple(2))), NULL));
+	__mpy_obj_ref_dec(test);
 	
-	__mpy_obj_ref_dec(var);
-	
-	__mpy_obj_ref_dec(function);
-	
+	__mpy_obj_ref_dec(cooleKlasse);
 	
 	__mpy_builtins_cleanup();
 	return 0;
