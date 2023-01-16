@@ -64,11 +64,8 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     public Node visitMultiplyExpression(MiniPythonParser.MultiplyExpressionContext ctx) {
         Arithmetic arithmetic = new Arithmetic();
         arithmetic.setOperator(Arithmetic.Operator.Multiplication);
- 
-        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
-            arithmetic.setOperand((Expression) visit(expression));
-        }
-
+        arithmetic.setLeft((Expression) visit(ctx.expression(0)));
+        arithmetic.setRight((Expression) visit(ctx.expression(1)));
         return arithmetic;
     }
 
@@ -76,11 +73,8 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     public Node visitDivisionExpression(MiniPythonParser.DivisionExpressionContext ctx) { 
         Arithmetic arithmetic = new Arithmetic();
         arithmetic.setOperator(Arithmetic.Operator.Division);
-
-        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
-            arithmetic.setOperand((Expression) visit(expression));
-        }
-
+        arithmetic.setLeft((Expression) visit(ctx.expression(0)));
+        arithmetic.setRight((Expression) visit(ctx.expression(1)));
         return arithmetic;
     }
 
@@ -88,11 +82,8 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     public Node visitPlusExpression(MiniPythonParser.PlusExpressionContext ctx) { 
         Arithmetic arithmetic = new Arithmetic();
         arithmetic.setOperator(Arithmetic.Operator.Plus);
-
-        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
-            arithmetic.setOperand((Expression) visit(expression));
-        }
-
+        arithmetic.setLeft((Expression) visit(ctx.expression(0)));
+        arithmetic.setRight((Expression) visit(ctx.expression(1)));
         return arithmetic;
     }
 
@@ -100,11 +91,8 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     public Node visitMinusExpression(MiniPythonParser.MinusExpressionContext ctx) { 
         Arithmetic arithmetic = new Arithmetic();
         arithmetic.setOperator(Arithmetic.Operator.Minus);
-
-        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
-            arithmetic.setOperand((Expression) visit(expression));
-        }
-
+        arithmetic.setLeft((Expression) visit(ctx.expression(0)));
+        arithmetic.setRight((Expression) visit(ctx.expression(1)));
         return arithmetic;
     }
 	
@@ -112,30 +100,17 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     public Node visitEqualExpression(MiniPythonParser.EqualExpressionContext ctx) { 
         Compare compare = new Compare();
         compare.setOperator(Compare.Operator.Equal);
-
-        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
-            compare.setOperand((Expression) visit(expression));
-        }
-
+        compare.setLeft((Expression) visit(ctx.expression(0)));
+        compare.setRight((Expression) visit(ctx.expression(1)));
         return compare;
-    }
-	
-	@Override 
-    public Node visitNotExpression(MiniPythonParser.NotExpressionContext ctx) { 
-        Negation not = new Negation();
-        not.setExpression((Expression) visit(ctx.expression()));
-        return not;
     }
 	
 	@Override 
     public Node visitGreaterThenExpression(MiniPythonParser.GreaterThenExpressionContext ctx) { 
         Compare compare = new Compare();
         compare.setOperator(Compare.Operator.Greater_Then);
-
-        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
-            compare.setOperand((Expression) visit(expression));
-        }
-
+        compare.setLeft((Expression) visit(ctx.expression(0)));
+        compare.setRight((Expression) visit(ctx.expression(1)));
         return compare;
     }
 	
@@ -143,11 +118,8 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     public Node visitNotEqualExpression(MiniPythonParser.NotEqualExpressionContext ctx) { 
         Compare compare = new Compare();
         compare.setOperator(Compare.Operator.NotEqual);
-
-        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
-            compare.setOperand((Expression) visit(expression));
-        }
-
+        compare.setLeft((Expression) visit(ctx.expression(0)));
+        compare.setRight((Expression) visit(ctx.expression(1)));
         return compare;
     }
 	
@@ -155,11 +127,8 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     public Node visitLessExpression(MiniPythonParser.LessExpressionContext ctx) { 
         Compare compare = new Compare();
         compare.setOperator(Compare.Operator.Less);
-
-        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
-            compare.setOperand((Expression) visit(expression));
-        }
-
+        compare.setLeft((Expression) visit(ctx.expression(0)));
+        compare.setRight((Expression) visit(ctx.expression(1)));
         return compare;
     }
 
@@ -167,11 +136,8 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     public Node visitGreaterExpression(MiniPythonParser.GreaterExpressionContext ctx) { 
         Compare compare = new Compare();
         compare.setOperator(Compare.Operator.Greater);
-
-        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
-            compare.setOperand((Expression) visit(expression));
-        }
-
+        compare.setLeft((Expression) visit(ctx.expression(0)));
+        compare.setRight((Expression) visit(ctx.expression(1)));
         return compare;
     }
 
@@ -179,12 +145,16 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
     public Node visitLessThenExpression(MiniPythonParser.LessThenExpressionContext ctx) { 
         Compare compare = new Compare();
         compare.setOperator(Compare.Operator.Less_Then);
-
-        for (MiniPythonParser.ExpressionContext expression: ctx.expression()) {
-            compare.setOperand((Expression) visit(expression));
-        }
-
+        compare.setLeft((Expression) visit(ctx.expression(0)));
+        compare.setRight((Expression) visit(ctx.expression(1)));
         return compare;
+    }
+
+    @Override 
+    public Node visitNotExpression(MiniPythonParser.NotExpressionContext ctx) { 
+        Negation not = new Negation();
+        not.setExpression((Expression) visit(ctx.expression()));
+        return not;
     }
 
 	@Override 
@@ -206,20 +176,18 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 	@Override 
     public Node visitIf(MiniPythonParser.IfContext ctx) { 
         If if_statement = new If();
+
         if_statement.setCondition((Expression) visit(ctx.if_statement().condition().expression()));
         if_statement.setIfBlock((Block) visit(ctx.if_statement().statements()));
 
-        If fold = if_statement;
         for (MiniPythonParser.Elif_statementContext elseIF: ctx.elif_statement()) {
-            If sub = new If();
-            sub.setCondition((Expression) visit(elseIF.condition().expression()));
-            sub.setIfBlock((Block) visit(elseIF.statements()));
-            fold.setElseBlock(new Block());
-            fold.getElseBlock().getStatements().add(sub);
-            fold = sub;
+            Expression condition = (Expression) visit(elseIF.condition().expression());
+            Block block = (Block) visit(elseIF.statements());
+            if_statement.setElifBlock(condition, block);
         }
+
         if (ctx.else_statement() != null) {
-            fold.setElseBlock((Block) visit(ctx.else_statement().statements()));
+            if_statement.setElseBlock((Block) visit(ctx.else_statement().statements()));
         }
 
         return if_statement;
@@ -323,8 +291,7 @@ public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 
     @Override 
     public Node visitImport_module(MiniPythonParser.Import_moduleContext ctx) { 
-        ImportModule module = new ImportModule((Identifier) visit(ctx.identifier()));
-        return module;
+        return new ImportModule((Identifier) visit(ctx.identifier()));
     }
 
 }

@@ -1,6 +1,7 @@
 package code.ast;
 
 import code.visitor.AstVisitor;
+import java.util.Map;
 
 import org.antlr.v4.runtime.tree.Tree;
 
@@ -8,6 +9,7 @@ public class If extends Statement {
 
     private Expression condition;
     private Block if_block;
+    private Map<Expression, Block> elif_block;
     private Block else_block;
 
     public Expression getCondition() {
@@ -24,6 +26,14 @@ public class If extends Statement {
 
     public void setIfBlock(Block block) {
         this.if_block = block;
+    }
+
+    public Map<Expression, Block> getElifBlock() {
+        return this.elif_block;
+    }
+
+    public void setElifBlock(Expression expression, Block block) {
+        this.elif_block.put(expression, block);
     }
 
     public Block getElseBlock() {

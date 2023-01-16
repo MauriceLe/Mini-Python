@@ -1,16 +1,13 @@
 package code.visitor;
 
 import code.ast.*;
-import code.core.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import code.ast.types.*;
-import code.environment.Environment;
 import java.nio.file.Path;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
 import CBuilder.literals.*;
 import CBuilder.objects.*;
+import CBuilder.objects.functions.Argument;
 import CBuilder.objects.functions.ReturnStatement;
 import CBuilder.variables.VariableDeclaration;
 import CBuilder.ProgramBuilder;
@@ -23,8 +20,10 @@ import CBuilder.keywords.bool.NotKeyword;
 @SuppressWarnings("unchecked")
 public class BuilderVisitor implements AstVisitor<Object> {
 
-    private Environment env = new Environment();
-    private ProgramBuilder program = new ProgramBuilder();
+    private List<CBuilder.Statement> statements = new ArrayList<>();
+    private List<CBuilder.objects.MPyClass> classes = new ArrayList<>();
+    private List<CBuilder.objects.functions.Function> functions = new ArrayList<>();
+    private List<CBuilder.variables.VariableDeclaration> variables = new ArrayList<>();
 
     @Override
     public Object visit(Statement node) {
@@ -53,23 +52,17 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
     @Override
     public Object visit(Arithmetic node) {
-        CBuilder.Expression left = (CBuilder.Expression) node.getOperands().get(0).accept(this);
-        CBuilder.Expression right = (CBuilder.Expression) node.getOperands().get(1).accept(this);
-
         return new Call(
-            new AttributeReference(node.getOperator(), (CBuilder.Expression) left),
-            List.of(new CBuilder.Expression[] {(CBuilder.Expression) right})
+            new AttributeReference(node.getOperator(), (CBuilder.Expression) node.getLeft().accept(this)),
+            List.of(new CBuilder.Expression[] {(CBuilder.Expression) node.getRight().accept(this)})
         );
     }
 
     @Override
     public Object visit(Compare node) {
-        CBuilder.Expression left = (CBuilder.Expression) node.getOperands().get(0).accept(this);
-        CBuilder.Expression right = (CBuilder.Expression) node.getOperands().get(1).accept(this);
-
         return new Call(
-            new AttributeReference(node.getOperator(), (CBuilder.Expression) left),
-            List.of(new CBuilder.Expression[] {(CBuilder.Expression) right})
+            new AttributeReference(node.getOperator(), (CBuilder.Expression) node.getLeft().accept(this)),
+            List.of(new CBuilder.Expression[] {(CBuilder.Expression) node.getRight().accept(this)})
         );
     }
 
@@ -83,13 +76,16 @@ public class BuilderVisitor implements AstVisitor<Object> {
         CBuilder.Reference identifier = (CBuilder.Reference) node.getIdentifier().accept(this);
         CBuilder.Expression expression = (CBuilder.Expression) node.getExpression().accept(this);
 
-        if (this.env.get(node.getIdentifier().getIdentifier()) == null){
-            VariableDeclaration var = new VariableDeclaration(node.getIdentifier().getIdentifier());
-            this.program.addVariable(var);
+        VariableDeclaration variable = new VariableDeclaration(node.getIdentifier().getText());
+        CBuilder.variables.Assignment assignment = new CBuilder.variables.Assignment(identifier, expression);
+
+        if (!variables.contains(variable)) {
+            variables.add(variable);
         }
 
-        this.env.define(node.getIdentifier().getIdentifier(), expression);
-        return new CBuilder.variables.Assignment((Reference) identifier, expression);
+        statements.add(assignment);
+
+        return assignment;
     }
 
     @Override
@@ -98,7 +94,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
             new IfStatement(
                 (CBuilder.Expression) node.getCondition().accept(this),
                 (List<CBuilder.Statement>) node.getIfBlock().accept(this)
-            ), 
+            ),
             Optional.empty(), 
             node.getElseBlock() == null 
                 ? Optional.empty() 
@@ -108,15 +104,19 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
     @Override
     public Object visit(While node) {
-        CBuilder.Expression condition = (CBuilder.Expression) node.getCondition().accept(this);
-        List<CBuilder.Statement> statements = (List<CBuilder.Statement>) node.getBody().accept(this);
+        WhileStatement while_Statement = new WhileStatement(
+            (CBuilder.Expression) node.getCondition().accept(this), 
+            (List<CBuilder.Statement>) node.getBody().accept(this)
+        );
 
-        return new WhileStatement(condition, statements);
+        statements.add(while_Statement);
+
+        return while_Statement;
     }
 
     @Override
     public Object visit(Identifier node) {
-        return new Reference(node.getIdentifier());
+        return new Reference(node.getText());
     }
 
     @Override
@@ -126,91 +126,125 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
     @Override
     public Object visit(Method node) {
-        List<CBuilder.Expression> args = new ArrayList<>();
-        for (Expression ex : node.getParameters()){
-            args.add((CBuilder.Expression) ex.accept(this));
-        }
-        return new Call((CBuilder.Expression) node.getIdentifier().accept(this), args);
+        Call method = new Call(
+            (CBuilder.Reference) node.getIdentifier().accept(this), 
+            node.getParameters().stream().map(x->(CBuilder.Expression) x.accept(this)).collect(Collectors.toList())
+        );
+
+        statements.add(method);
+
+        return method;
     }
 
     @Override
     public Object visit(Function node) {
-        List<CBuilder.Expression> args = new ArrayList<>();
-        for (Expression ex : node.getParameters()){
-            args.add((CBuilder.Expression) ex.accept(this));
-        }
-        return new Call((CBuilder.Expression) node.getIdentifier().accept(this), args);
-    }
-
-    @Override
-    public Object visit(DefClass node) {
-        Environment parentEnv = env;
-        this.env = new Environment(parentEnv);
-        String className = node.getIdentifier().getIdentifier();
-        Reference parent = null;
-        List<CBuilder.objects.functions.Function> methods = new ArrayList<>();
-        for(DefMethod method : node.getMethods()){
-            CBuilder.objects.functions.Function fun = (CBuilder.objects.functions.Function) method.accept(this);
-            methods.add(fun);
-        }
-        Map<Reference, CBuilder.Expression> attributes = null;
-        MPyClass pyClass = new MPyClass(
-            className,
-            parent,
-            methods,
-            attributes
+        Call function = new Call(
+            (CBuilder.Reference) node.getIdentifier().accept(this), 
+            node.getParameters().stream().map(x->(CBuilder.Expression) x.accept(this)).collect(Collectors.toList())
         );
-        this.program.addClass(pyClass);
-        this.env = parentEnv;
-        this.env.define(className, pyClass);
-        return pyClass;
+
+        statements.add(function);
+      
+        return function;
     }
 
     @Override
     public Object visit(DefFunction node) {
-        Environment parent = env;
-        this.env = new Environment(parent);
-        String functionName = node.getIdentifier().getIdentifier();
-        List<CBuilder.Statement> statements = (List<CBuilder.Statement>) node.getBody().accept(this);
-        List<CBuilder.objects.functions.Argument> positionalArguments = new ArrayList<>();
-        List<CBuilder.variables.VariableDeclaration> localVariables = new ArrayList<>();
-        for(int i = 0; i < node.getParameter().size(); i++){
-            String paramName = node.getParameter().get(i).getIdentifier();
-            positionalArguments.add(new CBuilder.objects.functions.Argument(paramName, i));
+
+        List<CBuilder.variables.VariableDeclaration> enclosing_variables = variables;
+        List<CBuilder.Statement> enclosing_statements = statements;
+
+        variables = new ArrayList<>();
+        statements = new ArrayList<>();
+
+        List<CBuilder.objects.functions.Argument> arguments = new ArrayList<>();
+        
+        for (int i=0; i<node.getParameter().size(); i++) {
+            arguments.add(new CBuilder.objects.functions.Argument(node.getParameter().get(i).getText(), i));
         }
-        CBuilder.objects.functions.Function fun = new CBuilder.objects.functions.Function(
-            functionName,
-            statements,
-            positionalArguments,
-            localVariables
+
+        CBuilder.objects.functions.Function function = new CBuilder.objects.functions.Function(
+            node.getIdentifier().getText(), 
+            (List<CBuilder.Statement>) node.getBody().accept(this), 
+            arguments, 
+            variables
+        );
+        
+        statements = enclosing_statements;
+        variables = enclosing_variables;
+
+        functions.add(function);
+
+        return function;
+    }
+
+    @Override
+    public Object visit(DefClass node) {
+
+        List<CBuilder.objects.functions.Function> enclosing = functions;
+        functions = new ArrayList<>();
+
+        if (node.getMethods().stream().noneMatch(f -> f.getIdentifier().getText().equals("__init__"))) {
+            functions.add(new CBuilder.objects.functions.Function(
+                "__init__",
+                List.of(new CBuilder.objects.SuperCall(List.of())),
+                List.of(new CBuilder.objects.functions.Argument("self", 0)),
+                List.of()
+            ));
+        }
+
+        for (DefMethod method: node.getMethods()) {
+            method.accept(this);
+        }
+
+        CBuilder.objects.MPyClass _class = new CBuilder.objects.MPyClass(
+            node.getIdentifier().getText(),
+            node.getSuperclass() != null 
+                ? new CBuilder.Reference(node.getSuperclass().getText()) 
+                : new CBuilder.Reference("__MPyType_Object"),
+            functions,
+            Map.of()
         );
 
-        this.program.addFunction(fun);
-        this.env = parent;
-        this.env.define(functionName, fun);
+        functions = enclosing;
 
-        return fun;
+        classes.add(_class);
+
+        return _class;
     }
 
     @Override
     public Object visit(DefMethod node) {
-        Environment parent = env;
-        this.env = new Environment(parent);
-        List<CBuilder.objects.functions.Argument> positionalArguments = new ArrayList<>();
-        List<CBuilder.variables.VariableDeclaration> localVariables = new ArrayList<>();
-        for(int i = 0; i < node.getParameters().size(); i++){
-            String paramName = node.getParameters().get(i).getIdentifier();
-            positionalArguments.add(new CBuilder.objects.functions.Argument(paramName, i));
+        List<CBuilder.variables.VariableDeclaration> enclosing_variables = variables;
+        List<CBuilder.Statement> enclosing_statements = statements;
+
+        variables = new ArrayList<>();
+        statements = new ArrayList<>();
+
+        List<Argument> arguments = new ArrayList<>();
+        
+        for (int i=0; i<node.getParameters().size(); i++) {
+            arguments.add(new Argument(node.getParameters().get(i).getText(), i));
         }
-        CBuilder.objects.functions.Function fun = new CBuilder.objects.functions.Function(
-            node.getIdentifier().getIdentifier(),
-            (List<CBuilder.Statement>) node.getBody().accept(this),
-            positionalArguments,
-            localVariables
+
+        CBuilder.objects.functions.Function function = new CBuilder.objects.functions.Function(
+            node.getIdentifier().getText(), 
+            (List<CBuilder.Statement>) node.getBody().accept(this), 
+            arguments,
+            variables
         );
-        this.env = parent;
-        this.env.define(node.getIdentifier().getIdentifier(), fun);
-        return fun;
+        
+        statements = enclosing_statements;
+        variables = enclosing_variables;
+
+        functions.add(function);
+
+        return function;
+    }
+
+    @Override
+    public Object visit(ImportModule node) {
+        return null;
     }
 
     @Override
@@ -218,54 +252,35 @@ public class BuilderVisitor implements AstVisitor<Object> {
         List<CBuilder.Statement> statements = new ArrayList<>();
 
         for(Statement statement : node.getStatements()){
-            if(this.env.getParent() == null){
-                statements.add((CBuilder.Statement) statement.accept(this));
-            }
-            this.program.addStatement((CBuilder.Statement) statement.accept(this));
+            statements.add((CBuilder.Statement) statement.accept(this));
         }
 
         return statements;
     }
 
     @Override
-    public Object visit(ImportModule node) {
-      
-        try {
-            MiniPythonLexer lexer = new MiniPythonLexer(CharStreams.fromFileName("src/test/" + node.toString() + ".mipy"));
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            MiniPythonParser parser = new MiniPythonParser(tokens);
-    
-            ParseTree tree = parser.start();
-            AstTreeVisitor visitor = new AstTreeVisitor();
-            AstTree ast = (AstTree) visitor.visit(tree);
-            BuilderVisitor build = new BuilderVisitor();
-            ast.accept(build);
+    public Object visit(AstTree node) {
+        
+        ProgramBuilder program = new ProgramBuilder();
 
-            for (Map.Entry<String, Object> entry : build.getEnvironment().getValues().entrySet()){
-                if(entry.getValue() instanceof MPyClass){
-                    this.program.addClass((MPyClass) entry.getValue());
-                } else if (entry.getValue() instanceof CBuilder.objects.functions.Function){
-                    this.program.addFunction((CBuilder.objects.functions.Function) entry.getValue());
-                } else if (entry.getValue() instanceof VariableDeclaration) {
-                    this.program.addVariable((VariableDeclaration) entry.getValue());
-                }
-            }
+        node.getBlock().accept(this);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (CBuilder.objects.functions.Function function: functions) {
+            program.addFunction(function);
         }
+        for (CBuilder.Statement statement: statements) {
+            program.addStatement(statement);
+        }
+        for (CBuilder.objects.MPyClass _class: classes) {
+            program.addClass(_class);
+        }
+        for (CBuilder.variables.VariableDeclaration variable: variables) {
+            program.addVariable(variable);
+        }
+
+        program.writeProgram(Path.of("out"));
+        
         return null;
     }
 
-    @Override
-    public Object visit(AstTree node) {
-        node.getBlock().accept(this);
-        this.program.writeProgram(Path.of("out"));
-        return program;
-    }
-
-    public Environment getEnvironment(){
-        return this.env;
-    }
-    
 }

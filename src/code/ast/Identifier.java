@@ -12,7 +12,7 @@ public class Identifier extends Expression {
         this.identifier = i;
     }
 
-    public String getIdentifier() {
+    public String getText() {
         return this.identifier;
     }
 

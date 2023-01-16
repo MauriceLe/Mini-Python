@@ -1,6 +1,9 @@
-var = 0
-
-while (var <= 4):
-    print(var)
-    var = var + 1
+def fun(a):
+    print(a)
+    b = 1
+    print(b)
 #end
+
+fun(10)
+
+

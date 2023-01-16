@@ -1,20 +1,13 @@
 package code.ast;
 
-
-import java.util.List;
-import java.util.ArrayList;
 import code.visitor.AstVisitor;
 import org.antlr.v4.runtime.tree.Tree;
 
-
 public class Compare extends Expression {
 
-    private List<Expression> operands;
+    private Expression left;
+    private Expression right;
     private Operator operator;
-
-    public Compare() {
-        operands = new ArrayList<>();
-    }
 
     public enum Operator {
         Equal,
@@ -29,20 +22,28 @@ public class Compare extends Expression {
         this.operator = operator;
     }
 
-    public void setOperand(Expression expression) {
-        this.operands.add(expression);
+    public void setLeft(Expression expression) {
+        this.left = expression;
     }
 
-    public List<Expression> getOperands() {
-        return this.operands;
+    public void setRight(Expression expression) {
+        this.right = expression;
+    }
+
+    public Expression getLeft() {
+        return this.left;
+    }
+
+    public Expression getRight() {
+        return this.right;
     }
 
     public String getOperator() {
         switch(this.operator) {
             case Equal: return "__eq__";
             case NotEqual: return "__ne__";
-            case Greater: return "__ge__";
-            case Greater_Then: return "__gt__";
+            case Greater: return "__gt__";
+            case Greater_Then: return "__ge__";
             case Less: return "__lt__";
             case Less_Then: return "__le__";
             default: return "";
@@ -51,12 +52,16 @@ public class Compare extends Expression {
 
     @Override
     public Tree getChild(int i) {
-        return this.operands.get(i);
+        switch(i) {
+            case 0: return this.left;
+            case 1: return this.right;
+            default: return super.getChild(i);
+        }
     }
 
     @Override
     public int getChildCount() {
-        return this.operands.size();
+        return 2;
     }
 
     @Override

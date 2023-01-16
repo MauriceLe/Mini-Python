@@ -1,20 +1,13 @@
 package code.ast;
 
-
-import java.util.List;
-import java.util.ArrayList;
 import code.visitor.AstVisitor;
 import org.antlr.v4.runtime.tree.Tree;
 
-
 public class Arithmetic extends Expression {
     
-    private List<Expression> operands;
+    private Expression left;
+    private Expression right;
     private Operator operator;
-
-    public Arithmetic() {
-        operands = new ArrayList<>();
-    }
 
     public enum Operator {
         Multiplication,
@@ -27,12 +20,20 @@ public class Arithmetic extends Expression {
         this.operator = operator;
     }
 
-    public List<Expression> getOperands() {
-        return this.operands;
+    public Expression getLeft() {
+        return this.left;
     }
 
-    public void setOperand(Expression expression) {
-        this.operands.add(expression);
+    public Expression getRight() {
+        return this.left;
+    }
+
+    public void setLeft(Expression expression) {
+        this.left = expression;
+    }
+
+    public void setRight(Expression expression) {
+        this.right = expression;
     }
 
     public String getOperator() {
@@ -47,12 +48,16 @@ public class Arithmetic extends Expression {
 
     @Override
     public Tree getChild(int i) {
-        return this.operands.get(i);
+        switch(i) {
+            case 0: return this.left;
+            case 1: return this.right;
+            default: return super.getChild(i);
+        }
     }
 
     @Override
     public int getChildCount() {
-        return this.operands.size();
+        return 2;
     }
 
     @Override
