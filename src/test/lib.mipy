@@ -1,3 +1,9 @@
-def test(a, b, c):
-    return a+b+c
+class Dog:
+    def __init__(self):
+        super()
+    #end
+
+    def wuff(self):
+        print('Wuff!')
+    #end
 #end

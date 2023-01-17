@@ -1,6 +1,6 @@
 package code;
 
-import code.core.*;
+import antlr.core.*;
 import code.visitor.*;
 import code.ast.AstTree;
 import org.antlr.v4.runtime.CharStreams;

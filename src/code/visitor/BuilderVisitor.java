@@ -5,8 +5,6 @@ import code.ast.Class;
 import code.ast.types.*;
 import code.ast.Exception;
 import code.ast.exceptions.*;
-import code.core.MiniPythonLexer;
-import code.core.MiniPythonParser;
 
 import java.util.*;
 import java.nio.file.Path;
@@ -23,6 +21,8 @@ import CBuilder.ProgramBuilder;
 import CBuilder.keywords.bool.NotKeyword;
 import CBuilder.objects.functions.Argument;
 import CBuilder.variables.VariableDeclaration;
+import antlr.core.MiniPythonLexer;
+import antlr.core.MiniPythonParser;
 import CBuilder.objects.functions.ReturnStatement;
 import CBuilder.conditions.conditionalStatement.*;
 
@@ -331,7 +331,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
             AstTreeVisitor visitor = new AstTreeVisitor();
             AstTree ast = (AstTree) visitor.visit(tree);
             BuilderVisitor build = new BuilderVisitor();
-            ast.accept(new BuilderVisitor());
+            ast.accept(build);
             variables = build.getVariables();
             functions = build.getFunctions();
             classes = build.getClasses();

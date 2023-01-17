@@ -1,3 +1,7 @@
-import lib
+x = 10
 
-print(test(1,2,3))
+try:
+    x = a
+except:
+    print('Test!')
+#end

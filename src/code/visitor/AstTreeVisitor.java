@@ -1,7 +1,7 @@
 package code.visitor;
 
+import antlr.core.*;
 import code.ast.*;
-import code.core.*;
 import code.ast.Class;
 import code.ast.types.*;
 import code.ast.Exception;

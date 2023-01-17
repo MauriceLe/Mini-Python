@@ -1,4 +1,4 @@
-package code.core;
+package antlr.core;
 // Generated from java-escape by ANTLR 4.11.1
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
