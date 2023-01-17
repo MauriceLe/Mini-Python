@@ -13,16 +13,44 @@
 #include "type-hierarchy/type.h"
 
 
+__MPyObj *test;
+__MPyObj* func_test(__MPyObj *args, __MPyObj *kwargs) {
+	assert(args != NULL && kwargs != NULL);
+	
+	__MPyGetArgsState argHelper = __mpy_args_init("test", args, kwargs, 3);
+	__MPyObj *x = __mpy_args_get_positional(&argHelper, 0, "x");
+	__MPyObj *y = __mpy_args_get_positional(&argHelper, 1, "y");
+	__MPyObj *z = __mpy_args_get_positional(&argHelper, 2, "z");
+	__mpy_args_finish(&argHelper);
+	
+	__MPyObj *retValue = NULL;
+	
+	retValue = __mpy_call(__mpy_obj_get_attr(__mpy_call(__mpy_obj_get_attr(x, "__mul__"), __mpy_tuple_assign(0, y, __mpy_obj_init_tuple(1)), NULL), "__add__"), __mpy_tuple_assign(0, z, __mpy_obj_init_tuple(1)), NULL);
+	goto ret;
+	
+	__mpy_obj_ref_dec(x);
+	__mpy_obj_ref_dec(y);
+	__mpy_obj_ref_dec(z);
+	
+	goto ret;
+	ret:
+	if (retValue == NULL) {
+		retValue = __mpy_obj_init_object();
+	}
+	return __mpy_obj_return(retValue);
+}
 
 
 int main() {
 	__mpy_builtins_setup();
 	
+	test = __mpy_obj_init_func(&func_test);
+	__mpy_obj_ref_inc(test);
 	
 	
-	__mpy_obj_ref_dec(__mpy_call(print, __mpy_tuple_assign(0, __mpy_obj_init_str_static("'Could not be resolved'"), __mpy_obj_init_tuple(1)), NULL));
 	
 	
+	__mpy_obj_ref_dec(test);
 	
 	
 	__mpy_builtins_cleanup();

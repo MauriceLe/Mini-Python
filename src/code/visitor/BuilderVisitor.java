@@ -333,19 +333,19 @@ public class BuilderVisitor implements AstVisitor<Object> {
         } else {
             boolean found = false;
             for (CBuilder.variables.VariableDeclaration var : variables){
-                if(var.getName() == node.getComponent().getText()){
+                if(var.getName().equals(node.getComponent().getText())){
                     this.variables.add(var);
                     found = true;
                 }
             }
             for (CBuilder.objects.functions.Function fun : functions){
-                if(fun.getName() == node.getComponent().getText()){
+                if(fun.getName().equals(node.getComponent().getText()) ){
                     this.functions.add(fun);
                     found = true;
                 }
             }
             for (CBuilder.objects.MPyClass cla : classes){
-                if(cla.getName() == node.getComponent().getText()){
+                if(cla.getName().equals(node.getComponent().getText())){
                     this.classes.add(cla);
                     found = true;
                 }
