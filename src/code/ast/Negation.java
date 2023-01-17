@@ -1,7 +1,6 @@
 package code.ast;
 
 import code.visitor.AstVisitor;
-
 import org.antlr.v4.runtime.tree.Tree;
 
 public class Negation extends Expression{

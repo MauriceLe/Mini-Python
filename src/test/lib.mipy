@@ -1,9 +1,3 @@
-class Dog:
-    def __init__(self):
-        super()
-    #end
-
-    def wuff():
-        print('Wau!')
-    #end
+def test(a, b, c):
+    return a+b+c
 #end

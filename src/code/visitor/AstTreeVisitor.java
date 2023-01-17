@@ -1,16 +1,11 @@
 package code.visitor;
 
-
 import code.ast.*;
+import code.core.*;
 import code.ast.Class;
-import code.ast.Exception;
-import code.ast.exceptions.ImportError;
-import code.ast.exceptions.NameError;
-import code.ast.exceptions.ZeroDivisionError;
 import code.ast.types.*;
-import code.core.MiniPythonBaseVisitor;
-import code.core.MiniPythonParser;
-
+import code.ast.Exception;
+import code.ast.exceptions.*;
 
 public class AstTreeVisitor extends MiniPythonBaseVisitor<Node> {
 

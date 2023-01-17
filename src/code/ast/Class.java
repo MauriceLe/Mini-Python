@@ -1,9 +1,8 @@
 package code.ast;
 
 import java.util.List;
-import java.util.ArrayList;
-
 import code.symbol.Scope;
+import java.util.ArrayList;
 import code.visitor.AstVisitor;
 import org.antlr.v4.runtime.tree.Tree;
 

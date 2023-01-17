@@ -12,142 +12,19 @@
 #include "type-hierarchy/object.h"
 #include "type-hierarchy/type.h"
 
-__MPyObj *b;
 
 
-__MPyObj *A;
-__MPyObj* func_A___init__(__MPyObj *args, __MPyObj *kwargs) {
-	assert(args != NULL && kwargs != NULL);
-	
-	__MPyGetArgsState argHelper = __mpy_args_init("__init__", args, kwargs, 1);
-	__MPyObj *self = __mpy_args_get_positional(&argHelper, 0, "self");
-	__mpy_args_finish(&argHelper);
-	
-	__MPyObj *retValue = NULL;
-	
-	__mpy_obj_ref_dec(__mpy_call(__mpy_super, __mpy_tuple_assign(0, self, __mpy_obj_init_tuple(1)), NULL));
-	
-	__mpy_obj_ref_dec(self);
-	
-	goto ret;
-	ret:
-	if (retValue == NULL) {
-		retValue = __mpy_obj_init_object();
-	}
-	return __mpy_obj_return(retValue);
-}
-__MPyObj* func_A_custom(__MPyObj *args, __MPyObj *kwargs) {
-	assert(args != NULL && kwargs != NULL);
-	
-	__MPyGetArgsState argHelper = __mpy_args_init("custom", args, kwargs, 1);
-	__MPyObj *self = __mpy_args_get_positional(&argHelper, 0, "self");
-	__mpy_args_finish(&argHelper);
-	
-	__MPyObj *retValue = NULL;
-	
-	__mpy_obj_ref_dec(__mpy_call(print, __mpy_tuple_assign(0, __mpy_obj_init_int(1), __mpy_obj_init_tuple(1)), NULL));
-	
-	__mpy_obj_ref_dec(self);
-	
-	goto ret;
-	ret:
-	if (retValue == NULL) {
-		retValue = __mpy_obj_init_object();
-	}
-	return __mpy_obj_return(retValue);
-}
-__MPyObj* func_A_reee(__MPyObj *args, __MPyObj *kwargs) {
-	assert(args != NULL && kwargs != NULL);
-	
-	__MPyGetArgsState argHelper = __mpy_args_init("reee", args, kwargs, 1);
-	__MPyObj *self = __mpy_args_get_positional(&argHelper, 0, "self");
-	__mpy_args_finish(&argHelper);
-	
-	__MPyObj *retValue = NULL;
-	
-	__mpy_obj_ref_dec(__mpy_call(__mpy_obj_get_attr(self, "custom"), __mpy_obj_init_tuple(0), NULL));
-	
-	__mpy_obj_ref_dec(self);
-	
-	goto ret;
-	ret:
-	if (retValue == NULL) {
-		retValue = __mpy_obj_init_object();
-	}
-	return __mpy_obj_return(retValue);
-}
-__MPyObj *B;
-__MPyObj* func_B___init__(__MPyObj *args, __MPyObj *kwargs) {
-	assert(args != NULL && kwargs != NULL);
-	
-	__MPyGetArgsState argHelper = __mpy_args_init("__init__", args, kwargs, 1);
-	__MPyObj *self = __mpy_args_get_positional(&argHelper, 0, "self");
-	__mpy_args_finish(&argHelper);
-	
-	__MPyObj *retValue = NULL;
-	
-	__mpy_obj_ref_dec(__mpy_call(__mpy_super, __mpy_tuple_assign(0, self, __mpy_obj_init_tuple(1)), NULL));
-	
-	__mpy_obj_ref_dec(self);
-	
-	goto ret;
-	ret:
-	if (retValue == NULL) {
-		retValue = __mpy_obj_init_object();
-	}
-	return __mpy_obj_return(retValue);
-}
 
 int main() {
 	__mpy_builtins_setup();
-	b = __mpy_obj_init_object();
-	__mpy_obj_ref_inc(b);
 	
 	
-	A = __mpy_obj_init_type("A", __MPyType_Object);
-	__mpy_obj_ref_inc(A);
-	{
-		__MPyObj *__init__;
-		__init__ = __mpy_obj_init_func(&func_A___init__);
-		__mpy_obj_ref_inc(__init__);
-		__mpy_obj_set_attr(A, "__init__", __init__);
-		__mpy_obj_ref_dec(__init__);
-	}
-	{
-		__MPyObj *custom;
-		custom = __mpy_obj_init_func(&func_A_custom);
-		__mpy_obj_ref_inc(custom);
-		__mpy_obj_set_attr(A, "custom", custom);
-		__mpy_obj_ref_dec(custom);
-	}
-	{
-		__MPyObj *reee;
-		reee = __mpy_obj_init_func(&func_A_reee);
-		__mpy_obj_ref_inc(reee);
-		__mpy_obj_set_attr(A, "reee", reee);
-		__mpy_obj_ref_dec(reee);
-	}
-	B = __mpy_obj_init_type("B", A);
-	__mpy_obj_ref_inc(B);
-	{
-		__MPyObj *__init__;
-		__init__ = __mpy_obj_init_func(&func_B___init__);
-		__mpy_obj_ref_inc(__init__);
-		__mpy_obj_set_attr(B, "__init__", __init__);
-		__mpy_obj_ref_dec(__init__);
-	}
 	
-	__mpy_obj_ref_dec(__mpy_call(B, __mpy_obj_init_tuple(0), NULL));
-	__mpy_obj_ref_dec(b);
-	b = __mpy_call(B, __mpy_obj_init_tuple(0), NULL);
-	__mpy_obj_ref_inc(b);
-	__mpy_obj_ref_dec(__mpy_call(__mpy_obj_get_attr(b, "reee"), __mpy_obj_init_tuple(0), NULL));
-	
-	__mpy_obj_ref_dec(b);
+	__mpy_obj_ref_dec(__mpy_call(test, __mpy_tuple_assign(0, __mpy_obj_init_int(1), __mpy_tuple_assign(1, __mpy_obj_init_int(2), __mpy_tuple_assign(2, __mpy_obj_init_int(3), __mpy_obj_init_tuple(3)))), NULL));
+	__mpy_obj_ref_dec(__mpy_call(print, __mpy_tuple_assign(0, __mpy_call(test, __mpy_tuple_assign(0, __mpy_obj_init_int(1), __mpy_tuple_assign(1, __mpy_obj_init_int(2), __mpy_tuple_assign(2, __mpy_obj_init_int(3), __mpy_obj_init_tuple(3)))), NULL), __mpy_obj_init_tuple(1)), NULL));
 	
 	
-	__mpy_obj_ref_dec(A);
-	__mpy_obj_ref_dec(B);
+	
 	
 	__mpy_builtins_cleanup();
 	return 0;

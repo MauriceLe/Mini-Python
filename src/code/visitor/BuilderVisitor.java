@@ -2,29 +2,29 @@ package code.visitor;
 
 import code.ast.*;
 import code.ast.Class;
+import code.ast.types.*;
 import code.ast.Exception;
-import code.ast.exceptions.ImportError;
-import code.ast.exceptions.NameError;
-import code.ast.exceptions.ZeroDivisionError;
+import code.ast.exceptions.*;
+import code.core.MiniPythonLexer;
+import code.core.MiniPythonParser;
+
 import java.util.*;
+import java.nio.file.Path;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-import code.ast.types.*;
-import code.core.MiniPythonLexer;
-import code.core.MiniPythonParser;
-import java.nio.file.Path;
-import CBuilder.literals.*;
+
 import CBuilder.objects.*;
-import CBuilder.objects.functions.Argument;
-import CBuilder.objects.functions.ReturnStatement;
-import CBuilder.variables.VariableDeclaration;
-import CBuilder.ProgramBuilder;
 import CBuilder.Reference;
+import CBuilder.literals.*;
 import CBuilder.conditions.*;
-import CBuilder.conditions.conditionalStatement.*;
+import CBuilder.ProgramBuilder;
 import CBuilder.keywords.bool.NotKeyword;
+import CBuilder.objects.functions.Argument;
+import CBuilder.variables.VariableDeclaration;
+import CBuilder.objects.functions.ReturnStatement;
+import CBuilder.conditions.conditionalStatement.*;
 
 
 @SuppressWarnings("unchecked")

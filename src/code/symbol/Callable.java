@@ -1,4 +1,5 @@
 package code.symbol;
+
 import java.util.List;
 
 public interface Callable {

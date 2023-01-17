@@ -1,8 +1,8 @@
 package code.ast;
 
+import java.util.Map;
 import code.visitor.AstVisitor;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import org.antlr.v4.runtime.tree.Tree;
 
 public class If extends Statement {

@@ -1,10 +1,9 @@
 package code.ast;
 
 import java.util.List;
-
 import code.symbol.Scope;
-import code.visitor.AstVisitor;
 import java.util.ArrayList;
+import code.visitor.AstVisitor;
 import org.antlr.v4.runtime.tree.Tree;
 
 public class Block extends Statement {
