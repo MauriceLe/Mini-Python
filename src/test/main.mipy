@@ -1,5 +1,7 @@
+import lib
+
 try:
-    from lib import test
+    print(test(1,2,3))
 except NameError:
     print('Could not be resolved')
 #end
