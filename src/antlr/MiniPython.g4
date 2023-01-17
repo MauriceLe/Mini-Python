@@ -69,9 +69,7 @@ fin_statement       : FINALLY COLON statements;
 
 expression_parameter: expression? (COMMA expression)*;
 
-function_parameter  : identifier? (COMMA identifier)*
-                    | SELF (COMMA identifier)*
-                    ;
+function_parameter  : identifier? (COMMA identifier)*;
 
 call                : identifier LBRACKET expression_parameter RBRACKET
                     | identifier DOT identifier LBRACKET expression_parameter RBRACKET
@@ -112,7 +110,6 @@ WHILE               : 'while';
 RETURN              : 'return';
 CLASS_              : 'class';
 DEF                 : 'def';
-SELF                : 'self';
 TRY                 : 'try';
 EXCEPT              : 'except';
 FINALLY             : 'finally';

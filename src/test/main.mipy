@@ -1,9 +1,22 @@
-import lib
+class A:
+    def __init__(self):
+        super()
+    #end
 
-try:
-    print(test(1,2,3))
-except NameError:
-    print('Could not be resolved')
+    def custom(self):
+        print('Ich bin eine Methode von A')
+    #end
+
+    def reee(self):
+        self.custom()
+    #end
 #end
 
+class B(A):
+    def __init__(self):
+        super()
+    #end
+#end
 
+b = B()
+b.reee()

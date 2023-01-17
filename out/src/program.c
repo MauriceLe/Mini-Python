@@ -12,25 +12,22 @@
 #include "type-hierarchy/object.h"
 #include "type-hierarchy/type.h"
 
+__MPyObj *b;
 
-__MPyObj *test;
-__MPyObj* func_test(__MPyObj *args, __MPyObj *kwargs) {
+
+__MPyObj *A;
+__MPyObj* func_A___init__(__MPyObj *args, __MPyObj *kwargs) {
 	assert(args != NULL && kwargs != NULL);
 	
-	__MPyGetArgsState argHelper = __mpy_args_init("test", args, kwargs, 3);
-	__MPyObj *x = __mpy_args_get_positional(&argHelper, 0, "x");
-	__MPyObj *y = __mpy_args_get_positional(&argHelper, 1, "y");
-	__MPyObj *z = __mpy_args_get_positional(&argHelper, 2, "z");
+	__MPyGetArgsState argHelper = __mpy_args_init("__init__", args, kwargs, 1);
+	__MPyObj *self = __mpy_args_get_positional(&argHelper, 0, "self");
 	__mpy_args_finish(&argHelper);
 	
 	__MPyObj *retValue = NULL;
 	
-	retValue = __mpy_call(__mpy_obj_get_attr(__mpy_call(__mpy_obj_get_attr(x, "__mul__"), __mpy_tuple_assign(0, y, __mpy_obj_init_tuple(1)), NULL), "__add__"), __mpy_tuple_assign(0, z, __mpy_obj_init_tuple(1)), NULL);
-	goto ret;
+	__mpy_obj_ref_dec(__mpy_call(__mpy_super, __mpy_tuple_assign(0, self, __mpy_obj_init_tuple(1)), NULL));
 	
-	__mpy_obj_ref_dec(x);
-	__mpy_obj_ref_dec(y);
-	__mpy_obj_ref_dec(z);
+	__mpy_obj_ref_dec(self);
 	
 	goto ret;
 	ret:
@@ -39,25 +36,59 @@ __MPyObj* func_test(__MPyObj *args, __MPyObj *kwargs) {
 	}
 	return __mpy_obj_return(retValue);
 }
-
-__MPyObj *cooleKlasse;
-__MPyObj* func_cooleKlasse_methode(__MPyObj *args, __MPyObj *kwargs) {
+__MPyObj* func_A_custom(__MPyObj *args, __MPyObj *kwargs) {
 	assert(args != NULL && kwargs != NULL);
 	
-	__MPyGetArgsState argHelper = __mpy_args_init("methode", args, kwargs, 3);
-	__MPyObj *a = __mpy_args_get_positional(&argHelper, 0, "a");
-	__MPyObj *b = __mpy_args_get_positional(&argHelper, 1, "b");
-	__MPyObj *c = __mpy_args_get_positional(&argHelper, 2, "c");
+	__MPyGetArgsState argHelper = __mpy_args_init("custom", args, kwargs, 1);
+	__MPyObj *self = __mpy_args_get_positional(&argHelper, 0, "self");
 	__mpy_args_finish(&argHelper);
 	
 	__MPyObj *retValue = NULL;
 	
-	retValue = __mpy_call(__mpy_obj_get_attr(__mpy_call(__mpy_obj_get_attr(a, "__add__"), __mpy_tuple_assign(0, b, __mpy_obj_init_tuple(1)), NULL), "__add__"), __mpy_tuple_assign(0, c, __mpy_obj_init_tuple(1)), NULL);
-	goto ret;
+	__mpy_obj_ref_dec(__mpy_call(print, __mpy_tuple_assign(0, __mpy_obj_init_int(1), __mpy_obj_init_tuple(1)), NULL));
 	
-	__mpy_obj_ref_dec(a);
-	__mpy_obj_ref_dec(b);
-	__mpy_obj_ref_dec(c);
+	__mpy_obj_ref_dec(self);
+	
+	goto ret;
+	ret:
+	if (retValue == NULL) {
+		retValue = __mpy_obj_init_object();
+	}
+	return __mpy_obj_return(retValue);
+}
+__MPyObj* func_A_reee(__MPyObj *args, __MPyObj *kwargs) {
+	assert(args != NULL && kwargs != NULL);
+	
+	__MPyGetArgsState argHelper = __mpy_args_init("reee", args, kwargs, 1);
+	__MPyObj *self = __mpy_args_get_positional(&argHelper, 0, "self");
+	__mpy_args_finish(&argHelper);
+	
+	__MPyObj *retValue = NULL;
+	
+	__mpy_obj_ref_dec(__mpy_call(__mpy_obj_get_attr(self, "custom"), __mpy_obj_init_tuple(0), NULL));
+	
+	__mpy_obj_ref_dec(self);
+	
+	goto ret;
+	ret:
+	if (retValue == NULL) {
+		retValue = __mpy_obj_init_object();
+	}
+	return __mpy_obj_return(retValue);
+}
+__MPyObj *B;
+__MPyObj* func_B___init__(__MPyObj *args, __MPyObj *kwargs) {
+	assert(args != NULL && kwargs != NULL);
+	
+	__MPyGetArgsState argHelper = __mpy_args_init("__init__", args, kwargs, 1);
+	__MPyObj *self = __mpy_args_get_positional(&argHelper, 0, "self");
+	__mpy_args_finish(&argHelper);
+	
+	__MPyObj *retValue = NULL;
+	
+	__mpy_obj_ref_dec(__mpy_call(__mpy_super, __mpy_tuple_assign(0, self, __mpy_obj_init_tuple(1)), NULL));
+	
+	__mpy_obj_ref_dec(self);
 	
 	goto ret;
 	ret:
@@ -69,25 +100,54 @@ __MPyObj* func_cooleKlasse_methode(__MPyObj *args, __MPyObj *kwargs) {
 
 int main() {
 	__mpy_builtins_setup();
+	b = __mpy_obj_init_object();
+	__mpy_obj_ref_inc(b);
 	
-	test = __mpy_obj_init_func(&func_test);
-	__mpy_obj_ref_inc(test);
 	
-	cooleKlasse = __mpy_obj_init_type("cooleKlasse", __MPyType_Object);
-	__mpy_obj_ref_inc(cooleKlasse);
+	A = __mpy_obj_init_type("A", __MPyType_Object);
+	__mpy_obj_ref_inc(A);
 	{
-		__MPyObj *methode;
-		methode = __mpy_obj_init_func(&func_cooleKlasse_methode);
-		__mpy_obj_ref_inc(methode);
-		__mpy_obj_set_attr(cooleKlasse, "methode", methode);
-		__mpy_obj_ref_dec(methode);
+		__MPyObj *__init__;
+		__init__ = __mpy_obj_init_func(&func_A___init__);
+		__mpy_obj_ref_inc(__init__);
+		__mpy_obj_set_attr(A, "__init__", __init__);
+		__mpy_obj_ref_dec(__init__);
+	}
+	{
+		__MPyObj *custom;
+		custom = __mpy_obj_init_func(&func_A_custom);
+		__mpy_obj_ref_inc(custom);
+		__mpy_obj_set_attr(A, "custom", custom);
+		__mpy_obj_ref_dec(custom);
+	}
+	{
+		__MPyObj *reee;
+		reee = __mpy_obj_init_func(&func_A_reee);
+		__mpy_obj_ref_inc(reee);
+		__mpy_obj_set_attr(A, "reee", reee);
+		__mpy_obj_ref_dec(reee);
+	}
+	B = __mpy_obj_init_type("B", A);
+	__mpy_obj_ref_inc(B);
+	{
+		__MPyObj *__init__;
+		__init__ = __mpy_obj_init_func(&func_B___init__);
+		__mpy_obj_ref_inc(__init__);
+		__mpy_obj_set_attr(B, "__init__", __init__);
+		__mpy_obj_ref_dec(__init__);
 	}
 	
+	__mpy_obj_ref_dec(__mpy_call(B, __mpy_obj_init_tuple(0), NULL));
+	__mpy_obj_ref_dec(b);
+	b = __mpy_call(B, __mpy_obj_init_tuple(0), NULL);
+	__mpy_obj_ref_inc(b);
+	__mpy_obj_ref_dec(__mpy_call(__mpy_obj_get_attr(b, "reee"), __mpy_obj_init_tuple(0), NULL));
+	
+	__mpy_obj_ref_dec(b);
 	
 	
-	__mpy_obj_ref_dec(test);
-	
-	__mpy_obj_ref_dec(cooleKlasse);
+	__mpy_obj_ref_dec(A);
+	__mpy_obj_ref_dec(B);
 	
 	__mpy_builtins_cleanup();
 	return 0;

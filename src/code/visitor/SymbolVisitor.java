@@ -3,9 +3,7 @@ package code.visitor;
 import java.util.function.Supplier;
 import code.ast.*;
 import code.ast.Class;
-import code.ast.types.Bool;
-import code.ast.types.Int;
-import code.ast.types.Text;
+import code.ast.types.*;
 import code.symbol.Scope;
 import code.symbol.Symbol;
 import code.symbol.Variable;
@@ -37,6 +35,7 @@ public class SymbolVisitor implements AstVisitor<Object>{
         }else {
             node.getExpression().accept(this);
         }
+
         return null;
     };
 
@@ -46,12 +45,13 @@ public class SymbolVisitor implements AstVisitor<Object>{
         return null;
     };
 
-    public Object visit(AstTree node){
+    public Object visit(AstTree node) {
+
         nest(()->{
             node.getBlock().accept(this);
-
             return null;
         });
+
         return null;
     };
 
@@ -123,6 +123,7 @@ public class SymbolVisitor implements AstVisitor<Object>{
             node.setScope(scope);
             code.symbol.Class newClass = new code.symbol.Class(node);
             newClass.setScope(scope);
+            
             return newClass;
         }));
         

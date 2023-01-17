@@ -1,9 +1,9 @@
-def test(x,y,z):
-    return x*y+z
-#end
+class Dog:
+    def __init__(self):
+        super()
+    #end
 
-class cooleKlasse:
-    def methode(a,b,c):
-        return a + b + c
+    def wuff():
+        print('Wau!')
     #end
 #end

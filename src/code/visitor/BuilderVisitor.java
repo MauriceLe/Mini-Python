@@ -6,7 +6,6 @@ import code.ast.Exception;
 import code.ast.exceptions.ImportError;
 import code.ast.exceptions.NameError;
 import code.ast.exceptions.ZeroDivisionError;
-
 import java.util.*;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.CharStreams;
@@ -99,15 +98,22 @@ public class BuilderVisitor implements AstVisitor<Object> {
         CBuilder.Expression expression = (CBuilder.Expression) node.getExpression().accept(this);
 
         VariableDeclaration variable = new VariableDeclaration(node.getIdentifier().getText());
-        CBuilder.variables.Assignment assignment = new CBuilder.variables.Assignment(identifier, expression);
+        CBuilder.variables.Assignment assign = new CBuilder.variables.Assignment(identifier, expression);
+
+        if (expression instanceof Reference) {
+            Reference reference = (Reference) expression;
+            if (variables.stream().noneMatch(x -> x.getName().equals(reference.getName()))) {
+                exceptions.add(new NameError());
+            }
+        }
 
         if (!variables.contains(variable)) {
             variables.add(variable);
         }
 
-        statements.add(assignment);
+        statements.add(assign);
 
-        return assignment;
+        return assign;
     }
 
     @Override
@@ -158,39 +164,37 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
     @Override
     public Object visit(Try node) {
-        Exception err = (Exception) node.getException();
-
-        List<Exception> enclosing_exceptions = this.exceptions;
+        List<Exception> enclosing_exceptions = exceptions;
         List<CBuilder.Statement> enclosing_statements = statements;
+
         this.exceptions = new ArrayList<>();
         this.statements = new ArrayList<>();
 
-        boolean isError = false;
-
         node.getTryBlock().accept(this);
          
-        if(err != null){
-             for (Exception e : this.exceptions){
-                if (e.getClass() == err.getClass()){
-                    isError = true;
-                }
-            }
-        } else if (!this.exceptions.isEmpty()){
-            isError = true;
-        }
-
         this.statements = enclosing_statements;
 
-        if (isError){
-            this.exceptions.remove(err);
+        if (this.exceptions.size() == 0) {
+            node.getTryBlock().accept(this);
+        } 
+        else if (this.exceptions.size() > 0) {
             node.getExceptBlock().accept(this);
+        } 
+        else {
+            for (Exception exception: this.exceptions){
+                if (node.getException() != null) {
+                    if (node.getException().getClass() == exception.getClass()) {
+                        node.getTryBlock().accept(this);
+                    }
+                }
+            }
         }
-
-        this.exceptions = enclosing_exceptions;
 
         if (node.getFinallyBlock() != null){
             node.getFinallyBlock().accept(this);
         }
+
+        this.exceptions = enclosing_exceptions;
 
         return null;
     }
@@ -200,6 +204,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
         List<CBuilder.variables.VariableDeclaration> enclosing_variables = variables;
         List<CBuilder.Statement> enclosing_statements = statements;
+
         variables = new ArrayList<>();
         statements = new ArrayList<>();
 
@@ -218,26 +223,30 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
     @Override
     public Object visit(Callable node) {
+        Call call;
 
-
-        boolean exists = false;
-        for (CBuilder.objects.functions.Function fun : this.functions){
-            if(fun.getName().equals(node.getIdentifier().getText())){
-                exists = true;
-            }
+        if (node.getClassIdentifier() != null) {
+            call = new Call(
+                new AttributeReference(
+                    node.getIdentifier().getText(), 
+                    (Reference) node.getClassIdentifier().accept(this)
+                ), 
+                node.getParameters().stream().map(x->(CBuilder.Expression) x.accept(this)).collect(Collectors.toList())
+            );
+        } 
+        else {
+            call = new Call(
+                (CBuilder.Reference) node.getIdentifier().accept(this), 
+                node.getParameters().stream().map(x->(CBuilder.Expression) x.accept(this)).collect(Collectors.toList())
+            );
         }
-    
-        if((!exists) && (!node.getIdentifier().getText().equals("print"))){
-            this.exceptions.add(new NameError());
-        }
 
-        Call call = new Call(
-            (CBuilder.Reference) node.getIdentifier().accept(this), 
-            node.getParameters().stream().map(x->(CBuilder.Expression) x.accept(this)).collect(Collectors.toList())
-        );
-        
         statements.add(call);
-      
+
+        if (functions.stream().noneMatch(x -> x.getName().equals(node.getIdentifier().getText()))){
+            exceptions.add(new NameError());
+        }
+
         return call;
     }
 
@@ -246,6 +255,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
         List<CBuilder.variables.VariableDeclaration> enclosing_variables = variables;
         List<CBuilder.Statement> enclosing_statements = statements;
+
         variables = new ArrayList<>();
         statements = new ArrayList<>();
 
@@ -313,7 +323,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
         List<CBuilder.objects.MPyClass> classes = new ArrayList<>();
         List<CBuilder.Statement> statements = new ArrayList<>();
 
-        try{
+        try {
             MiniPythonLexer lexer = new MiniPythonLexer(CharStreams.fromFileName("src/test/" + node.getModule().getText() + ".mipy"));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             MiniPythonParser parser = new MiniPythonParser(tokens);
@@ -321,7 +331,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
             AstTreeVisitor visitor = new AstTreeVisitor();
             AstTree ast = (AstTree) visitor.visit(tree);
             BuilderVisitor build = new BuilderVisitor();
-            ast.accept(build);
+            ast.accept(new BuilderVisitor());
             variables = build.getVariables();
             functions = build.getFunctions();
             classes = build.getClasses();

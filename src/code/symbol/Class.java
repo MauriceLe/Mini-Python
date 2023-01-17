@@ -1,10 +1,8 @@
 package code.symbol;
 
-import code.ast.Class;
-
 public class Class extends Symbol {
 
-    private Class _class;
+    private code.ast.Class _class;
 
     public Class(){
         this._class = null;
