@@ -12,75 +12,28 @@
 #include "type-hierarchy/object.h"
 #include "type-hierarchy/type.h"
 
+__MPyObj *a;
 
 
-__MPyObj *Animal;
-__MPyObj* func_Animal___init__(__MPyObj *args, __MPyObj *kwargs) {
-	assert(args != NULL && kwargs != NULL);
-	
-	__MPyGetArgsState argHelper = __mpy_args_init("__init__", args, kwargs, 1);
-	__MPyObj *self = __mpy_args_get_positional(&argHelper, 0, "self");
-	__mpy_args_finish(&argHelper);
-	
-	__MPyObj *retValue = NULL;
-	
-	__mpy_obj_ref_dec(__mpy_call(__mpy_super, __mpy_tuple_assign(0, self, __mpy_obj_init_tuple(1)), NULL));
-	
-	__mpy_obj_ref_dec(self);
-	
-	goto ret;
-	ret:
-	if (retValue == NULL) {
-		retValue = __mpy_obj_init_object();
-	}
-	return __mpy_obj_return(retValue);
-}
-__MPyObj* func_Animal_wuff(__MPyObj *args, __MPyObj *kwargs) {
-	assert(args != NULL && kwargs != NULL);
-	
-	__MPyGetArgsState argHelper = __mpy_args_init("wuff", args, kwargs, 1);
-	__MPyObj *self = __mpy_args_get_positional(&argHelper, 0, "self");
-	__mpy_args_finish(&argHelper);
-	
-	__MPyObj *retValue = NULL;
-	
-	__mpy_obj_ref_dec(__mpy_call(print, __mpy_tuple_assign(0, __mpy_obj_init_str_static("'Wuff!'"), __mpy_obj_init_tuple(1)), NULL));
-	
-	__mpy_obj_ref_dec(self);
-	
-	goto ret;
-	ret:
-	if (retValue == NULL) {
-		retValue = __mpy_obj_init_object();
-	}
-	return __mpy_obj_return(retValue);
-}
 
 int main() {
 	__mpy_builtins_setup();
+	a = __mpy_obj_init_object();
+	__mpy_obj_ref_inc(a);
 	
 	
-	Animal = __mpy_obj_init_type("Animal", __MPyType_Object);
-	__mpy_obj_ref_inc(Animal);
-	{
-		__MPyObj *__init__;
-		__init__ = __mpy_obj_init_func(&func_Animal___init__);
-		__mpy_obj_ref_inc(__init__);
-		__mpy_obj_set_attr(Animal, "__init__", __init__);
-		__mpy_obj_ref_dec(__init__);
+	
+	__mpy_obj_ref_dec(a);
+	a = __mpy_obj_init_int(5);
+	__mpy_obj_ref_inc(a);
+	if (__mpy_boolean_raw(__mpy_call(__mpy_obj_get_attr(__mpy_call(__mpy_obj_get_attr(a, "__lt__"), __mpy_tuple_assign(0, __mpy_obj_init_int(10), __mpy_obj_init_tuple(1)), NULL), "__bool__"), __mpy_obj_init_tuple(0), NULL))) {
+		__mpy_obj_ref_dec(__mpy_call(print, __mpy_tuple_assign(0, __mpy_obj_init_str_static("'a < 10'"), __mpy_obj_init_tuple(1)), NULL));
+	}else {
+		__mpy_obj_ref_dec(__mpy_call(print, __mpy_tuple_assign(0, __mpy_obj_init_str_static("'a >= 10'"), __mpy_obj_init_tuple(1)), NULL));
 	}
-	{
-		__MPyObj *wuff;
-		wuff = __mpy_obj_init_func(&func_Animal_wuff);
-		__mpy_obj_ref_inc(wuff);
-		__mpy_obj_set_attr(Animal, "wuff", wuff);
-		__mpy_obj_ref_dec(wuff);
-	}
+	__mpy_obj_ref_dec(a);
 	
 	
-	
-	
-	__mpy_obj_ref_dec(Animal);
 	
 	__mpy_builtins_cleanup();
 	return 0;

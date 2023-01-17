@@ -3,8 +3,12 @@ class Animal:
         super()
     #end
 
-    def wuff(self):
-        print('Wuff!')
+    def wuff(self, amount):
+        i = 0
+        while i < amount:
+            print('Wuff!')
+            i = i + 1
+        #end
     #end
 #end
 

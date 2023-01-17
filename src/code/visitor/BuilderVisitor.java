@@ -187,16 +187,17 @@ public class BuilderVisitor implements AstVisitor<Object> {
             node.getTryBlock().accept(this);
         } 
         else if (this.exceptions.size() > 0) {
-            node.getExceptBlock().accept(this);
-        } 
-        else {
-            for (Exception exception: this.exceptions){
-                if (node.getException() != null) {
+            if (node.getException() != null) {
+                for (Exception exception: this.exceptions){
                     if (node.getException().getClass() == exception.getClass()) {
                         node.getTryBlock().accept(this);
                     }
                 }
+            } else {
+                node.getExceptBlock().accept(this);
             }
+        } 
+        else {
         }
 
         if (node.getFinallyBlock() != null){
