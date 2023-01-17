@@ -331,6 +331,7 @@ public class BuilderVisitor implements AstVisitor<Object> {
         List<CBuilder.objects.functions.Function> functions = new ArrayList<>();
         List<CBuilder.objects.MPyClass> classes = new ArrayList<>();
         List<CBuilder.Statement> statements = new ArrayList<>();
+        BuilderVisitor build = new BuilderVisitor();
 
         try {
             MiniPythonLexer lexer = new MiniPythonLexer(CharStreams.fromFileName("src/test/" + node.getModule().getText() + ".mipy"));
@@ -339,15 +340,15 @@ public class BuilderVisitor implements AstVisitor<Object> {
             ParseTree tree = parser.start();
             AstTreeVisitor visitor = new AstTreeVisitor();
             AstTree ast = (AstTree) visitor.visit(tree);
-            BuilderVisitor build = new BuilderVisitor();
             ast.accept(build);
-            variables = build.getVariables();
-            functions = build.getFunctions();
-            classes = build.getClasses();
-            statements = build.getStatements();
         } catch(java.lang.Exception e){
             this.exceptions.add(new ImportError());
         }
+        
+        variables = build.getVariables();
+        functions = build.getFunctions();
+        classes = build.getClasses();
+        statements = build.getStatements();
 
         if (node.getComponent() == null){
             for (CBuilder.variables.VariableDeclaration var : variables){
