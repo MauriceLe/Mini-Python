@@ -220,17 +220,15 @@ public class BuilderVisitor implements AstVisitor<Object> {
     public Object visit(Callable node) {
 
 
-        if(!node.getIdentifier().getText().contains("print") && !node.getIdentifier().getText().contains("input")){
-            boolean exists = false;
-            for (CBuilder.objects.functions.Function fun : this.functions){
-                if(fun.getName().equals(node.getIdentifier().getText())){
-                    exists = true;
-                }
+        boolean exists = false;
+        for (CBuilder.objects.functions.Function fun : this.functions){
+            if(fun.getName().equals(node.getIdentifier().getText())){
+                exists = true;
             }
+        }
     
-            if(!exists){
-                this.exceptions.add(new NameError());
-            }
+        if((!exists) && (!node.getIdentifier().getText().equals("print"))){
+            this.exceptions.add(new NameError());
         }
 
         Call call = new Call(
