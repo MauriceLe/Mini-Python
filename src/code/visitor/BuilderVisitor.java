@@ -4,6 +4,7 @@ import code.ast.*;
 import code.ast.Class;
 import code.ast.Exception;
 import code.ast.exceptions.ImportError;
+import code.ast.exceptions.NameError;
 import code.ast.exceptions.ZeroDivisionError;
 
 import java.util.*;
@@ -316,17 +317,39 @@ public class BuilderVisitor implements AstVisitor<Object> {
             this.exceptions.add(new ImportError());
         }
 
-        for (CBuilder.variables.VariableDeclaration var : variables){
-            this.variables.add(var);
-        }
-        for (CBuilder.objects.functions.Function fun : functions){
-            this.functions.add(fun);
-        }
-        for (CBuilder.objects.MPyClass cla : classes){
-            this.classes.add(cla);
-        }
-        for (CBuilder.Statement stmt : statements){
-            this.statements.add(stmt);
+        if (node.getComponent() == null){
+            for (CBuilder.variables.VariableDeclaration var : variables){
+                this.variables.add(var);
+            }
+            for (CBuilder.objects.functions.Function fun : functions){
+                this.functions.add(fun);
+            }
+            for (CBuilder.objects.MPyClass cla : classes){
+                this.classes.add(cla);
+            }
+            for (CBuilder.Statement stmt : statements){
+                this.statements.add(stmt);
+            }
+        } else {
+            boolean found = false;
+            for (CBuilder.variables.VariableDeclaration var : variables){
+                if(var.getName() == node.getComponent().getText()){
+                    this.variables.add(var);
+                }
+            }
+            for (CBuilder.objects.functions.Function fun : functions){
+                if(fun.getName() == node.getComponent().getText()){
+                    this.functions.add(fun);
+                }
+            }
+            for (CBuilder.objects.MPyClass cla : classes){
+                if(cla.getName() == node.getComponent().getText()){
+                    this.classes.add(cla);
+                }
+            }
+            if (!found){
+                this.exceptions.add(new NameError());
+            }
         }
 
         return null;

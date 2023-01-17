@@ -5,13 +5,23 @@ import code.visitor.AstVisitor;
 public class ImportModule extends Statement {
     
     private Identifier module;
+    private Identifier component;
 
     public ImportModule(Identifier i){
         this.module = i;
     }
 
+    public ImportModule(Identifier i, Identifier c){
+        this.module = i;
+        this.component = c;
+    }
+
     public Identifier getModule(){
         return this.module;
+    }
+
+    public Identifier getComponent(){
+        return this.component;
     }
 
     public void test(){

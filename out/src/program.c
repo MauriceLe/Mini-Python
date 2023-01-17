@@ -12,20 +12,16 @@
 #include "type-hierarchy/object.h"
 #include "type-hierarchy/type.h"
 
-__MPyObj *a;
 
 
 
 int main() {
 	__mpy_builtins_setup();
-	a = __mpy_obj_init_object();
-	__mpy_obj_ref_inc(a);
 	
 	
 	
-	__mpy_obj_ref_dec(__mpy_call(print, __mpy_tuple_assign(0, __mpy_obj_init_str_static("'Division 0'"), __mpy_obj_init_tuple(1)), NULL));
+	__mpy_obj_ref_dec(__mpy_call(print, __mpy_tuple_assign(0, __mpy_obj_init_str_static("'Could not be resolved'"), __mpy_obj_init_tuple(1)), NULL));
 	
-	__mpy_obj_ref_dec(a);
 	
 	
 	

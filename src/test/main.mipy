@@ -1,7 +1,7 @@
 try:
-    a = 10/0
-except ZeroDivisionError:
-    print('Division 0')
+    from lib import test
+except NameError:
+    print('Could not be resolved')
 #end
 
 
