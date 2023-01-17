@@ -166,13 +166,22 @@ public class BuilderVisitor implements AstVisitor<Object> {
     public Object visit(Try node) {
         List<Exception> enclosing_exceptions = exceptions;
         List<CBuilder.Statement> enclosing_statements = statements;
-
-        this.exceptions = new ArrayList<>();
-        this.statements = new ArrayList<>();
+        List<CBuilder.objects.MPyClass> enclosing_classes = classes;
+        List<CBuilder.objects.functions.Function> enclosing_functions = functions;
+        List<CBuilder.variables.VariableDeclaration> enclosing_variables = variables;
+        
+        exceptions = new ArrayList<>();
+        statements = new ArrayList<>();
+        variables = new ArrayList<>();
+        functions = new ArrayList<>();
+        classes = new ArrayList<>();
 
         node.getTryBlock().accept(this);
          
-        this.statements = enclosing_statements;
+        statements = enclosing_statements;
+        variables = enclosing_variables;
+        functions = enclosing_functions;
+        classes = enclosing_classes;
 
         if (this.exceptions.size() == 0) {
             node.getTryBlock().accept(this);

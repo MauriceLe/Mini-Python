@@ -1,7 +1,6 @@
-x = 10
 
-try:
-    x = a
+try: 
+    import lib
 except:
-    print('Test!')
+    print('Error')
 #end

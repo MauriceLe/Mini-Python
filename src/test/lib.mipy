@@ -1,4 +1,4 @@
-class Dog:
+class Animal:
     def __init__(self):
         super()
     #end
@@ -7,3 +7,4 @@ class Dog:
         print('Wuff!')
     #end
 #end
+
