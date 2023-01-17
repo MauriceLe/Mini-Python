@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 import code.ast.*;
 import code.ast.Class;
 import code.ast.types.*;
+import code.symbol.NativeFunction;
 import code.symbol.Scope;
 import code.symbol.Symbol;
 import code.symbol.Variable;
@@ -48,6 +49,8 @@ public class SymbolVisitor implements AstVisitor<Object>{
     public Object visit(AstTree node) {
 
         nest(()->{
+            scope.bind("print", NativeFunction.print);
+            scope.bind("input", NativeFunction.input);
             node.getBlock().accept(this);
             return null;
         });
@@ -92,6 +95,10 @@ public class SymbolVisitor implements AstVisitor<Object>{
 
         symbol = scope.resolve(node.getText());
 
+        if(symbol == null){
+            System.out.println("Identifier '" + node.getText() + "' is not defined");
+        }
+
         return symbol;
     };
 
@@ -105,48 +112,34 @@ public class SymbolVisitor implements AstVisitor<Object>{
             System.out.println("Class '" + node.getIdentifier().getText() + "' is already defined or imported");
         }
 
-        scope.bind(node.getIdentifier().getText(), nest(()->{
-            String base = node.getClass().getName();
-            if(base != null){
-                code.symbol.Class parent = (code.symbol.Class) scope.resolve(base);
+        code.symbol.Class newClass = new code.symbol.Class(node);
+        newClass.setScope(scope);
+        
+        node.setScope(scope);
 
-                if(parent == null){
+        for(code.ast.Function function : node.getFunctions()){
+            function.accept(this);
+        }
 
-                }
-                scope.setParentScope(parent.getScope());
-            }
-
-            for(code.ast.Function function : node.getFunctions()){
-                function.accept(this);
-            }
-
-            node.setScope(scope);
-            code.symbol.Class newClass = new code.symbol.Class(node);
-            newClass.setScope(scope);
-            
-            return newClass;
-        }));
+        scope.bind(node.getIdentifier().getText(),newClass);
         
         return scope.resolve(node.getIdentifier().getText());
     };
 
-    public Object visit(code.ast.Function node){
+    public Object visit(Function node){
         if(scope.resolve(node.getIdentifier().getText()) != null){
             System.out.println("Function '" + node.getIdentifier().getText() + "' is already defined or imported");
         }
 
-        scope.bind(node.getIdentifier().getText(), nest(()-> {
-            for(Identifier parameter : node.getParameter()){
-                scope.bind(parameter.getText(),null);
-            }
+        code.symbol.Function function = new code.symbol.Function(node);
+        function.setScope(scope);
 
-            node.getBody().accept(this);
-            node.setScope(scope);
-            
-            code.symbol.Function function = new code.symbol.Function(node);
-            function.setScope(scope);
-            return function;
-        }));
+        scope.bind(node.getIdentifier().getText(), function);
+        for(Identifier parameter : node.getParameter()){
+            scope.bind(parameter.getText(), new Variable(parameter));
+        }
+        node.setScope(scope);
+        //node.getBody().accept(this);
 
         return null;
     };
