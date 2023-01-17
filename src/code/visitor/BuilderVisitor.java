@@ -4,6 +4,7 @@ import code.ast.*;
 import code.ast.Class;
 import code.ast.Exception;
 import code.ast.exceptions.ImportError;
+import code.ast.exceptions.ZeroDivisionError;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -62,6 +63,16 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
     @Override
     public Object visit(Arithmetic node) {
+
+        CBuilder.Expression right = (CBuilder.Expression) node.getRight().accept(this);
+
+        if (right instanceof IntLiteral) {
+            IntLiteral lit = (IntLiteral) right;
+            if (node.getOperator() == "__div__" && lit.getValue() == 0) {
+                exceptions.add(new ZeroDivisionError());
+            }
+        }
+
         return new Call(
             new AttributeReference(node.getOperator(), (CBuilder.Expression) node.getLeft().accept(this)),
             List.of(new CBuilder.Expression[] {(CBuilder.Expression) node.getRight().accept(this)})
@@ -147,11 +158,16 @@ public class BuilderVisitor implements AstVisitor<Object> {
     @Override
     public Object visit(Try node) {
         Exception err = (Exception) node.getException();
-        List<Exception> enclosing = this.exceptions;
+
+        List<Exception> enclosing_exceptions = this.exceptions;
+        List<CBuilder.Statement> enclosing_statements = statements;
         this.exceptions = new ArrayList<>();
+        this.statements = new ArrayList<>();
+
         boolean isError = false;
 
-        List<CBuilder.Statement> tryStatements = (List<CBuilder.Statement>) node.getTryBlock().accept(this);
+        node.getTryBlock().accept(this);
+         
         if(err != null){
              for (Exception e : this.exceptions){
                 if (e.getClass() == err.getClass()){
@@ -161,15 +177,20 @@ public class BuilderVisitor implements AstVisitor<Object> {
         } else if (!this.exceptions.isEmpty()){
             isError = true;
         }
+
+        this.statements = enclosing_statements;
+
         if (isError){
             this.exceptions.remove(err);
-            List<CBuilder.Statement> exceptStatements = (List<CBuilder.Statement>) node.getExceptBlock().accept(this);
-        }
-        if (node.getFinallyBlock() != null){
-            List<CBuilder.Statement> finallyStatements = (List<CBuilder.Statement>) node.getFinallyBlock().accept(this);
+            node.getExceptBlock().accept(this);
         }
 
-        this.exceptions = enclosing;
+        this.exceptions = enclosing_exceptions;
+
+        if (node.getFinallyBlock() != null){
+            node.getFinallyBlock().accept(this);
+        }
+
         return null;
     }
 

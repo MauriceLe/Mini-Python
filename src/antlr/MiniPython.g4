@@ -51,7 +51,9 @@ condition           : expression COLON
 
 return              : RETURN expression;
 
-import_module       : IMPORT identifier;
+import_module       : IMPORT identifier
+                    | FROM identifier IMPORT identifier
+                    ;
 
 while               : WHILE condition statements END;
 
@@ -100,7 +102,9 @@ GREATER_THEN        : '>=';
 EQUAL               : '==';
 NOT_EQUAL           : '!=';
 
+FROM                : 'from';
 IMPORT              : 'import';
+
 IF                  : 'if';
 ELIF                : 'elif';
 ELSE                : 'else';
