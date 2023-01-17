@@ -219,7 +219,8 @@ public class BuilderVisitor implements AstVisitor<Object> {
     @Override
     public Object visit(Callable node) {
 
-        if(!node.getIdentifier().getText().equals("print") && !node.getIdentifier().getText().equals("input")){
+
+        if(!node.getIdentifier().getText().contains("print") && !node.getIdentifier().getText().contains("input")){
             boolean exists = false;
             for (CBuilder.objects.functions.Function fun : this.functions){
                 if(fun.getName().equals(node.getIdentifier().getText())){
