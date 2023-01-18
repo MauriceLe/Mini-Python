@@ -77,7 +77,9 @@ public class SymbolVisitor implements AstVisitor<Object>{
         return null;
     };
 
-    public Object visit(Callable node){return null;};
+    public Object visit(Callable node){
+        return null;
+    };
 
     public Object visit(If node){
         node.getCondition().accept(this);
@@ -112,14 +114,22 @@ public class SymbolVisitor implements AstVisitor<Object>{
             System.out.println("Class '" + node.getIdentifier().getText() + "' is already defined or imported");
         }
 
-        code.symbol.Class newClass = new code.symbol.Class(node);
-        newClass.setScope(scope);
-        
-        node.setScope(scope);
-
-        for(code.ast.Function function : node.getFunctions()){
-            function.accept(this);
-        }
+        Symbol newClass = nest(()->{
+            /*if(node.getSuperclass() != null){
+                code.symbol.Class parent = (code.symbol.Class) scope.resolve(node.getSuperclass().getText());
+                if(parent == null){
+                    System.out.println("Class '" + node.getSuperclass().getText() + "' doesn't exist");
+                }
+                scope.setParentScope(parent.getScope());
+            }*/
+            for(code.ast.Function function : node.getFunctions()){
+                function.accept(this);
+            }
+            node.setScope(scope);
+            code.symbol.Class clazz = new code.symbol.Class(node);
+            clazz.setScope(scope);
+            return clazz;
+        });
 
         scope.bind(node.getIdentifier().getText(),newClass);
         
@@ -131,15 +141,18 @@ public class SymbolVisitor implements AstVisitor<Object>{
             System.out.println("Function '" + node.getIdentifier().getText() + "' is already defined or imported");
         }
 
-        code.symbol.Function function = new code.symbol.Function(node);
-        function.setScope(scope);
+        Symbol function = nest(()->{
+            for(Identifier parameter : node.getParameter()){
+                scope.bind(parameter.getText(), new Variable(parameter));
+            }
+            node.setScope(scope);
+            node.getBody().accept(this);
+            code.symbol.Function func = new code.symbol.Function(node);
+            func.setScope(scope);
+            return func;
+        });
 
         scope.bind(node.getIdentifier().getText(), function);
-        for(Identifier parameter : node.getParameter()){
-            scope.bind(parameter.getText(), new Variable(parameter));
-        }
-        node.setScope(scope);
-        //node.getBody().accept(this);
 
         return null;
     };
@@ -184,6 +197,11 @@ public class SymbolVisitor implements AstVisitor<Object>{
 
     @Override
     public Object visit(Try node) {
+        node.getTryBlock().accept(this);
+        node.getExceptBlock().accept(this);
+        if(node.getFinallyBlock() != null){
+            node.getFinallyBlock().accept(this);
+        }
         return null;
     };
     
