@@ -186,20 +186,18 @@ public class BuilderVisitor implements AstVisitor<Object> {
         if (this.exceptions.size() == 0) {
             node.getTryBlock().accept(this);
         } 
+        
         else if (this.exceptions.size() > 0) {
             if (node.getException() != null) {
-                for (Exception exception: this.exceptions){
-                    if (node.getException().getClass() == exception.getClass()) {
-                        node.getTryBlock().accept(this);
-                    }
+                if (exceptions.stream().anyMatch(x -> x.getClass() == node.getException().getClass())) {
+                    node.getExceptBlock().accept(this);
                 }
-            } else {
+            } 
+            else {
                 node.getExceptBlock().accept(this);
             }
         } 
-        else {
-        }
-
+        
         if (node.getFinallyBlock() != null){
             node.getFinallyBlock().accept(this);
         }
@@ -233,6 +231,11 @@ public class BuilderVisitor implements AstVisitor<Object> {
 
     @Override
     public Object visit(Callable node) {
+        
+        if (functions.stream().noneMatch(x -> x.getName().equals(node.getIdentifier().getText()))){
+            exceptions.add(new NameError());
+        }
+
         Call call;
 
         if (node.getClassIdentifier() != null) {
@@ -252,10 +255,6 @@ public class BuilderVisitor implements AstVisitor<Object> {
         }
 
         statements.add(call);
-
-        if (functions.stream().noneMatch(x -> x.getName().equals(node.getIdentifier().getText()))){
-            exceptions.add(new NameError());
-        }
 
         return call;
     }

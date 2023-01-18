@@ -3,7 +3,7 @@ package code.ast;
 import code.visitor.AstVisitor;
 import org.antlr.v4.runtime.tree.Tree;
 
-public class Try extends Statement{
+public class Try extends Statement {
 
     private Exception exception;
     private Block try_block;

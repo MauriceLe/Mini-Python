@@ -1,7 +1,32 @@
-a = 5
-
-if a < 10:
-    print('a < 10')
-else:
-    print('a >= 10')
+try:
+    a = 10/0
+except ZeroDivisionError:
+    print('ZeroDivisionError')
 #end
+
+try:
+    function(10)
+except NameError:
+    print('NameError')
+#end
+
+try:
+    import not_found
+except ImportError:
+    print('ImportError')
+#end
+
+try:
+    import not_found
+    function(10)
+    a = 10/0
+except:
+    print('Error')
+finally:
+    print('Finally')
+#end
+
+import lib
+dog = Dog()
+dog.wuff()
+print(function(1,2,3))

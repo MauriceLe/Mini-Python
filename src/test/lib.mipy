@@ -1,14 +1,13 @@
-class Animal:
+class Dog:
     def __init__(self):
         super()
     #end
 
-    def wuff(self, amount):
-        i = 0
-        while i < amount:
-            print('Wuff!')
-            i = i + 1
-        #end
+    def wuff(self):
+        print('Wuff!')
     #end
 #end
 
+def calculate(a, b, c):
+    return a + b * c
+#end
