@@ -119,25 +119,25 @@ In diesem Beispiel wird die Fehlerbehandlung mit `try`, `except`, und `finally` 
 
 1. Klone das Repository:
 
-   ```bash
-    git clone https://github.com/MauriceLe/Mini-Python.git
-    cd src
-   ```
+     ```bash
+      git clone https://github.com/MauriceLe/Mini-Python.git
+      cd src
+     ```
    
 2. Abhängigkeiten installieren:
 
-  Stelle sicher, dass Java und Antlr auf deinem System installiert sind. Du kannst Antlr von der offiziellen Webseite herunterladen.
+    Stelle sicher, dass Java und Antlr auf deinem System installiert sind. Du kannst Antlr von der offiziellen Webseite herunterladen.
 
 3. Komplilieren:
 
-  ```bash
-    antlr4 MiniPython.g4
-    javac MiniPython*.java
-   ```
+    ```bash
+      antlr4 MiniPython.g4
+      javac MiniPython*.java
+     ```
 
 4. Ausführen:
 
-  Führe den Mini-Python-Compiler mit einer .mipy-Datei aus
+    Führe den Mini-Python-Compiler mit einer .mipy-Datei aus
 
   ```bash
     java MiniPythonCompiler main.mipy
