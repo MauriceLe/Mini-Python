@@ -139,8 +139,8 @@ In diesem Beispiel wird die Fehlerbehandlung mit `try`, `except`, und `finally` 
 
     Führe den Mini-Python-Compiler mit einer .mipy-Datei aus
 
-  ```bash
-    java MiniPythonCompiler main.mipy
-   ```
+    ```bash
+      java MiniPythonCompiler main.mipy
+     ```
 
   
